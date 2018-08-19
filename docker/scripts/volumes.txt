@@ -1,0 +1,1 @@
+mg-consignation-mongo mg-consignation-rabbitmq

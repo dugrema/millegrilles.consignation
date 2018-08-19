@@ -9,6 +9,9 @@ services:
   mongo:
     image: mongo
 
+    volumes:
+      - mg-consignation-mongo:/data/db
+
     deploy:
       replicas: 1
       resources:
@@ -29,6 +32,9 @@ services:
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
     image: rabbitmq:3-management
+
+    volumes:
+      - mg-consignation-rabbitmq:/var/lib/rabbitmq
 
     deploy:
       replicas: 1
@@ -63,6 +69,12 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
     networks:
       - overlay
+
+volumes:
+  mg-consignation-mongo:
+    name: mg-consignation-mongo
+  mg-consignation-rabbitmq:
+    name: mg-consignation-rabbitmq
 
 networks:
   overlay:
