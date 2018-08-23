@@ -14,16 +14,16 @@ class TransactionLirePika:
           
         self.inError = True
 
-    def connecter_rabbitmq(self):
-        mq_queue = "transactions" #os.environ['MQ_QUEUE']
-        mq_host = "dev2" #os.environ['MQ_HOST']
+    def connecter(self, callback):
+        #mq_queue = "transactions" #os.environ['MQ_QUEUE']
+        #mq_host = "dev2" #os.environ['MQ_HOST']
 
-        self.connectionmq = pika.BlockingConnection(pika.ConnectionParameters(mq_host))
+        self.connectionmq = pika.BlockingConnection(pika.ConnectionParameters(self.configuration.mqHost))
         self.channel = self.connectionmq.channel()
-        self.channel.queue_declare(queue=mq_queue)   
+        self.channel.queue_declare(queue=self.configuration.mqQueue)   
 
-        self.channel.basic_consume(self.lire_message,
-                                   queue=mq_queue,
+        self.channel.basic_consume(callback,
+                                   queue=self.configuration.mqQueue,
                                    no_ack=True)
 
         self.channel.start_consuming()
@@ -41,10 +41,11 @@ class TransactionLirePika:
       
         self.disconnect()
          
-    def disconnect(self):
+    def deconnecter(self):
         try:
             if self.connectionmq != None:
                 self.connectionmq.close()
         finally:
             self.channel = None
+            self.connectionmq = None
 
