@@ -14,10 +14,9 @@ class TransactionLirePika:
           
         self.inError = True
 
+    # Connecter au serveur RabbitMQ
+    # Le callback est une methode qui va etre appellee lorsqu'un message est recu
     def connecter(self, callback):
-        #mq_queue = "transactions" #os.environ['MQ_QUEUE']
-        #mq_host = "dev2" #os.environ['MQ_HOST']
-
         self.connectionmq = pika.BlockingConnection(pika.ConnectionParameters(self.configuration.mqHost))
         self.channel = self.connectionmq.channel()
         self.channel.queue_declare(queue=self.configuration.mqQueue)   
@@ -30,6 +29,7 @@ class TransactionLirePika:
 
         return self.connectionmq
 
+    # Mettre la classe en etat d'erreur
     def enterErrorState(self):
         self.inError = True
       
@@ -40,7 +40,8 @@ class TransactionLirePika:
                 None
       
         self.disconnect()
-         
+    
+    # Se deconnecter de RabbitMQ
     def deconnecter(self):
         try:
             if self.connectionmq != None:
