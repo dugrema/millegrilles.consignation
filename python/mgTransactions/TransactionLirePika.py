@@ -2,9 +2,10 @@
 import json, time, sys, os, traceback, codecs
 import pika
 
-class TransactionLire:
+class TransactionLirePika:
 
-    def __init__(self):
+    def __init__(self, configuration):
+        self.configuration = configuration
         self.cnx = None
         self.connectionmq = None
         self.channel = None
