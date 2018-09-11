@@ -7,8 +7,7 @@ VERSION=1.0
 IMAGENAME=$REPO/$NAME:$VERSION
 
 sudo docker manifest create --insecure $IMAGENAME \
-  $IMAGENAME.x86_64 \
-  $IMAGENAME.armv7l
+  $IMAGENAME.x86_64
 
 echo "Manifest updated: $IMAGENAME"
 
