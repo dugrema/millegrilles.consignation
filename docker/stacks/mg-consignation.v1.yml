@@ -7,7 +7,7 @@ services:
 
   # Base de donnees MongoDB
   mongo:
-    image: mongo
+    image: repository.maple.mdugre.info:5000/mg_mongo:1.0
 
     volumes:
       - mg-consignation-mongo:/data/db
@@ -34,7 +34,7 @@ services:
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
-    image: rabbitmq:3-management
+    image: repository.maple.mdugre.info:5000/mg_rabbitmq:1.0
 
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
@@ -62,6 +62,10 @@ services:
     image: mongo-express
     deploy:
       replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 75M
       restart_policy:
         condition: any
         delay: 30s
