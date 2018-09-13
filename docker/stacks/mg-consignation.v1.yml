@@ -75,8 +75,8 @@ services:
         delay: 30s
 
     environment:
-      MG_MQ_HOST: dev2
-      MG_MONGO_HOST: dev2
+      MG_MQ_HOST: rabbitmq
+      MG_MONGO_HOST: mongo
 
     networks:
       - overlay
