@@ -1,2 +1,0 @@
-# MilleGrilles consignation module Transactions
-
