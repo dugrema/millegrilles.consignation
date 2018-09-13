@@ -56,6 +56,31 @@ services:
     networks:
       - overlay
 
+  # Script Python de persistance des transactions
+  transactions:
+    image: repository.maple.mdugre.info:5000/mg_transactions:1.0
+
+    depends_on:
+        - mongo
+        - rabbitmq
+
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.20"
+          memory: 50M
+      restart_policy:
+        condition: any
+        delay: 30s
+
+    environment:
+      MG_MQ_HOST: dev2
+      MG_MONGO_HOST: dev2
+
+    networks:
+      - overlay
+
 # Utilitaires pour gerer / debugger les services
 
   mongo-express:
