@@ -14,4 +14,6 @@ ENV MG_MONGO_HOST dev2.maple.mdugre.info
 COPY src/ ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD [ "python", "./millegrilles/consignation/ConsignateurTransaction.py" ]
+ENTRYPOINT ["python3"]
+CMD ["millegrilles/consignation/ConsignateurTransaction.py"]
+

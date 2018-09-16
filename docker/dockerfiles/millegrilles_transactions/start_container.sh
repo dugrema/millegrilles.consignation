@@ -1,8 +1,7 @@
 #!/bin/bash
 
-REPO=repository.maple.mdugre.info:5000
-NAME=mg_transactions
-VERSION=1.0
+# Importer le nom du repository, image et version
+source image_info.txt
 ARCH=`uname -m`
 
 docker run $REPO/$NAME.$ARCH:$VERSION
