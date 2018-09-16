@@ -58,7 +58,7 @@ services:
 
   # Script Python de persistance des transactions
   transactions:
-    image: repository.maple.mdugre.info:5000/mg_transactions:1.0
+    image: repository.maple.mdugre.info:5000/mg_transactions:1.1
 
     depends_on:
         - mongo
@@ -73,6 +73,35 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+
+    environment:
+      MG_MQ_HOST: rabbitmq
+      MG_MONGO_HOST: mongo
+
+    networks:
+      - overlay
+
+  # Script Python pour orienter les transactions vers un processus
+  orienteur:
+    image: repository.maple.mdugre.info:5000/mg_transactions:1.1
+
+    depends_on:
+        - mongo
+        - rabbitmq
+
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.20"
+          memory: 50M
+      restart_policy:
+        condition: any
+        delay: 30s
+
+    entrypoint: 
+      - python3
+      - millegrilles/processus/OrienteurTransaction.py
 
     environment:
       MG_MQ_HOST: rabbitmq
