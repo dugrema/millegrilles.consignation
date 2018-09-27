@@ -46,7 +46,7 @@ services:
       resources:
         limits:
           cpus: "0.50"
-          memory: 250M
+          memory: 1G
       restart_policy:
         condition: any
         delay: 30s

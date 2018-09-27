@@ -59,15 +59,49 @@ class ImportDataToTransaction:
         self._cursor = self._cnmaria.cursor()
         self._cursor.execute(
             '''
-                select hist.location, hist.temps_lect as temps_lecture, instruments.instrument_id as senseur, 
-                       temperature, humidite, pression, bat_mv as batterie_mv
-                from lectmeteo.lect_hist hist
-                     inner join lectmeteo.instruments instruments
-			                 on hist.location = instruments.location
-                     left join lectmeteo.lect_etat etat 
-                            on instruments.instrument_id = etat.instrument_id
-		                   and hist.temps_lect = etat.temps_lect
-                 where hist.location != 0
+select hist.location, hist.temps_lect as temps_lecture, 
+case
+    when hist.location = 'Bureau' then 16
+    when hist.location = 'Chambre' then 21
+    when hist.location = 'ChambreFroide' then 24
+	when hist.location = 'Cuisine' then 2
+    when hist.location = 'Extension' then 20
+    when hist.location = 'Estension_old2' then 9
+    when hist.location = 'Garage' then 13
+    when hist.location = 'Inconnu' then 5
+    when hist.location = 'Mobile' then 5
+    when hist.location = 'Mobile-1' then 5
+    when hist.location = 'Patio' then 3
+	when hist.location = 'Refrigerateur' then 19
+	when hist.location = 'Remise' then 15
+	when hist.location = 'Sous-sol' then 12
+    else cast(hist.location as signed)
+end as senseur,
+       temperature, humidite, pression, bat_mv
+from lectmeteo.lect_hist hist
+     left join lectmeteo.lect_etat etat 
+            on etat.temps_lect = hist.temps_lect
+		   and etat.instrument_id = case
+    when hist.location = 'Bureau' then 16
+    when hist.location = 'Chambre' then 21
+    when hist.location = 'ChambreFroide' then 24
+	when hist.location = 'Cuisine' then 2
+    when hist.location = 'Extension' then 20
+    when hist.location = 'Estension_old2' then 9
+    when hist.location = 'Garage' then 13
+    when hist.location = 'Inconnu' then 5
+    when hist.location = 'Mobile' then 5
+    when hist.location = 'Mobile-1' then 5
+    when hist.location = 'Patio' then 3
+	when hist.location = 'Refrigerateur' then 19
+	when hist.location = 'Remise' then 15
+	when hist.location = 'Sous-sol' then 12
+    else cast(hist.location as signed)
+end
+where hist.location != '0'
+  and hist.temps_lect between '2018-09-01' and '2018-09-25'
+order by hist.temps_lect desc
+            
                  LIMIT %s''' % self._taille_max)
 
     def iterer(self):
@@ -122,14 +156,15 @@ class ImportDataToTransaction:
 
         message_utf8 = json.dumps(transaction_message, sort_keys=True, ensure_ascii=False)
 
-        print("JSON output transaction: %s" % message_utf8)
+        #print("JSON output transaction: %s" % message_utf8)
 
         return message_utf8
 
     def transmettre_transaction(self, message):
         self._channel.basic_publish(exchange='millegrilles.evenements',
                               routing_key='sansnom.transaction.nouvelle',
-                              body=message)
+                              body=message,
+                              properties=pika.BasicProperties(delivery_mode=2))
 
 
 # --- MAIN ---
