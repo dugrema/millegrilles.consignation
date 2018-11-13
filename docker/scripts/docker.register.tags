@@ -1,0 +1,6 @@
+  HTTP/1.1 200 OK
+  Content-Type: application/json; charset=utf-8
+  Docker-Distribution-Api-Version: registry/2.0
+  X-Content-Type-Options: nosniff
+  Date: Tue, 13 Nov 2018 23:25:08 GMT
+  Content-Length: 135
