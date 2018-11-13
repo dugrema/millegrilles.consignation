@@ -1,4 +1,4 @@
-REPO=repository.maple.mdugre.info:5000
+REPO=registry.maple.mdugre.info:5000
 NAME=mg_transactions
-VERSION=1.1
+VERSION=1.2
 

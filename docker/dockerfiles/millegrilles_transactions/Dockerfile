@@ -8,12 +8,12 @@ WORKDIR /usr/src/app
 ENV PYTHONPATH /usr/src/app
 
 # Variables d'environnement
-ENV MG_MQ_HOST dev2.maple.mdugre.info
-ENV MG_MONGO_HOST dev2.maple.mdugre.info
+ENV MG_MQ_HOST rabbitmq
+ENV MG_MONGO_HOST mongo
 
 COPY src/ ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT ["python3"]
+ENTRYPOINT ["/usr/bin/python3"]
 CMD ["millegrilles/consignation/ConsignateurTransaction.py"]
 
