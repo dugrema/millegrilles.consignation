@@ -16,7 +16,7 @@ class ImportDataToTransaction:
         self._channel = None
         self._cursor = None
         self._taille_batch = 20
-        self._taille_max = 100000
+        self._taille_max = 20000000
 
         self._transaction_header = {
             'signature_contenu': '',
@@ -99,8 +99,7 @@ from lectmeteo.lect_hist hist
     else cast(hist.location as signed)
 end
 where hist.location != '0'
-  and hist.temps_lect between '2018-09-01' and '2018-09-25'
-order by hist.temps_lect desc
+  and hist.temps_lect between '2018-09-25' and '2018-09-28'
             
                  LIMIT %s''' % self._taille_max)
 
