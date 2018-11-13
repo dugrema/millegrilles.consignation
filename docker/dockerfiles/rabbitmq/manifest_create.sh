@@ -1,8 +1,7 @@
 #!/bin/bash
 
-REPO=repository.maple.mdugre.info:5000
-NAME=mg_rabbitmq
-VERSION=1.0
+# Importer le nom du repository, image et version
+source image_info.txt
 
 IMAGENAME=$REPO/$NAME:$VERSION
 
@@ -12,9 +11,9 @@ sudo docker manifest create --insecure $IMAGENAME \
 
 if [ $? -eq "0" ]; then
   echo "Manifest updated: $IMAGENAME"
+
   sudo docker manifest push --purge $IMAGENAME
 else
-  echo "Erreur creation manifeste: $IMAGENAME"
+  echo "Erreur de creation du manifeste: $IMAGENAME"
 fi
-
 
