@@ -7,11 +7,9 @@ services:
 
   # Base de donnees MongoDB
   mongo:
-    image: repository.maple.mdugre.info:5000/mg_mongo:1.0
-
+    image: registry.maple.mdugre.info:5000/mg_mongo:1.2
     volumes:
       - mg-consignation-mongo:/data/db
-
     deploy:
       replicas: 1
       resources:
@@ -30,17 +28,14 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
 
     networks:
-      - overlay
+      - mg_net
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
-    image: repository.maple.mdugre.info:5000/mg_rabbitmq:1.0
-
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq:1.2
     hostname: rabbitmq
-
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
-
     deploy:
       replicas: 1
       resources:
@@ -50,74 +45,18 @@ services:
       restart_policy:
         condition: any
         delay: 30s
-
     ports:
       - "15672:15672"
       - "5671-5672:5671-5672"
-
     networks:
-      - overlay
-
-  # Script Python de persistance des transactions
-#  transactions:
-#    image: repository.maple.mdugre.info:5000/mg_transactions:1.1
-#
-#    depends_on:
-#        - mongo
-#        - rabbitmq
-#
-#    deploy:
-#      replicas: 1
-#      resources:
-#        limits:
-#          cpus: "0.20"
-#          memory: 50M
-#      restart_policy:
-#        condition: any
-#        delay: 30s
-#
-#    environment:
-#      MG_NOM_MILLEGRILLE: dev2
-#      MG_MQ_HOST: rabbitmq
-#      MG_MONGO_HOST: mongo
-#
-#    networks:
-#      - overlay
-
-  # Script Python pour orienter les transactions vers un processus
-  orienteur:
-    image: repository.maple.mdugre.info:5000/mg_transactions:1.1
-
-    depends_on:
-        - mongo
-        - rabbitmq
-
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: "0.20"
-          memory: 50M
-      restart_policy:
-        condition: any
-        delay: 30s
-
-    entrypoint: 
-      - python3
-      - millegrilles/processus/OrienteurTransaction.py
-
-    environment:
-      MG_NOM_MILLEGRILLE: dev2
-      MG_MQ_HOST: rabbitmq
-      MG_MONGO_HOST: mongo
-
-    networks:
-      - overlay
+      - mg_net
 
 # Utilitaires pour gerer / debugger les services
 
   mongo-express:
     image: mongo-express
+    depends_on:
+        - mongo
     deploy:
       replicas: 1
       resources:
@@ -133,7 +72,7 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
     networks:
-      - overlay
+      - mg_net
 
 volumes:
   mg-consignation-mongo:
@@ -142,5 +81,8 @@ volumes:
     name: mg-consignation-rabbitmq
 
 networks:
-  overlay:
+  mg_net:
+    external: true
+    name: mg_net
+
 

@@ -1,5 +1,5 @@
 #!/bin/bash
 
-VERSION=v1
+NOM_MILLEGRILLE=dev2
 
-docker stack deploy -c mg-consignation.$VERSION.yml mg_dev2_consignation
+docker stack deploy -c mg-consignation.yml "mg_$NOM_MILLEGRILLE_consignation"
