@@ -2,4 +2,4 @@
 
 NOM_MILLEGRILLE=dev2
 
-docker stack deploy -c mg-consignation.yml "mg_$NOM_MILLEGRILLE_consignation"
+docker stack deploy -c mg-consignation-middleware.yml mg-consignation-middleware-$NOM_MILLEGRILLE

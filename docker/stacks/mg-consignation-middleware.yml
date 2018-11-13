@@ -1,4 +1,4 @@
-# Stack pour consignation de MilleGrilles
+# Stack pour consignation de MilleGrilles, middleware (logiciels serveurs)
 
 # Use root/example as user/password credentials
 version: '3.7'
@@ -19,14 +19,11 @@ services:
       restart_policy:
         condition: any
         delay: 30s
-
     ports:
       - "27017:27017"
-
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-
     networks:
       - mg_net
 
