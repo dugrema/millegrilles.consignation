@@ -16,7 +16,7 @@ class ImportDataToTransaction:
         self._channel = None
         self._cursor = None
         self._taille_batch = 20
-        self._taille_max = 20000000
+        self._taille_max = 100000
 
         self._transaction_header = {
             'signature_contenu': '',
@@ -27,11 +27,11 @@ class ImportDataToTransaction:
     def connecter(self):
         self._cnmaria = None
         self._cnmaria = mysql.connector.connect(user='cuisine_senseur', password='cuisine',
-                                        host='infraserv1',
+                                        host='192.168.1.28',
                                         database='lectmeteo',
                                         autocommit=True)
 
-        self._connectionmq = pika.BlockingConnection(pika.ConnectionParameters('dev2'))
+        self._connectionmq = pika.BlockingConnection(pika.ConnectionParameters('192.168.1.110'))
         self._channel = self._connectionmq.channel()
 
 
@@ -99,7 +99,7 @@ from lectmeteo.lect_hist hist
     else cast(hist.location as signed)
 end
 where hist.location != '0'
-  and hist.temps_lect between '2018-09-25' and '2018-09-28'
+  and hist.temps_lect between '2018-11-11' and '2018-11-14'
             
                  LIMIT %s''' % self._taille_max)
 
@@ -161,7 +161,7 @@ where hist.location != '0'
 
     def transmettre_transaction(self, message):
         self._channel.basic_publish(exchange='millegrilles.evenements',
-                              routing_key='sansnom.transaction.nouvelle',
+                              routing_key='dev2.transaction.nouvelle',
                               body=message,
                               properties=pika.BasicProperties(delivery_mode=2))
 
