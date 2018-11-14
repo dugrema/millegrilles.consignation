@@ -1,0 +1,38 @@
+# Stack pour consignation de MilleGrilles
+
+# Use root/example as user/password credentials
+version: '3.7'
+
+services:
+
+  # Script Python de persistance des transactions
+  transactions:
+    image: registry.maple.mdugre.info:5000/mg_transactions:1.2
+#    depends_on:
+#        - mongo
+#        - rabbitmq
+    deploy:
+      replicas: 1
+      resources:
+       limits:
+          cpus: "0.20"
+          memory: 50M
+      restart_policy:
+        condition: any
+        delay: 30s
+    entrypoint: 
+      - python3
+      - millegrilles/transaction/ConsignateurTransaction.py
+    environment:
+      MG_NOM_MILLEGRILLE: dev2
+      MG_MQ_HOST: rabbitmq
+      MG_MONGO_HOST: mongo
+    networks:
+      - mg_net
+
+networks:
+  mg_net:
+    external: true
+    name: mg_net
+
+
