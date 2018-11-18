@@ -14,6 +14,6 @@ ENV MG_MONGO_HOST mongo
 COPY src/ ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-ENTRYPOINT ["/usr/bin/python3"]
-CMD ["millegrilles/consignation/ConsignateurTransaction.py"]
+ENTRYPOINT ["python3"]
+CMD ["millegrilles/transaction/ConsignateurTransaction.py"]
 

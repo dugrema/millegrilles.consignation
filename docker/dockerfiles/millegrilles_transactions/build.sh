@@ -14,7 +14,7 @@ SRC_FOLDER=tmp_src
 GIT_FOLDER=$SRC_FOLDER/$GIT_NAME
 
 mkdir $SRC_FOLDER
-git -C $SRC_FOLDER clone $GIT_PATH
+git -C $SRC_FOLDER clone --single-branch -b $BRANCH $GIT_PATH
 if [ $? -ne "0" ]; then
   echo "Erreur extraction code via git"
   exit -1
