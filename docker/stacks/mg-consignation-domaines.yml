@@ -5,18 +5,25 @@ version: '3.7'
 
 services:
 
-  # Script Python de persistance des transactions
-  transactions:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:v0.2.1
+  # Script Python pour executer les processus
+  processus:
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python:v0.2.1
     deploy:
       replicas: 1
       resources:
-       limits:
+        limits:
           cpus: "0.20"
           memory: 50M
       restart_policy:
         condition: any
         delay: 30s
+    entrypoint: 
+      - python3
+      - millegrilles/script_demarrergestionnaire.py
+      - -m 
+      - mgdomaines.appareils.SenseursPassifs 
+      - -c 
+      - GestionnaireSenseursPassifs
     environment:
       MG_NOM_MILLEGRILLE: dev2
       MG_MQ_HOST: rabbitmq
