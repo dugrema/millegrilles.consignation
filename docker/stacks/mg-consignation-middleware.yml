@@ -9,6 +9,7 @@ services:
   mongo:
     image: registry.maple.mdugre.info:5000/mg_mongo:1.2
     command: --replSet rs0
+    hostname: mongo
     volumes:
       - mg-consignation-mongo:/data/db
     deploy:
