@@ -1,19 +1,21 @@
 # Stack pour consignation de MilleGrilles, middleware (logiciels serveurs)
-
-# Use root/example as user/password credentials
 version: '3.7'
 
 services:
 
   # Base de donnees MongoDB
   mongo:
-    image: registry.maple.mdugre.info:5000/mg_mongo:1.2
-    command: --replSet rs0
-    hostname: mongo
+    image: registry.maple.mdugre.info:5000/mg_mongo:v0.3.1
+    command: --replSet rs0 --bind_ip localhost,mongo.maple.millegrilles.mdugre.info
+    hostname: mongo.maple.millegrilles.mdugre.info
     volumes:
       - mg-consignation-mongo:/data/db
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.database == true
       resources:
         limits:
           cpus: "2.0"
@@ -25,18 +27,24 @@ services:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_ROOT_PASSWORD_FILE: mongo.root.password
     networks:
       - mg_net
+    secrets:
+      - mongo.root.password
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq:1.2
-    hostname: rabbitmq
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq:v0.3.1
+    hostname: mq
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.mq == true
       resources:
         limits:
           cpus: "0.50"
@@ -50,14 +58,42 @@ services:
     networks:
       - mg_net
 
-# Utilitaires pour gerer / debugger les services
+  # Proxy avec nginx
+  nginx:
+    image: registry.maple.mdugre.info:5000/mg_nginx:v0.3.1
+    hostname: nginx
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.public == true
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: 1G
+      restart_policy:
+        condition: any
+        delay: 30s
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - mg_net
+    secrets:
+      - ssl.maple.millegrilles.cert
+      - ssl.maple.millegrilles.key
 
+  # Utilitaires pour gerer / debugger les services
   mongo-express:
     image: mongo-express
     depends_on:
         - mongo
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.consoles == true
       resources:
         limits:
           cpus: "0.5"
@@ -66,12 +102,14 @@ services:
         condition: any
         delay: 30s
     ports:
-      - 8081:8081
+      - 38081:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_ADMINPASSWORD_FILE: mongo.root.password
     networks:
       - mg_net
+    secrets:
+      - mongo.root.password
 
 volumes:
   mg-consignation-mongo:
@@ -79,9 +117,19 @@ volumes:
   mg-consignation-rabbitmq:
     name: mg-consignation-rabbitmq
 
+secrets:
+  mongo.root.password:
+    external: true
+  ssl.maple.millegrilles.cert:
+    external: true
+  ssl.maple.millegrilles.key:
+    external: true
+
 networks:
   mg_net:
     external: true
     name: mg_net
+#    external_links:
+#      - mongo:mongo
 
 
