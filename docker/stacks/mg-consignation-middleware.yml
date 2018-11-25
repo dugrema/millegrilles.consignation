@@ -35,7 +35,7 @@ services:
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq:v0.3.2
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.3.3
     hostname: mq.maple.millegrilles.mdugre.info
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
@@ -53,12 +53,13 @@ services:
         condition: any
         delay: 30s
     ports:
-      - "15672:15672"
+      - "15671:15671"
       - "5671-5672:5671-5672"
     networks:
       - mg_net
     secrets:
-      - ssl.maple.millegrilles.cert
+      - ssl.maple.millegrilles.chain
+      - ssl.maple.millegrilles.simpcert
       - ssl.maple.millegrilles.key
 
   # Proxy avec nginx
@@ -126,6 +127,10 @@ secrets:
   ssl.maple.millegrilles.cert:
     external: true
   ssl.maple.millegrilles.key:
+    external: true
+  ssl.maple.millegrilles.chain:
+    external: true
+  ssl.maple.millegrilles.simpcert:
     external: true
 
 networks:

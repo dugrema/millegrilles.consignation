@@ -12,4 +12,4 @@ cp server.key ssl.maple.millegrilles.key
 cp server.crt ssl.maple.millegrilles.cert
 
 # Cleanup
-rm server.*
+#rm server.*
