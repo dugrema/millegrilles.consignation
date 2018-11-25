@@ -9,7 +9,7 @@ openssl rsa -in server.key.org -out server.key
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 
 cp server.key ssl.maple.millegrilles.key
-cp server.crt ssl.maple.millegrilles.crt
+cp server.crt ssl.maple.millegrilles.cert
 
 # Cleanup
 rm server.*
