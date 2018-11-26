@@ -6,7 +6,7 @@ services:
   # Base de donnees MongoDB
   mongo:
     image: registry.maple.mdugre.info:5000/mg_mongo.x86_64:v0.3.1
-#    command: --replSet rs0
+    command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/ssl.maple.millegrilles.key_cert
     hostname: mongo.maple.millegrilles.mdugre.info
     volumes:
       - mg-consignation-mongo:/data/db
@@ -27,7 +27,7 @@ services:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: p1234
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /var/run/mongo.root.password
     networks:
       - mg_net
     secrets:
