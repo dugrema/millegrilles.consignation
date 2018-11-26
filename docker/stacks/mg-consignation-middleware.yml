@@ -105,8 +105,8 @@ services:
       restart_policy:
         condition: any
         delay: 30s
-    ports:
-      - 38081:8081
+#    ports:
+#      - 38081:8081
     environment:
       ME_CONFIG_MONGODB_URL: 'mongodb://mongo:27017/admin?ssl=true'
       MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
