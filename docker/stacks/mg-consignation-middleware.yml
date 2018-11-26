@@ -88,8 +88,8 @@ services:
 
   # Utilitaires pour gerer / debugger les services
   mongo-express:
-    image: mongo-express
-    command: node app --url mongodb://mongo:27017/admin?ssl=true
+    image: registry.maple.mdugre.info:5000/mg_md_mongo_express.x86_64:v0.4.1
+#    command: node app --url mongodb://mongo:27017/admin?ssl=true
     depends_on:
         - mongo
     deploy:
@@ -108,26 +108,24 @@ services:
     ports:
       - 38081:8081
     environment:
+      ME_CONFIG_MONGODB_URL: 'mongodb://mongo:27017/admin?ssl=true'
       MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
       ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/mongoexpress.web.password
       VCAP_APP_HOST: '::'
       VCAP_APP_PORT: 443
       ME_CONFIG_BASICAUTH_USERNAME: mathieu
-      ME_CONFIG_BASICAUTH_PASSWORD: web_auth_2018
+#      ME_CONFIG_BASICAUTH_PASSWORD: example
       ME_CONFIG_SITE_SSL_ENABLED: 'true'
       ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/ssl.maple.millegrilles.cert'
       ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/ssl.maple.millegrilles.key'
-      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
       ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: example
-#      ME_CONFIG_MONGODB_SERVER: mongo
-#      ME_CONFIG_MONGODB_AUTH_USERNAME: mathieu
-#      ME_CONFIG_MONGODB_AUTH_PASSWORD: p1234
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: example
     networks:
       - mg_net
     secrets:
       - mongo.root.password
+      - mongoexpress.web.password
       - ssl.maple.millegrilles.cert
       - ssl.maple.millegrilles.key
 
@@ -139,6 +137,8 @@ volumes:
 
 secrets:
   mongo.root.password:
+    external: true
+  mongoexpress.web.password:
     external: true
   ssl.maple.millegrilles.cert:
     external: true
