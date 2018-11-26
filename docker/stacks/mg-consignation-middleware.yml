@@ -36,7 +36,7 @@ services:
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq:v0.3.4
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.3.5
     hostname: mq.maple.millegrilles.mdugre.info
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
