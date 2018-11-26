@@ -152,7 +152,5 @@ networks:
   mg_net:
     external: true
     name: mg_net
-#    external_links:
-#      - mongo:mongo
 
 
