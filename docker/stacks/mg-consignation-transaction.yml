@@ -9,8 +9,13 @@ services:
   transactions-python:
     image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.4.1
     hostname: transactions-python.maple.millegrilles.mdugre.info
+#    command: -c "import time; time.sleep(1000)"
     deploy:
       replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.python == true
       resources:
        limits:
           cpus: "0.20"
@@ -19,21 +24,28 @@ services:
         condition: any
         delay: 30s
     environment:
-      MG_NOM_MILLEGRILLE: dev2
+      MG_CONFIG_JSON: /run/secrets/mg.transactions.json
+      MG_NOM_MILLEGRILLE: maple
       MG_MQ_HOST: rabbitmq
-      MG_MQ_PASSWORD: gopEM219umESS4
+#      MG_MQ_PASSWORD: gopEM219umESS4
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
-      MG_MONGO_USER: root
-      MG_MONGO_PASSWORD: example
+      MG_MONGO_USER: transaction
+#      MG_MONGO_PASSWORD: example
     networks:
       - mg_net
 #    links:
 #      - rabbitmq:mq.maple.millegrilles.mdugre.info
+    secrets:
+      - mg.transactions.json
+
 
 networks:
   mg_net:
     external: true
     name: mg_net
 
+secrets:
+  mg.transactions.json:
+    external: true
 

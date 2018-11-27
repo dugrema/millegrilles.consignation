@@ -87,7 +87,7 @@ services:
       - ssl.maple.millegrilles.key
 
   # Utilitaires pour gerer / debugger les services
-  mongo-express:
+  web-mongo-express:
     image: registry.maple.mdugre.info:5000/mg_md_mongo_express.x86_64:v0.4.1
 #    command: node app --url mongodb://mongo:27017/admin?ssl=true
     depends_on:
