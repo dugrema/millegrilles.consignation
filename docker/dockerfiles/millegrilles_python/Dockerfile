@@ -7,8 +7,8 @@ ENV BUILD_FOLDER=/opt/millegrilles/build \
     BUNDLE_FOLDER=/opt/millegrilles/dist \
     c=/opt/millegrilles/build/src \
     PYTHONPATH=/opt/millegrilles/dist \
-    MG_MQ_HOST=mq.maple.millegrilles.mdugre.info \
-    MG_MONGO_HOST=mongo.maple.millegrilles.mdugre.info
+    MG_MQ_HOST=mq \
+    MG_MONGO_HOST=mongo
 
 COPY scripts/ $BUILD_FOLDER/scripts
 COPY src/ $SRC_FOLDER/

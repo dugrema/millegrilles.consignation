@@ -57,6 +57,17 @@ db.createUser(
    }
 )
 
+db.createUser(
+   {
+     user: "mgdomaines",
+     pwd: "PWD_MGPROCESSUS",
+     roles:
+       [
+         { role: "readWrite", db: "mg-maple" }
+       ]
+   }
+)
+
 // Creation d'usagers pour les appareils
 db.createUser(
    {
