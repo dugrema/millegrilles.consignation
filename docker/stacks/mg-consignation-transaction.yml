@@ -71,6 +71,37 @@ services:
     secrets:
       - mg.mgpprocessus.json
 
+  # Script Python pour executer les processus
+  domaines-python:
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.4.2
+    hostname: domaines-python.maple.millegrilles.mdugre.info
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.python == true
+          - node.labels.millegrilles.domaines == true
+      resources:
+        limits:
+          cpus: "0.20"
+          memory: 50M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
+      MG_NOM_MILLEGRILLE: maple
+      MG_MQ_HOST: rabbitmq
+      MG_MQ_USER: mgdomaines
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: nocert
+      MG_MONGO_USER: mgdomaines
+    networks:
+      - mg_net
+    secrets:
+      - mg.mgdomaines.json
+
 networks:
   mg_net:
     external: true
@@ -81,5 +112,6 @@ secrets:
     external: true
   mg.mgpprocessus.json:
     external: true
-
+  mg.mgdomaines.json:
+    external: true
 
