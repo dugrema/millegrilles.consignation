@@ -4,6 +4,16 @@ use admin
 // Changer un mot de passe au besoin
 //db.changeUserPassword('admin','<new_password>')
 
+// Ajouter un role
+/* 
+db.grantRolesToUser( 
+  "cuisine", 
+  [ 
+    {role: "read", db: "mg-maple"}  
+  ]
+)
+*/
+
 db.createUser(
     {
       user: "mathieu",
