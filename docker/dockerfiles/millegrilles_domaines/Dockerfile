@@ -1,9 +1,12 @@
 # Image pour scripts python MilleGrilles domaines
 # Note: les fichiers doivent avoir ete copies dans le repertoire courant sous src/
 
-FROM registry.maple.mdugre.info:5000/millegrilles_consignation_python:v0.2.1
+FROM registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.4.3
 
-COPY src/ ./
+COPY scripts/ $BUILD_FOLDER/scripts
+COPY src/ $SRC_FOLDER/
 
-CMD ["millegrilles/script_demarrergestionnaire.py", "-m", "mgdomaines.appareils.SenseursPassifs", "-c", "GestionnaireSenseursPassifs"]
+RUN $BUILD_FOLDER/scripts/setup.sh
+
+CMD ["demarrer_domaine.py", "-m", "mgdomaines.appareils.SenseursPassifs", "-c", "GestionnaireSenseursPassifs"]
 
