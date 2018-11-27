@@ -59,16 +59,17 @@ services:
         condition: any
         delay: 30s
     environment:
-      MG_CONFIG_JSON: /run/secrets/mg.transactions.json
+      MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
       MG_NOM_MILLEGRILLE: maple
       MG_MQ_HOST: rabbitmq
+      MG_MQ_USER: mgprocessus
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
-      MG_MONGO_USER: transaction
+      MG_MONGO_USER: mgprocessus
     networks:
       - mg_net
     secrets:
-      - mg.transactions.json
+      - mg.mgpprocessus.json
 
 networks:
   mg_net:
@@ -78,4 +79,7 @@ networks:
 secrets:
   mg.transactions.json:
     external: true
+  mg.mgpprocessus.json:
+    external: true
+
 
