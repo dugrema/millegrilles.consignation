@@ -18,8 +18,8 @@ services:
           - node.labels.millegrilles.python == true
       resources:
        limits:
-          cpus: "0.20"
-          memory: 50M
+          cpus: "2.00"
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s

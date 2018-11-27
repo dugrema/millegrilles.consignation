@@ -18,8 +18,8 @@ services:
           - node.labels.millegrilles.database == true
       resources:
         limits:
-          cpus: "2.0"
-          memory: 1.5G
+          cpus: "3.0"
+          memory: 2.0G
       restart_policy:
         condition: any
         delay: 30s
@@ -48,8 +48,8 @@ services:
           - node.labels.millegrilles.mq == true
       resources:
         limits:
-          cpus: "0.50"
-          memory: 1G
+          cpus: "1.50"
+          memory: 2.7G
       restart_policy:
         condition: any
         delay: 30s
@@ -72,8 +72,8 @@ services:
           - node.labels.netzone.public == true
       resources:
         limits:
-          cpus: "0.50"
-          memory: 1G
+          cpus: "1.00"
+          memory: 500M
       restart_policy:
         condition: any
         delay: 30s
