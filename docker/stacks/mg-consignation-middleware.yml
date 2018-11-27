@@ -63,7 +63,7 @@ services:
 
   # Proxy avec nginx
   nginx:
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v0.3.2
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v0.5.2
     hostname: www.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
