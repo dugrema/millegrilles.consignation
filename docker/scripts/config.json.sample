@@ -1,0 +1,4 @@
+{
+  "MG_MONGO_PASSWORD": "pwdA",
+  "MG_MQ_PASSWORD": "pwdB"
+}
