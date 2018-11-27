@@ -33,7 +33,7 @@ db.createUser(
 db.createUser(
     {
       user: "oplogger",
-      pwd: "PWD_OPLOGGER",
+      pwd: "p1234",
       roles: 
         [ 
           {role: "read", db: "local"} 
@@ -101,4 +101,17 @@ db.createUser(
    }
 )
 
+// Usagers web
 
+// Creer un usager coupdoeil pour meteor avec access au oplog
+db.createUser(
+   {
+     user: "coupdoeilmeteor",
+     pwd: "higCYUD096aQUI67",
+     roles:
+       [
+         { role: "read", db: "mg-maple" },
+         { role: "read", db: "local" }
+       ]
+   }
+)
