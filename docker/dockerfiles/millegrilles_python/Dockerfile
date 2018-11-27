@@ -17,5 +17,5 @@ RUN $BUILD_FOLDER/scripts/setup.sh
 
 WORKDIR /opt/millegrilles/dist
 ENTRYPOINT ["python3"]
-CMD ["millegrilles/transaction/ConsignateurTransaction.py"]
+CMD ["demarrer.py"]
 
