@@ -3,17 +3,19 @@
 
 FROM python:3.7
 
-WORKDIR /usr/src/app
+ENV BUILD_FOLDER=/opt/millegrilles/build \
+    BUNDLE_FOLDER=/opt/millegrilles/dist \
+    c=/opt/millegrilles/build/src \
+    PYTHONPATH=/opt/millegrilles/dist \
+    MG_MQ_HOST=mq.maple.millegrilles.mdugre.info \
+    MG_MONGO_HOST=mongo.maple.millegrilles.mdugre.info
 
-ENV PYTHONPATH /usr/src/app
+COPY scripts/ $BUILD_FOLDER/scripts
+COPY src/ $SRC_FOLDER/
 
-# Variables d'environnement
-ENV MG_MQ_HOST rabbitmq
-ENV MG_MONGO_HOST mongo
+RUN $BUILD_FOLDER/scripts/setup.sh
 
-COPY src/ ./
-RUN pip install --no-cache-dir -r requirements.txt
-
+WORKDIR /opt/millegrilles/dist
 ENTRYPOINT ["python3"]
 CMD ["millegrilles/transaction/ConsignateurTransaction.py"]
 
