@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
 import mysql.connector
+import traceback
 import pika
 import json
 import uuid
 import datetime
 from decimal import Decimal
-
+from pika.credentials import PlainCredentials
 
 class ImportDataToTransaction:
 
@@ -16,7 +17,7 @@ class ImportDataToTransaction:
         self._channel = None
         self._cursor = None
         self._taille_batch = 20
-        self._taille_max = 1000000
+        self._taille_max = 2000000
 
         self._transaction_header = {
             'signature_contenu': '',
@@ -31,7 +32,19 @@ class ImportDataToTransaction:
                                         database='lectmeteo',
                                         autocommit=True)
 
-        self._connectionmq = pika.BlockingConnection(pika.ConnectionParameters('127.0.1.1'))
+        credentials = PlainCredentials(
+            'cuisine',
+            'jojCUSH1956o',
+            erase_on_connect=True
+        )
+        self._connectionmq = pika.BlockingConnection(
+            pika.ConnectionParameters(
+                host='192.168.1.28',
+                port=5671,
+                credentials=credentials,
+                ssl=True  # Mettre SSL lorsque ca fonctionnera avec RabbitMQ
+            )
+        )
         self._channel = self._connectionmq.channel()
 
 
@@ -99,7 +112,7 @@ from lectmeteo.lect_hist hist
     else cast(hist.location as signed)
 end
 where hist.location != '0'
-  and hist.temps_lect between '2018-11-20' and '2018-11-21'
+  and hist.temps_lect between '2018-07-01' and '2018-08-01'
             
                  LIMIT %s''' % self._taille_max)
 
@@ -111,7 +124,12 @@ where hist.location != '0'
             for ligne in resultat:
                 ligne_dict = self.traiter_ligne(ligne)
                 transaction = self.preparer_transaction(ligne_dict)
-                self.transmettre_transaction(transaction)
+                try:
+                    self.transmettre_transaction(transaction)
+                except Exception as e:
+                    print("Erreur rendu a transaction: %s" % str(transaction))
+                    traceback.print_exc()
+                    raise e
 
             resultat = self._cursor.fetchmany(size=self._taille_batch)
 
@@ -161,7 +179,7 @@ where hist.location != '0'
 
     def transmettre_transaction(self, message):
         self._channel.basic_publish(exchange='millegrilles.evenements',
-                              routing_key='sansnom.transaction.nouvelle',
+                              routing_key='maple.transaction.nouvelle',
                               body=message,
                               properties=pika.BasicProperties(delivery_mode=2))
 

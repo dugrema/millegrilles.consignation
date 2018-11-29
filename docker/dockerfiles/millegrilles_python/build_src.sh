@@ -3,7 +3,9 @@
 FOLDER_SRC=src
 GIT_SERVEUR=ssh://repository.maple.mdugre.info/var/lib/git
 GIT_PROJET=MilleGrilles.consignation.python
-BRANCH=v0.5
+#BRANCH=v0.5
+
+source image_info.txt
 
 if [ ! -d $FOLDER_SRC/$GIT_PROJET ]; then
   echo "Creation folder $FOLDER_SRC/$GIT_PROJET"
