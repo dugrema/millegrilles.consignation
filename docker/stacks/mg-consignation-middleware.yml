@@ -55,6 +55,7 @@ services:
         delay: 30s
     ports:
       - "5671:5671"
+#      - "15671:443"
     networks:
       - mg_net
     secrets:
@@ -62,29 +63,29 @@ services:
       - ssl.maple.millegrilles.key
 
   # Proxy avec nginx
-#  nginx:
-#    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v0.5.2
-#    hostname: www.maple.millegrilles.mdugre.info
-#    deploy:
-#      replicas: 1
-#      placement:
-#        constraints:
-#          - node.labels.netzone.public == true
-#      resources:
-#        limits:
-#          cpus: "1.00"
-#          memory: 500M
-#      restart_policy:
-#        condition: any
-#        delay: 30s
-##    ports:
-##     - "30080:80"
-##    - "30443:443"
-#    networks:
-#      - mg_net
-#    secrets:
-#      - ssl.maple.millegrilles.cert
-#      - ssl.maple.millegrilles.key
+  nginx:
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v0.5.2
+    hostname: www.maple.millegrilles.mdugre.info
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.public == true
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 500M
+      restart_policy:
+        condition: any
+        delay: 30s
+#    ports:
+#     - "30080:80"
+#    - "30443:443"
+    networks:
+      - mg_net
+    secrets:
+      - ssl.maple.millegrilles.cert
+      - ssl.maple.millegrilles.key
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
@@ -119,7 +120,7 @@ services:
       ME_CONFIG_SITE_SSL_ENABLED: 'true'
       ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/ssl.maple.millegrilles.cert'
       ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/ssl.maple.millegrilles.key'
-      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+#      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
 # Environnement developpement
 #      ME_CONFIG_MONGODB_URL: 'mongodb://192.168.1.110:27017/admin?ssl=true'
 #      MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password

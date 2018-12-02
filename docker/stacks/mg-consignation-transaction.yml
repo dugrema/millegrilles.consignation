@@ -7,7 +7,7 @@ services:
 
   # Script Python de persistance des transactions
   transactions-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.4.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.6.1
     hostname: transactions-python.maple.millegrilles.mdugre.info
 #    command: -c "import time; time.sleep(1000)"
     deploy:
@@ -18,8 +18,8 @@ services:
           - node.labels.millegrilles.python == true
       resources:
        limits:
-          cpus: "2.00"
-          memory: 100M
+          cpus: "1.50"
+          memory: 200M
       restart_policy:
         condition: any
         delay: 30s
@@ -41,7 +41,7 @@ services:
 
   # Script Python pour executer les processus
   processus-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.4.1
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.1
     hostname: processus-python.maple.millegrilles.mdugre.info
     command: demarrer_mgp.py
     deploy:
@@ -53,8 +53,8 @@ services:
           - node.labels.millegrilles.mgp == true
       resources:
         limits:
-          cpus: "0.20"
-          memory: 50M
+          cpus: "1.00"
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s
@@ -73,7 +73,7 @@ services:
 
   # Script Python pour executer les processus
   domaines-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.4.2
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.1
     hostname: domaines-python.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
@@ -84,7 +84,7 @@ services:
           - node.labels.millegrilles.domaines == true
       resources:
         limits:
-          cpus: "0.20"
+          cpus: "0.50"
           memory: 50M
       restart_policy:
         condition: any
@@ -114,4 +114,3 @@ secrets:
     external: true
   mg.mgdomaines.json:
     external: true
-
