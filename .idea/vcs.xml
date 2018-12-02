@@ -2,5 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/docker/dockerfiles/millegrilles_domaines/src/MilleGrilles.domaines.python" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/docker/dockerfiles/millegrilles_python/src/MilleGrilles.consignation.python" vcs="Git" />
   </component>
 </project>
