@@ -7,7 +7,7 @@ services:
 
   # Script Python de persistance des transactions
   transactions-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.6.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.6.3
     hostname: transactions-python.maple.millegrilles.mdugre.info
 #    command: -c "import time; time.sleep(1000)"
     deploy:
@@ -41,7 +41,7 @@ services:
 
   # Script Python pour executer les processus
   processus-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.1
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.3
     hostname: processus-python.maple.millegrilles.mdugre.info
     command: demarrer_mgp.py
     deploy:
@@ -73,7 +73,7 @@ services:
 
   # Script Python pour executer les processus
   domaines-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.1
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.3
     hostname: domaines-python.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
