@@ -1,6 +1,6 @@
 # m h  dom mon dow   command
 
-# Timers MilleGrille dev2
-0 *    * * *         /home/mathieu/millegrilles-timers/start-horaire.sh
-0 0    * * *         /home/mathieu/millegrilles-timers/start-quotidien.sh
-
+# Timers MilleGrille infraserv1
+0 *  * * *  /home/millegrilles/scripts/trigger_horaire.sh
+0 0  * * *  /home/millegrilles/scripts/trigger_quotidien.sh
+12 */2 * * * /home/millegrilles/scripts/trigger_download_weathergcca.sh
