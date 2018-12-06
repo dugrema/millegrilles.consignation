@@ -5,11 +5,11 @@ services:
 
   # Base de donnees MongoDB
   mongo:
-    image: registry.maple.mdugre.info:5000/mg_mongo.x86_64:v0.3.1
+    image: registry.maple.mdugre.info:5000/mg_mongo:v0.7.1
     command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/ssl.maple.millegrilles.key_cert
     hostname: mongo.maple.millegrilles.mdugre.info
     volumes:
-      - mg-consignation-mongo:/data/db
+      - /mnt/mongodata1:/data/db
     deploy:
       replicas: 1
       placement:
@@ -36,7 +36,7 @@ services:
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.4.2
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq:v0.7.1
     hostname: mq.maple.millegrilles.mdugre.info
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
@@ -64,7 +64,7 @@ services:
 
   # Proxy avec nginx
   nginx:
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v0.5.2
+    image: registry.maple.mdugre.info:5000/mg_nginx:v0.7.1
     hostname: www.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
@@ -89,7 +89,7 @@ services:
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
-    image: registry.maple.mdugre.info:5000/mg_md_mongo_express.x86_64:v0.4.1
+    image: registry.maple.mdugre.info:5000/mg_md_mongo_express:v0.7.1
 #    command: node app --url mongodb://mongo:27017/admin?ssl=true
     depends_on:
         - mongo
@@ -134,8 +134,8 @@ services:
       - ssl.maple.millegrilles.key
 
 volumes:
-  mg-consignation-mongo:
-    name: mg-consignation-mongo
+#  mg-consignation-mongo:
+#    name: mg-consignation-mongo
   mg-consignation-rabbitmq:
     name: mg-consignation-rabbitmq
 
