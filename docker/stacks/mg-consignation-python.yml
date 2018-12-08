@@ -7,9 +7,8 @@ services:
 
   # Script Python de persistance des transactions
   transactions-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.6.3
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.8.0
     hostname: transactions-python.maple.millegrilles.mdugre.info
-#    command: -c "import time; time.sleep(1000)"
     deploy:
       replicas: 1
       placement:
@@ -27,21 +26,17 @@ services:
       MG_CONFIG_JSON: /run/secrets/mg.transactions.json
       MG_NOM_MILLEGRILLE: maple
       MG_MQ_HOST: rabbitmq
-#      MG_MQ_PASSWORD: gopEM219umESS4
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
       MG_MONGO_USER: transaction
-#      MG_MONGO_PASSWORD: example
     networks:
       - mg_net
-#    links:
-#      - rabbitmq:mq.maple.millegrilles.mdugre.info
     secrets:
       - mg.transactions.json
 
   # Script Python pour executer les processus
   processus-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.3
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.8.0
     hostname: processus-python.maple.millegrilles.mdugre.info
     command: demarrer_mgp.py
     deploy:
@@ -73,7 +68,7 @@ services:
 
   # Script Python pour executer les processus
   domaines-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.6.3
+    image: registry.maple.mdugre.info:5000/millegrilles_domaines_python.x86_64:v0.8.0
     hostname: domaines-python.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
