@@ -9,7 +9,7 @@ services:
     command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/ssl.maple.millegrilles.key_cert
     hostname: mongo.maple.millegrilles.mdugre.info
     volumes:
-      - mg-consignation-mongo:/data/db
+      - /mnt/mongodata1:/data/db
     deploy:
       replicas: 1
       placement:
@@ -36,7 +36,7 @@ services:
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   rabbitmq:
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.4.2
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.8.2
     hostname: mq.maple.millegrilles.mdugre.info
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
@@ -48,8 +48,8 @@ services:
           - node.labels.millegrilles.mq == true
       resources:
         limits:
-          cpus: "1.50"
-          memory: 2.7G
+          cpus: "2.00"
+          memory: 750M
       restart_policy:
         condition: any
         delay: 30s
