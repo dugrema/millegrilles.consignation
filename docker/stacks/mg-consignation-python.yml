@@ -7,7 +7,7 @@ services:
 
   # Script Python de persistance des transactions
   transactions-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.1
     hostname: transactions-python.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
@@ -37,7 +37,7 @@ services:
 
   # Ceduleur Python qui transmet un message a toutes les minutes
   ceduleur-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.1
     hostname: ceduleur-python.maple.millegrilles.mdugre.info
     command: demarrer_ceduleur.py
     deploy:
@@ -64,9 +64,9 @@ services:
 
   # Script Python pour executer les processus
   processus-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.1
     hostname: processus-python.maple.millegrilles.mdugre.info
-    command: demarrer_mgp.py
+    command: demarrer_mgp.py --info
     deploy:
       replicas: 1
       placement:
@@ -96,7 +96,8 @@ services:
 
   # Script Python pour executer les processus
   domaines-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.1
+    command: demarrer_domaine.py --info
     hostname: domaines-python.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
@@ -120,6 +121,7 @@ services:
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
       MG_MONGO_USER: mgdomaines
+      MG_DOMAINES_JSON: /opt/millegrilles/dist/domaines.json
     networks:
       - mg_net
     secrets:
