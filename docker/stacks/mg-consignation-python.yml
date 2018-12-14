@@ -26,7 +26,7 @@ services:
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.transactions.json
       MG_NOM_MILLEGRILLE: maple
-      MG_MQ_HOST: rabbitmq
+      MG_MQ_HOST: mq
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
       MG_MONGO_USER: transaction
@@ -56,7 +56,7 @@ services:
     environment:
       MG_NOM_MILLEGRILLE: maple
       MG_CONFIG_JSON: /run/secrets/mg.notifications.json
-      MG_MQ_HOST: rabbitmq
+      MG_MQ_HOST: mq
     networks:
       - mg_net
     secrets:
@@ -84,7 +84,7 @@ services:
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
       MG_NOM_MILLEGRILLE: maple
-      MG_MQ_HOST: rabbitmq
+      MG_MQ_HOST: mq
       MG_MQ_USER: mgprocessus
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
@@ -116,7 +116,7 @@ services:
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
       MG_NOM_MILLEGRILLE: maple
-      MG_MQ_HOST: rabbitmq
+      MG_MQ_HOST: mq
       MG_MQ_USER: mgdomaines
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
