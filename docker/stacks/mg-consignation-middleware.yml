@@ -35,7 +35,7 @@ services:
       - ssl.maple.millegrilles.key_cert
 
   # Systeme de messagerie RabbitMQ, incluant web manager
-  rabbitmq:
+  mq:
     image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.8.2
     hostname: mq.maple.millegrilles.mdugre.info
     volumes:
@@ -55,6 +55,7 @@ services:
         delay: 30s
     ports:
       - "5671:5671"
+      - "5673:5672"
 #      - "15671:443"
     networks:
       - mg_net
