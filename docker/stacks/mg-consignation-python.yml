@@ -7,7 +7,7 @@ services:
 
   # Script Python de persistance des transactions
   transactions-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.10
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.10.0
     hostname: transactions-python.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
@@ -37,7 +37,7 @@ services:
 
   # Ceduleur Python qui transmet un message a toutes les minutes
   ceduleur-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.10
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.10.0
     hostname: ceduleur-python.maple.millegrilles.mdugre.info
     command: demarrer_ceduleur.py
     deploy:
@@ -64,7 +64,7 @@ services:
 
   # Script Python pour executer les processus
   processus-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.10
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.10.0
     hostname: processus-python.maple.millegrilles.mdugre.info
     command: demarrer_mgp.py --info
     deploy:
@@ -89,6 +89,12 @@ services:
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
       MG_MONGO_USER: mgprocessus
+      MG_EMAIL_HOST: mail.mdugre.info
+      MG_EMAIL_PORT: 465
+      MG_EMAIL_USER: maple.millegrilles@mdugre.info
+      MG_EMAIL_PASSWORD: kikIL932cedWIC12
+      MG_EMAIL_FROM: maple.millegrilles@mdugre.info
+      MG_EMAIL_TO: mathieu.dugre@me.com
     networks:
       - mg_net
     secrets:
@@ -96,7 +102,7 @@ services:
 
   # Script Python pour executer les domaines
   domaines-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.9.10
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v0.10.0
     command: demarrer_domaine.py --info
     hostname: domaines-python.maple.millegrilles.mdugre.info
     deploy:
