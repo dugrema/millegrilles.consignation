@@ -36,7 +36,7 @@ services:
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.8.2
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.10.4
     hostname: mq.maple.millegrilles.mdugre.info
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
@@ -56,7 +56,7 @@ services:
     ports:
       - "5671:5671"
       - "5673:5672"
-#      - "15671:443"
+      - "15671:443"
     networks:
       - mg_net
     secrets:
@@ -107,8 +107,8 @@ services:
       restart_policy:
         condition: any
         delay: 30s
-#    ports:
-#      - 8081:8081
+    ports:
+      - 8081:443
     environment:
       ME_CONFIG_BASICAUTH_USERNAME: mathieu
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
