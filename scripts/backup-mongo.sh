@@ -11,9 +11,9 @@ BACKUP_ROOT=/mnt/backup
 
 # Preparer folder backup sur host
 BACKUP_LEAF=backup_maple_$DATE
-mkdir -p $BACKUP_MAPPED_FOLDER/$BACKUP_LEAF
-chown mathieu:docker $BACKUP_MAPPED_FOLDER/$BACKUP_LEAF
-chmod 770 $BACKUP_MAPPED_FOLDER/$BACKUP_LEAF
+mkdir -p "$BACKUP_MAPPED_FOLDER/$BACKUP_LEAF"
+chown `whoami`:docker "$BACKUP_MAPPED_FOLDER/$BACKUP_LEAF"
+chmod 770 "$BACKUP_MAPPED_FOLDER/$BACKUP_LEAF"
 
 # Nom du folder backup dans container
 BACKUP_FOLDER=$BACKUP_ROOT/$BACKUP_LEAF
