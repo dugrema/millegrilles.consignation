@@ -1,16 +1,25 @@
 // Creation d'usagers administrateur pour Mongo dans MilleGrilles
-use admin 
+use admin
 
 // Changer un mot de passe au besoin
 //db.changeUserPassword('admin','<new_password>')
 
 // Ajouter un role
-/* 
-db.grantRolesToUser( 
-  "cuisine", 
-  [ 
-    {role: "read", db: "mg-maple"}  
+/*
+db.grantRolesToUser(
+  "cuisine",
+  [
+    {role: "read", db: "mg-maple"}
   ]
+)
+
+// Revoke
+db.revokeRolesFromUser(
+   "coupdoeil",
+   [{
+     "role": "readWrite",
+     "db": "mg-sansnom"
+   }]
 )
 */
 
@@ -34,9 +43,9 @@ db.createUser(
     {
       user: "oplogger",
       pwd: "p1234",
-      roles: 
-        [ 
-          {role: "read", db: "local"} 
+      roles:
+        [
+          {role: "read", db: "local"}
         ]
     }
 )
@@ -107,11 +116,22 @@ db.createUser(
 db.createUser(
    {
      user: "coupdoeilmeteor",
-     pwd: "higCYUD096aQUI67",
+     pwd: "PWD",
      roles:
        [
          { role: "read", db: "mg-maple" },
          { role: "read", db: "local" }
+       ]
+   }
+)
+
+db.createUser(
+   {
+     user: "backup",
+     pwd: "PWD",
+     roles:
+       [
+         "backup"
        ]
    }
 )
