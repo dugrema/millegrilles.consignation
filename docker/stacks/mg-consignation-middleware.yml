@@ -6,8 +6,8 @@ services:
   # Base de donnees MongoDB
   mongo:
     image: registry.maple.mdugre.info:5000/mg_mongo.x86_64:v0.3.1
-    command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/ssl.maple.millegrilles.key_cert
-    hostname: mongo.maple.millegrilles.mdugre.info
+    command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/ssl.pivoine.millegrilles.key_cert
+    hostname: mongo.pivoine.millegrilles.mdugre.info
     volumes:
       - /mnt/mongodata1:/data/db
     deploy:
@@ -18,8 +18,8 @@ services:
           - node.labels.millegrilles.database == true
       resources:
         limits:
-          cpus: "3.0"
-          memory: 2.0G
+          cpus: "1.5"
+          memory: 1.0G
       restart_policy:
         condition: any
         delay: 30s
@@ -32,12 +32,13 @@ services:
       - mg_net
     secrets:
       - mongo.root.password
-      - ssl.maple.millegrilles.key_cert
+      - ssl.pivoine.millegrilles.key_cert
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.10.4
-    hostname: mq.maple.millegrilles.mdugre.info
+    image: mg_rabbitmq.x86_64:v0.10.4.3
+#    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.10.4
+    hostname: mq.pivoine.millegrilles.mdugre.info
     volumes:
       - mg-consignation-rabbitmq:/var/lib/rabbitmq
     deploy:
@@ -56,17 +57,18 @@ services:
     ports:
       - "5671:5671"
       - "5673:5672"
-      - "15671:443"
+#      - "15671:443"
+      - "15672:15672"
     networks:
       - mg_net
     secrets:
-      - ssl.maple.millegrilles.cert
-      - ssl.maple.millegrilles.key
+      - ssl.pivoine.millegrilles.cert
+      - ssl.pivoine.millegrilles.key
 
   # Proxy avec nginx
   nginx:
     image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v0.5.2
-    hostname: www.maple.millegrilles.mdugre.info
+    hostname: www.pivoine.millegrilles.mdugre.info
     deploy:
       replicas: 1
       placement:
@@ -85,8 +87,8 @@ services:
     networks:
       - mg_net
     secrets:
-      - ssl.maple.millegrilles.cert
-      - ssl.maple.millegrilles.key
+      - ssl.pivoine.millegrilles.cert
+      - ssl.pivoine.millegrilles.key
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
@@ -119,8 +121,8 @@ services:
       VCAP_APP_HOST: '::'
       VCAP_APP_PORT: 443
       ME_CONFIG_SITE_SSL_ENABLED: 'true'
-      ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/ssl.maple.millegrilles.cert'
-      ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/ssl.maple.millegrilles.key'
+      ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/ssl.pivoine.millegrilles.cert'
+      ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/ssl.pivoine.millegrilles.key'
 #      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
 # Environnement developpement
 #      ME_CONFIG_MONGODB_URL: 'mongodb://192.168.1.110:27017/admin?ssl=true'
@@ -131,12 +133,12 @@ services:
     secrets:
       - mongo.root.password
       - mongoexpress.web.password
-      - ssl.maple.millegrilles.cert
-      - ssl.maple.millegrilles.key
+      - ssl.pivoine.millegrilles.cert
+      - ssl.pivoine.millegrilles.key
 
 volumes:
   mg-consignation-mongo:
-    name: mg-consignation-mongo
+    name: /mnt/mongodata1
   mg-consignation-rabbitmq:
     name: mg-consignation-rabbitmq
 
@@ -145,12 +147,15 @@ secrets:
     external: true
   mongoexpress.web.password:
     external: true
-  ssl.maple.millegrilles.cert:
+  ssl.pivoine.millegrilles.cert:
     external: true
-  ssl.maple.millegrilles.key:
+    name: ssl.pivoine.millegrilles.fullchain.20181224
+  ssl.pivoine.millegrilles.key:
     external: true
-  ssl.maple.millegrilles.key_cert:
+    name: ssl.pivoine.millegrilles.key.20181224
+  ssl.pivoine.millegrilles.key_cert:
     external: true
+    name: ssl.pivoine.millegrilles.key_cert.20181224
 
 networks:
   mg_net:
