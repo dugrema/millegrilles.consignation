@@ -25,8 +25,10 @@ services:
         delay: 30s
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.transactions.json
-      MG_NOM_MILLEGRILLE: maple
+      MG_NOM_MILLEGRILLE: pivoine
       MG_MQ_HOST: mq
+      MG_MQ_PORT: 5672
+      MG_MQ_SSL: "off"
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
       MG_MONGO_USER: transaction
@@ -54,13 +56,16 @@ services:
         condition: any
         delay: 30s
     environment:
-      MG_NOM_MILLEGRILLE: maple
-      MG_CONFIG_JSON: /run/secrets/mg.notifications.json
+      MG_NOM_MILLEGRILLE: pivoine
+      MG_CONFIG_JSON: /run/secrets/mg.ceduleur.json
       MG_MQ_HOST: mq
+      MG_MQ_PORT: 5672
+      MG_MQ_SSL: "off"
+      MG_MQ_USER: cedule
     networks:
       - mg_net
     secrets:
-      - mg.notifications.json
+      - mg.ceduleur.json
 
   # Script Python pour executer les processus
   processus-python:
@@ -83,9 +88,11 @@ services:
         delay: 30s
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
-      MG_NOM_MILLEGRILLE: maple
+      MG_NOM_MILLEGRILLE: pivoine
       MG_MQ_HOST: mq
       MG_MQ_USER: mgprocessus
+      MG_MQ_PORT: 5672
+      MG_MQ_SSL: "off"
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
       MG_MONGO_USER: mgprocessus
@@ -121,9 +128,11 @@ services:
         delay: 30s
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
-      MG_NOM_MILLEGRILLE: maple
+      MG_NOM_MILLEGRILLE: pivoine
       MG_MQ_HOST: mq
       MG_MQ_USER: mgdomaines
+      MG_MQ_PORT: 5672
+      MG_MQ_SSL: "off"
       MG_MONGO_HOST: mongo
       MG_MONGO_SSL: nocert
       MG_MONGO_USER: mgdomaines
@@ -141,9 +150,14 @@ networks:
 secrets:
   mg.transactions.json:
     external: true
-  mg.notifications.json:
+    name: mg.transactions.json.1
+  mg.ceduleur.json:
     external: true
+    name: mg.ceduleur.json.1
   mg.mgpprocessus.json:
     external: true
+    name: mg.mgpprocessus.json.1
   mg.mgdomaines.json:
     external: true
+    name: mg.mgdomaines.json.1
+

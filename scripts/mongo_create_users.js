@@ -110,6 +110,17 @@ db.createUser(
    }
 )
 
+db.createUser(
+   {
+     user: "chambre",
+     pwd: "PWD_CHAMBRE",
+     roles:
+       [
+         { role: "read", db: "mg-pivoine" }
+       ]
+   }
+)
+
 // Usagers web
 
 // Creer un usager coupdoeil pour meteor avec access au oplog
@@ -119,7 +130,7 @@ db.createUser(
      pwd: "PWD",
      roles:
        [
-         { role: "read", db: "mg-maple" },
+         { role: "read", db: "mg-pivoine" },
          { role: "read", db: "local" }
        ]
    }
