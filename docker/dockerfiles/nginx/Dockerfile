@@ -11,8 +11,10 @@ COPY . $APP_SOURCE_DIR
 EXPOSE 80
 EXPOSE 443
 
-RUN http_proxy=http://192.168.1.28:8000 && export http_proxy && \
-    $APP_SOURCE_DIR/scripts/setup.sh && \
+VOLUME /etc/nginx/conf.d
+VOLUME /usr/share/nginx/html
+
+RUN $APP_SOURCE_DIR/scripts/setup.sh && \
     rm -rf $APP_SOURCE_DIR
-    
+
 CMD ["/opt/nginx/dist/run.sh"]
