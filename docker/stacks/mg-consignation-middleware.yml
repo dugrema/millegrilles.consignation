@@ -67,8 +67,10 @@ services:
 
   # Proxy avec nginx
   nginx:
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v0.5.2
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v1.1-pivoine.1-pivoine
     hostname: www.pivoine.millegrilles.mdugre.info
+    volumes:
+      - /usr/share/nginx/pivoine.millegrilles/conf.d:/etc/nginx/conf.d
     deploy:
       replicas: 1
       placement:
@@ -81,9 +83,9 @@ services:
       restart_policy:
         condition: any
         delay: 30s
-#    ports:
-#     - "30080:80"
-#    - "30443:443"
+    ports:
+     - "30080:80"
+     - "30443:443"
     networks:
       - mg_net
     secrets:
@@ -141,6 +143,10 @@ volumes:
     name: /mnt/mongodata1
   mg-consignation-rabbitmq:
     name: mg-consignation-rabbitmq
+  mg-consignation-nginx-etc:
+    name: /usr/share/nginx/etc
+  mg-consignation-nginx-www:
+    name: /usr/share/nginx/html
 
 secrets:
   mongo.root.password:
