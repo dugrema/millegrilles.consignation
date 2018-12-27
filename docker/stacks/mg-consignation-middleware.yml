@@ -71,7 +71,7 @@ services:
     hostname: www.pivoine.millegrilles.mdugre.info
     volumes:
       - /usr/share/nginx/pivoine/conf.d:/etc/nginx/conf.d
-      - /usr/share/nginx/pivoine/html:/etc/nginx/html
+      - /usr/share/nginx/pivoine/html:/usr/share/nginx/html
     deploy:
       replicas: 1
       placement:
@@ -156,13 +156,13 @@ secrets:
     external: true
   ssl.pivoine.millegrilles.cert:
     external: true
-    name: ssl.pivoine.millegrilles.fullchain.20181224
+    name: ssl.pivoine.millegrilles.fullchain.20181226
   ssl.pivoine.millegrilles.key:
     external: true
-    name: ssl.pivoine.millegrilles.key.20181224
+    name: ssl.pivoine.millegrilles.privkey.20181226
   ssl.pivoine.millegrilles.key_cert:
     external: true
-    name: ssl.pivoine.millegrilles.key_cert.20181224
+    name: ssl.pivoine.millegrilles.key_cert.20181226
 
 networks:
   mg_net:
