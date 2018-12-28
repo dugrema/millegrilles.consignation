@@ -50,6 +50,18 @@ db.createUser(
     }
 )
 
+db.createUser(
+    {
+      user: "dev",
+      pwd: "p1234",
+      roles:
+        [
+          {role: "read", db: "local"},
+          {role: "readWrite", db: "mg-sansnom"}
+        ]
+    }
+)
+
 // Creation d'usagers pour les scripts python
 
 // Persistance de transactions
