@@ -163,7 +163,11 @@ db.createUser(
 db.createUser(
    {
      user: "vmhost5",
+<<<<<<< HEAD
      pwd: "7G3iTQ1f5962",
+=======
+     pwd: "PWD",
+>>>>>>> f80fa9fcb6c184be613c43bca0c10c7a9875b9a2
      roles:
        [
          { role: "read", db: "mg-pivoine" }
