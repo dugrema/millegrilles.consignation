@@ -158,3 +158,15 @@ db.createUser(
        ]
    }
 )
+
+// Creation d'usagers pour les appareils
+db.createUser(
+   {
+     user: "vmhost5",
+     pwd: "PWD",
+     roles:
+       [
+         { role: "read", db: "mg-pivoine" }
+       ]
+   }
+)
