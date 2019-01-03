@@ -7,7 +7,7 @@ services:
 
   # Script Python de persistance des transactions
   transactions-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.1.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
     hostname: transactions-python.maple.millegrilles.mdugre.info
     deploy:
       replicas: 1
@@ -39,7 +39,7 @@ services:
 
   # Ceduleur Python qui transmet un message a toutes les minutes
   ceduleur-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.1.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
     hostname: ceduleur-python.maple.millegrilles.mdugre.info
     command: demarrer_ceduleur.py
     deploy:
@@ -69,7 +69,7 @@ services:
 
   # Script Python pour executer les processus
   processus-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.1.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
     hostname: processus-python.maple.millegrilles.mdugre.info
     command: demarrer_mgp.py --info
     deploy:
@@ -109,7 +109,7 @@ services:
 
   # Script Python pour executer les domaines
   domaines-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.1.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
     command: demarrer_domaine.py --info
     hostname: domaines-python.maple.millegrilles.mdugre.info
     deploy:
