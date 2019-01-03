@@ -20,5 +20,5 @@ export $(cut -d= -f1 $ENV_NAME.env)
 
 $DOCKER_COMPOSE config > $ENV_NAME.yml
 
-echo -en "\nFichier $ENV_NAME.yml cree."
+echo -e "\nFichier $ENV_NAME.yml cree.\n"
 exit 0

@@ -7,8 +7,8 @@ services:
 
   # Script Python de persistance des transactions
   transactions-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
-    hostname: transactions-python.maple.millegrilles.mdugre.info
+    image: ${REGISTRY}/millegrilles_consignation_python${MG_PYTHON_IMAGE_VERSION}
+    hostname: transactions-python.${URL_DOMAIN}
     deploy:
       replicas: 1
       placement:
@@ -23,15 +23,12 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+    env_file:
+      - services.env
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.transactions.json
-      MG_NOM_MILLEGRILLE: pivoine
-      MG_MQ_HOST: mq
-      MG_MQ_PORT: 5672
-      MG_MQ_SSL: "off"
-      MG_MONGO_HOST: mongo
-      MG_MONGO_SSL: nocert
-      MG_MONGO_USER: transaction
+      MG_MQ_USER: ${MG_MQ_USER_TRANSACTION}
+      MG_MONGO_USER: ${MG_MONGO_USER_TRANSACTION}
     networks:
       - mg_net
     secrets:
@@ -39,8 +36,8 @@ services:
 
   # Ceduleur Python qui transmet un message a toutes les minutes
   ceduleur-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
-    hostname: ceduleur-python.maple.millegrilles.mdugre.info
+    image: ${REGISTRY}/millegrilles_consignation_python${MG_PYTHON_IMAGE_VERSION}
+    hostname: ceduleur-python.${URL_DOMAIN}
     command: demarrer_ceduleur.py
     deploy:
       replicas: 1
@@ -55,13 +52,11 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+    env_file:
+      - services.env
     environment:
-      MG_NOM_MILLEGRILLE: pivoine
       MG_CONFIG_JSON: /run/secrets/mg.ceduleur.json
-      MG_MQ_HOST: mq
-      MG_MQ_PORT: 5672
-      MG_MQ_SSL: "off"
-      MG_MQ_USER: cedule
+      MG_MQ_USER: ${MG_MQ_USER_CEDULE}
     networks:
       - mg_net
     secrets:
@@ -69,8 +64,8 @@ services:
 
   # Script Python pour executer les processus
   processus-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
-    hostname: processus-python.maple.millegrilles.mdugre.info
+    image: ${REGISTRY}/millegrilles_consignation_python${MG_PYTHON_IMAGE_VERSION}
+    hostname: processus-python.${URL_DOMAIN}
     command: demarrer_mgp.py --info
     deploy:
       replicas: 1
@@ -86,22 +81,18 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+    env_file:
+      - services.env
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
-      MG_NOM_MILLEGRILLE: pivoine
-      MG_MQ_HOST: mq
-      MG_MQ_USER: mgprocessus
-      MG_MQ_PORT: 5672
-      MG_MQ_SSL: "off"
-      MG_MONGO_HOST: mongo
-      MG_MONGO_SSL: nocert
-      MG_MONGO_USER: mgprocessus
-      MG_EMAIL_HOST: mail.mdugre.info
-      MG_EMAIL_PORT: 465
-      MG_EMAIL_USER: maple.millegrilles@mdugre.info
-      MG_EMAIL_PASSWORD: kikIL932cedWIC12
-      MG_EMAIL_FROM: maple.millegrilles@mdugre.info
-      MG_EMAIL_TO: mathieu.dugre@me.com
+      MG_MQ_USER: ${MG_MQ_USER_MGPROCESSUS}
+      MG_MONGO_USER: ${MG_MONGO_USER_MGPROCESSUS}
+      MG_EMAIL_HOST: ${MG_EMAIL_HOST}
+      MG_EMAIL_PORT: ${MG_EMAIL_PORT}
+      MG_EMAIL_USER: ${MG_EMAIL_USER}
+      MG_EMAIL_PASSWORD: ${MG_EMAIL_PASSWORD}
+      MG_EMAIL_FROM: ${MG_EMAIL_FROM}
+      MG_EMAIL_TO: ${MG_EMAIL_TO}
     networks:
       - mg_net
     secrets:
@@ -109,9 +100,9 @@ services:
 
   # Script Python pour executer les domaines
   domaines-python:
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.2.1
+    image: ${REGISTRY}/millegrilles_consignation_python${MG_PYTHON_IMAGE_VERSION}
     command: demarrer_domaine.py --info
-    hostname: domaines-python.maple.millegrilles.mdugre.info
+    hostname: domaines-python.${URL_DOMAIN}
     deploy:
       replicas: 1
       placement:
@@ -126,16 +117,12 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+    env_file:
+      - services.env
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
-      MG_NOM_MILLEGRILLE: pivoine
-      MG_MQ_HOST: mq
-      MG_MQ_USER: mgdomaines
-      MG_MQ_PORT: 5672
-      MG_MQ_SSL: "off"
-      MG_MONGO_HOST: mongo
-      MG_MONGO_SSL: nocert
-      MG_MONGO_USER: mgdomaines
+      MG_MQ_USER: ${MG_MQ_USER_DOMAINES}
+      MG_MONGO_USER: ${MG_MONGO_USER_DOMAINES}
       MG_DOMAINES_JSON: /opt/millegrilles/dist/domaines.json
     networks:
       - mg_net
@@ -150,14 +137,13 @@ networks:
 secrets:
   mg.transactions.json:
     external: true
-    name: mg.transactions.json.1
+    name: mg.transactions.json.${CONFIGURATION_TRANSACTION_VERSION}
   mg.ceduleur.json:
     external: true
-    name: mg.ceduleur.json.1
+    name: mg.ceduleur.json.${CONFIGURATION_CEDULEUR_VERSION}
   mg.mgpprocessus.json:
     external: true
-    name: mg.mgpprocessus.json.1
+    name: mg.mgpprocessus.json.${CONFIGURATION_MGPPROCESSUS_VERSION}
   mg.mgdomaines.json:
     external: true
-    name: mg.mgdomaines.json.1
-
+    name: mg.mgdomaines.json.${CONFIGURATION_MGDOMAINES_VERSION}
