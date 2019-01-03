@@ -16,9 +16,9 @@ fi
 
 # Exporter les variables du fichier d'environnement
 source $ENV_NAME.env
-`$(cut -d= -f1 $ENV_NAME.env)`
+export $(cut -d= -f1 $ENV_NAME.env)
 
 $DOCKER_COMPOSE config > $ENV_NAME.yml
 
-echo "Fichier $ENV_NAME.yml cree."
+echo -en "\nFichier $ENV_NAME.yml cree."
 exit 0
