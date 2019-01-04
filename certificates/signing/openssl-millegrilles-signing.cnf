@@ -1,14 +1,14 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
+KEYS            = ~/certificates/millegrilles/privkeys
 
 ####################################################################
 [ ca ]
 default_ca    = CA_default      # The default ca section
 
 [ CA_default ]
-base_dir      = .
 
-default_days     = 1830         # How long to certify for
+default_days     = 366         # How long to certify for
 default_crl_days = 180          # How long before next CRL
 default_md       = sha512       # Use public key default MD
 preserve         = no           # Keep passed DN ordering
@@ -18,8 +18,9 @@ x509_extensions = ca_extensions # The extensions to add to the cert
 email_in_dn     = no            # Don't concat the email in the DN
 copy_extensions = copy          # Required to copy SANs from CSR to cert
 
-certificate   = $base_dir/millegrilles_cacert.pem   # The CA certifcate
-private_key   = $base_dir/millegrilles_cakey.pem    # The CA private key
+base_dir      = .
+certificate   = $base_dir/millegrilles_signingcert.pem  # The CA certifcate
+private_key   = $KEYS/millegrilles_signingkey.pem       # The CA private key
 new_certs_dir = $base_dir              # Location for new certs after signing
 database      = $base_dir/index.txt    # Database index file
 serial        = $base_dir/serial.txt   # The current serial number
@@ -30,7 +31,7 @@ unique_subject = no  # Set to 'no' to allow creation of
 ####################################################################
 [ req ]
 default_bits       = 8192
-default_keyfile    = millegrilles_cakey.pem
+default_keyfile    = millegrilles_signingkey.pem
 distinguished_name = ca_distinguished_name
 x509_extensions    = ca_extensions
 string_mask        = utf8only
@@ -50,7 +51,7 @@ organizationName            = Organization Name (eg, company)
 organizationName_default    = MilleGrilles
 
 organizationalUnitName         = Organizational Unit (eg, division)
-organizationalUnitName_default = CA ROOT
+organizationalUnitName_default = Signature
 
 commonName         = Common Name (e.g. server FQDN or YOUR name)
 commonName_default = millegrilles.com
@@ -66,6 +67,7 @@ authorityKeyIdentifier = keyid:always, issuer
 basicConstraints       = critical, CA:true
 keyUsage               = keyCertSign, cRLSign
 
+####################################################################
 [ signing_policy ]
 countryName = optional
 stateOrProvinceName = optional
@@ -75,8 +77,9 @@ organizationalUnitName = optional
 commonName = supplied
 emailAddress = optional
 
+####################################################################
 [ signing_req ]
 subjectKeyIdentifier   = hash
 authorityKeyIdentifier = keyid,issuer
-basicConstraints       = CA:TRUE
-keyUsage               = keyCertSign, cRLSign
+basicConstraints       = CA:FALSE
+keyUsage               = digitalSignature, keyEncipherment
