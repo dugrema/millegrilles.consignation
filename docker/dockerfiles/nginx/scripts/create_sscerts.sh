@@ -8,8 +8,8 @@ cp server.key server.key.org
 openssl rsa -in server.key.org -out server.key
 openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt
 
-cp server.key ssl.maple.millegrilles.key
-cp server.crt ssl.maple.millegrilles.cert
+cp server.key pki.millegrilles.web.key
+cp server.crt pki.millegrilles.web.cert
 
 # Cleanup
 #rm server.*
