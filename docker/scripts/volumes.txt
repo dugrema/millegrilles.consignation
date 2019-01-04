@@ -1,1 +1,4 @@
-mg-consignation-rabbitmq
+mg-middleware-mongodata
+mg-middleware-rabbitmq
+mg-middleware-nginx-conf
+mg-middleware-nginx-www

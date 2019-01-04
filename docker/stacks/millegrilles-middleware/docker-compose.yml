@@ -6,10 +6,14 @@ services:
   # Base de donnees MongoDB
   mongo:
     image: ${REGISTRY}/mg_mongo${MONGO_IMAGE_VERSION}
-    command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/ssl.millegrilles.key_cert
+    command:
+      --replSet rs0
+      --sslMode requireSSL
+      --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
+      --sslCAFile /run/secrets/pki.millegrilles.ssl.ca
     hostname: mongo.${URL_DOMAIN}
     volumes:
-      - /mnt/mongodata1:/data/db
+      - ${MONGODB_DATA_MAPPING}:/data/db
     deploy:
       replicas: 1
       placement:
@@ -32,15 +36,15 @@ services:
       - mg_net
     secrets:
       - mongo.root.password
-      - ssl.millegrilles.key_cert
+      - pki.millegrilles.ssl.key_cert
+      - pki.millegrilles.ssl.ca
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:
     image: ${REGISTRY}/mg_rabbitmq${MQ_IMAGE_VERSION}
-#    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:v0.10.4
     hostname: mq.${URL_DOMAIN}
     volumes:
-      - mg-consignation-rabbitmq:/var/lib/rabbitmq
+      - mg-middleware-rabbitmq:/var/lib/rabbitmq
     deploy:
       replicas: 1
       placement:
@@ -62,16 +66,18 @@ services:
     networks:
       - mg_net
     secrets:
-      - ssl.millegrilles.cert
-      - ssl.millegrilles.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.web.cert
+      - pki.millegrilles.web.key
 
   # Proxy avec nginx
   nginx:
     image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
     hostname: www.${URL_DOMAIN}
     volumes:
-      - ${NGINX_FILES_PATH}/conf.d:/etc/nginx/conf.d
-      - ${NGINX_FILES_PATH}/html:/usr/share/nginx/html
+      - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
+      - ${NGINX_WWW_PATH}:/usr/share/nginx/html
     deploy:
       replicas: 1
       placement:
@@ -90,8 +96,8 @@ services:
     networks:
       - mg_net
     secrets:
-      - ssl.millegrilles.cert
-      - ssl.millegrilles.key
+      - pki.millegrilles.web.cert
+      - pki.millegrilles.web.key
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
@@ -124,45 +130,52 @@ services:
       VCAP_APP_HOST: '::'
       VCAP_APP_PORT: 443
       ME_CONFIG_SITE_SSL_ENABLED: 'true'
-      ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/ssl.millegrilles.cert'
-      ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/ssl.millegrilles.key'
-#      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
-# Environnement developpement
-#      ME_CONFIG_MONGODB_URL: 'mongodb://192.168.1.110:27017/admin?ssl=true'
-#      MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
-#      ME_CONFIG_BASICAUTH_PASSWORD: dev
+      ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/pki.millegrilles.web.cert'
+      ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/pki.millegrilles.web.key'
     networks:
       - mg_net
     secrets:
       - mongo.root.password
       - mongoexpress.web.password
-      - ssl.millegrilles.cert
-      - ssl.millegrilles.key
+      - pki.millegrilles.web.cert
+      - pki.millegrilles.web.key
 
 volumes:
-  mg-consignation-mongo:
-    name: /mnt/mongodata1
-  mg-consignation-rabbitmq:
-    name: mg-consignation-rabbitmq
-  mg-consignation-nginx-etc:
-    name: /usr/share/nginx/etc
-  mg-consignation-nginx-www:
-    name: /usr/share/nginx/html
+  mg-middleware-mongodata:
+    name: mg-middleware-mongodata
+  mg-middleware-rabbitmq:
+    name: mg-middleware-rabbitmq
+  mg-middleware-nginx-conf:
+    name: mg-middleware-nginx-conf
+  mg-middleware-nginx-www:
+    name: mg-middleware-nginx-www
 
 secrets:
   mongo.root.password:
     external: true
   mongoexpress.web.password:
     external: true
-  ssl.millegrilles.cert:
+  pki.millegrilles.web.chain:
     external: true
-    name: ${MILLEGRILLES_CERTIFICATE_PREFIX}.fullchain.${MILLEGRILLES_CERTIFICATE_VERSION}
-  ssl.millegrilles.key:
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}
+  pki.millegrilles.web.key:
     external: true
-    name: ${MILLEGRILLES_CERTIFICATE_PREFIX}.privkey.${MILLEGRILLES_CERTIFICATE_VERSION}
-  ssl.millegrilles.key_cert:
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.privkey.${PKI_MILLEGRILLES_WEB_VERSION}
+  pki.millegrilles.web.key_cert:
     external: true
-    name: ${MILLEGRILLES_CERTIFICATE_PREFIX}.key_cert.${MILLEGRILLES_CERTIFICATE_VERSION}
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key_cert.${PKI_MILLEGRILLES_WEB_VERSION}
+  pki.millegrilles.ssl.ca:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.ca.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.chain:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.fullchain.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.key:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.privkey.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.key_cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
 
 networks:
   mg_net:
