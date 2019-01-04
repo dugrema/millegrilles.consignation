@@ -10,13 +10,13 @@ if [ ! -f $REQUEST_FILE ]; then
   exit 2
 fi
 
-CNF_FILE=openssl-ca.cnf
+CNF_FILE=openssl-millegrilles-signing.cnf
 PRIVATE_PATH=~/certificates/millegrilles/privkeys
-CAKEY=$PRIVATE_PATH/millegrilles_cakey.pem
-let "DAYS=365 * 10"  # 10 ans
+CAKEY=$PRIVATE_PATH/millegrilles_signingkey.pem
+let "DAYS=365 * 1"  # 1 an
 
 if [ ! -f $CAKEY ]; then
-  echo "Cle CA introuvable: $CAKEY"
+  echo "Cle Signing introuvable: $CAKEY"
   exit 1
 fi
 
