@@ -6,11 +6,11 @@ services:
   # Base de donnees MongoDB
   mongo:
     image: ${REGISTRY}/mg_mongo${MONGO_IMAGE_VERSION}
-    command:
-      --replSet rs0
-      --sslMode requireSSL
-      --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
-      --sslCAFile /run/secrets/pki.millegrilles.ssl.ca
+#    command:
+#      --replSet rs0
+#      --sslMode requireSSL
+#      --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
+#      --sslCAFile /run/secrets/pki.millegrilles.ssl.ca
     hostname: mongo.${URL_DOMAIN}
     volumes:
       - ${MONGODB_DATA_MAPPING}:/data/db
