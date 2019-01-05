@@ -13,7 +13,6 @@ PRIVATE_PATH=$SECURE_PATH/privkeys
 KEY=$PRIVATE_PATH/${NOM_OU}.pem
 
 mkdir -p $PRIVATE_PATH
-mkdir -p $CERT_PATH
 
 requete() {
   CNF_FILE=$1
@@ -27,6 +26,11 @@ requete() {
           -nodes \
           -out ${NOM_OU}.csr -outform PEM \
           -keyout $KEY -keyform PEM
+
+  if [ $? -ne 0 ]; then
+    echo "Erreur creation certificat"
+    exit 2
+  fi
 
   # Creer backup de la cle
   chmod 400 $KEY
