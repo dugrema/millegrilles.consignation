@@ -4,6 +4,7 @@ NOM_OU=$1
 
 if [ -z $NOM_OU ]; then
   echo "Il faut fournir un nom pour le certificat"
+  exit 1
 fi
 
 CNF_FILE=openssl-millegrille.cnf
@@ -15,7 +16,7 @@ openssl req \
         -newkey rsa:8192 \
         -sha512 \
         -nodes \
-        -out ${NOM_OU}_req.csr -outform PEM \
+        -out ${NOM_OU}.csr -outform PEM \
         -keyout $KEY -keyform PEM
 
 # Creer backup de la cle
