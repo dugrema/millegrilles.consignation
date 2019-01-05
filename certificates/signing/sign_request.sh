@@ -1,30 +1,13 @@
 #!/usr/bin/env bash
 
+source fonctions_cert.sh
+
 NOM_OU=$1
 
 if [ -z $NOM_OU ]; then
-  echo "Le nom du fichier (prefixe) doit etre fourni"
-  exit 1
+  echo "Il faut fournir les parametres suivants: server nom_noeud"
 fi
 
-CNF_FILE=openssl-millegrilles-signing.cnf
-PRIVATE_PATH=~/certificates/millegrilles/privkeys
-DB_PATH=db
-REQUEST_PATH=$DB_PATH/requests
-CERT_PATH=$DB_PATH/named_certs
-
-if [ -z $CERT_OUTPUT_FILE ]; then
-  echo "CERT_OUTPUT_FILE file doit etre fourni"
-  exit 1
-fi
-
-if [ ! -f $REQUEST_FILE ]; then
-  echo "Request file pas accessible: $REQUEST_FILE"
-  exit 2
-fi
-
-openssl ca -config $CNF_FILE \
-        -policy signing_policy \
-        -extensions signing_req \
-        -out $CERT_PATH/${CERT_OUTPUT_FILE}.cert.pem \
-        -infiles $REQUEST_PATH/${REQUEST_FILE}.csr
+# Creer et signer un nouveau certificat
+#signer_certificat $NOM_OU db/requests/$NOM_OU.csr db/named_certs/$NOM_OU.cert.pem
+concatener_chaine db/named_certs/$NOM_OU.cert.pem

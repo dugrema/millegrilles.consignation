@@ -1,6 +1,12 @@
 # Image MongoDB
 FROM mongo:4.0
-
 MAINTAINER Mathieu Dugre <mail@mdugre.info>
 
-CMD ["mongod", "--replSet", "rs0", "--sslMode", "requireSSL", "--sslPEMKeyFile", "/run/secrets/pki.millegrilles.ssl.key_cert", "--sslCAFile", "/run/secrets/pki.millegrilles.ssl.ca"]
+ENV APP_SOURCE_DIR=/opt/mongodb/src \
+    APP_BUNDLE_DIR=/opt/mongodb/dist
+
+COPY certs $APP_BUNDLE_DIR/certs
+
+VOLUME /opt/mongodb/conf
+
+CMD ["mongod", "--replSet", "rs0", "--sslMode", "requireSSL", "--sslPEMKeyFile", "/run/secrets/pki.millegrilles.ssl.key_cert", "--sslCAFile", "$APP_BUNDLE_DIR/certs/millegrilles.ca.cert.pem"]

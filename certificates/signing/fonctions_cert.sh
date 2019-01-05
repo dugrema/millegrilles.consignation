@@ -5,6 +5,7 @@ GIT_SCRIPT=git/MilleGrilles.consignation
 SCRIPT_PATH=certificates/leaf
 SCRIPT_CREATION=creer_cert.sh
 CNF_FILE=openssl-millegrilles-signing.cnf
+CERT_SIGNING=millegrilles_signing.cert
 
 preparer_creation_cert_millegrille() {
   SERVER=$1
@@ -70,6 +71,15 @@ signer_certificat() {
     echo "Erreur de signature du certificat"
     exit 3
   fi
+}
+
+concatener_chaine() {
+  # Fonction qui concatene le certificat de signature et le leaf.
+  CERT_FILE=$1
+  
+  csplit -f tmp-cert- $CERT_FILE '/-----BEGIN CERTIFICATE-----/' '{*}'
+  cat $CERT_SIGNING tmp-cert-01 > $CERT_FILE.fullchain
+  rm tmp-cert*
 }
 
 transmettre_certificat() {

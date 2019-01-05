@@ -16,4 +16,5 @@ fi
 preparer_creation_cert_noeud $SERVER $NOM_OU $DOMAIN_SUFFIX
 downloader_csr $SERVER $NOM_OU
 signer_certificat $NOM_OU db/requests/$NOM_OU.csr db/named_certs/$NOM_OU.cert.pem
+concatener_chaine db/named_certs/$NOM_OU.cert.pem
 transmettre_certificat $SERVER db/named_certs/$NOM_OU.cert.pem
