@@ -24,7 +24,7 @@ preparer_creation_cert_millegrille() {
   fi
 }
 
-preparer_creation() {
+preparer_creation_cert_noeud() {
   SERVER=$1
   NOM_OU=$2
 
