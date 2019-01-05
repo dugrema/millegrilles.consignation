@@ -1,6 +1,6 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
-DOMAIN_SUFFIX   = pivoine.millegrilles.mdugre.info
+NOEUD_NOM       = $ENV::NOM_OU
 EMAIL           = pivoine.millegrilles@mdugre.info
 
 ####################################################################
@@ -26,7 +26,7 @@ organizationName            = Organization Name (eg, company)
 organizationName_default    = Millegrilles
 
 commonName           = Common Name (e.g. server FQDN or YOUR name)
-commonName_default   = $DOMAIN_SUFFIX
+commonName_default   = $NOEUD_NOM
 
 emailAddress         = Email Address
 emailAddress_default = $EMAIL
@@ -43,8 +43,4 @@ nsComment            = "OpenSSL Generated Certificate"
 ####################################################################
 [ alternate_names ]
 
-DNS.1  = www.$DOMAIN_SUFFIX
-DNS.2  = mongo.$DOMAIN_SUFFIX
-DNS.3  = mongo-express.$DOMAIN_SUFFIX
-DNS.4  = mq.$DOMAIN_SUFFIX
-DNS.5  = coupdoeil.$DOMAIN_SUFFIX
+DNS.1  = $NOEUD_NOM
