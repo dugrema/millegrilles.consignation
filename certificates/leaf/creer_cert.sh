@@ -10,9 +10,15 @@ fi
 CNF_FILE=openssl-millegrille.cnf
 SECURE_PATH=~/certificates/millegrilles
 PRIVATE_PATH=$SECURE_PATH/privkeys
+CERT_PATH=$SECURE_PATH/certs
 KEY=$PRIVATE_PATH/${NOM_OU}.pem
 
-mkdir -p $PRIVATE_PATH
+preparer_path() {
+  mkdir -p $PRIVATE_PATH
+  mkdir -p $CERT_PATH
+  chmod 755 $SECURE_PATH
+  chmod 700 $PRIVATE_PATH
+}
 
 requete() {
   CNF_FILE=$1
@@ -37,5 +43,6 @@ requete() {
   cp $KEY $KEY.`date +%Y%m%d`
 }
 
+preparer_path
 requete $CNF_FILE $NOM_OU $KEY
 
