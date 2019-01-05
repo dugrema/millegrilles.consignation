@@ -29,7 +29,6 @@ requete() {
 
   openssl req \
           -config $CNF_FILE \
-          -newkey rsa:8192 \
           -sha512 \
           -nodes \
           -out ${NOM_OU}.csr -outform PEM \
