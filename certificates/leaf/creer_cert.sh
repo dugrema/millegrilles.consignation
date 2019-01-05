@@ -1,49 +1,25 @@
 #!/usr/bin/env bash
 
 NOM_OU=$1
-
 if [ -z $NOM_OU ]; then
-  echo "Il faut fournir un nom pour le certificat"
+  echo "Il faut fournir un nom de la MilleGrille pour le certificat"
   exit 1
 fi
+export NOM_OU  # Utilise par CNF
 
-export NOM_OU
+DOMAIN_SUFFIX=$2
+if [ -z $DOMAIN_SUFFIX ]; then
+  echo "Il faut fournir le suffixe du domaine de la MilleGrille"
+  exit 1
+fi
+export DOMAIN_SUFFIX  # Utilise par CNF
 
-CNF_FILE=openssl-millegrille.cnf
-SECURE_PATH=~/certificates/millegrilles
-PRIVATE_PATH=$SECURE_PATH/privkeys
-CERT_PATH=$SECURE_PATH/certs
+# Importer fonctions
+source fonctions_creer_certs.sh
+
+# Executer code creation d'un nouveau certificat de MilleGrille
 KEY=$PRIVATE_PATH/${NOM_OU}.pem
-
-preparer_path() {
-  mkdir -p $PRIVATE_PATH
-  mkdir -p $CERT_PATH
-  chmod 755 $SECURE_PATH
-  chmod 700 $PRIVATE_PATH
-}
-
-requete() {
-  CNF_FILE=$1
-  NOM_OU=$2
-  KEY=$3
-
-  openssl req \
-          -config $CNF_FILE \
-          -newkey rsa \
-          -sha512 \
-          -nodes \
-          -out ${NOM_OU}.csr -outform PEM \
-          -keyout $KEY -keyform PEM
-
-  if [ $? -ne 0 ]; then
-    echo "Erreur creation certificat"
-    exit 2
-  fi
-
-  # Creer backup de la cle
-  chmod 400 $KEY
-  cp $KEY $KEY.`date +%Y%m%d`
-}
+CNF_FILE=openssl-millegrille.cnf
 
 preparer_path
 requete $CNF_FILE $NOM_OU $KEY

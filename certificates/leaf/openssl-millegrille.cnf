@@ -1,11 +1,12 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
-NOEUD_NOM       = $ENV::NOM_OU
-EMAIL           = pivoine.millegrilles@mdugre.info
+MG_NOM          = $ENV::NOM_OU
+DOMAIN_SUFFIX   = $ENV::DOMAIN_SUFFIX
+EMAIL           = millegrilles@mdugre.info
 
 ####################################################################
 [ req ]
-default_bits       = 4096
+default_bits       = 8192
 default_keyfile    = millegrille.pem
 distinguished_name = server_distinguished_name
 req_extensions     = server_req_extensions
@@ -26,10 +27,10 @@ organizationName            = Organization Name (eg, company)
 organizationName_default    = Millegrilles
 
 commonName           = Common Name (e.g. server FQDN or YOUR name)
-commonName_default   = $NOEUD_NOM
+commonName_default   = MG_NOM
 
 emailAddress         = Email Address
-emailAddress_default = $EMAIL
+emailAddress_default = $MG_NOM.$EMAIL
 
 ####################################################################
 [ server_req_extensions ]
@@ -43,4 +44,8 @@ nsComment            = "OpenSSL Generated Certificate"
 ####################################################################
 [ alternate_names ]
 
-DNS.1  = $NOEUD_NOM
+DNS.1  = www.$DOMAIN_SUFFIX
+DNS.2  = mongo.$DOMAIN_SUFFIX
+DNS.3  = mongo-express.$DOMAIN_SUFFIX
+DNS.4  = mq.$DOMAIN_SUFFIX
+DNS.5  = coupdoeil.$DOMAIN_SUFFIX

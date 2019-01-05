@@ -1,7 +1,7 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
 NOEUD_NOM       = $ENV::NOM_OU
-EMAIL           = pivoine.millegrilles@mdugre.info
+EMAIL           = millegrilles@mdugre.info
 
 ####################################################################
 [ req ]
