@@ -27,7 +27,7 @@ organizationName            = Organization Name (eg, company)
 organizationName_default    = Millegrilles
 
 commonName           = Common Name (e.g. server FQDN or YOUR name)
-commonName_default   = $MG_NOM
+commonName_default   = A$MG_NOM
 
 emailAddress         = Email Address
 emailAddress_default = $MG_NOM.$EMAIL
