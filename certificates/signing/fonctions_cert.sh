@@ -4,6 +4,25 @@
 GIT_SCRIPT=git/MilleGrilles.consignation
 SCRIPT_PATH=certificates/leaf
 SCRIPT_CREATION=creer_cert.sh
+CNF_FILE=openssl-millegrilles-signing.cnf
+
+preparer_creation_cert_millegrille() {
+  SERVER=$1
+  NOM_OU=$2
+  DOMAIN_SUFFIX=$3
+
+  # Uploader le script et l'executer
+  ssh $SERVER \
+    cd $GIT_SCRIPT \;\
+    git pull \;\
+    cd $SCRIPT_PATH \;\
+    ./$SCRIPT_CREATION $NOM_OU $DOMAIN_SUFFIX
+
+  if [ $? -ne 0 ]; then
+    echo "Erreur de preparation de la requete de certificat"
+    exit 1
+  fi
+}
 
 preparer_creation() {
   SERVER=$1
