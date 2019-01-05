@@ -1,20 +1,9 @@
 #!/usr/bin/env bash
 
-SERVER=$1
-NOM_OU=$2
-
-# Local parameters
-CNF_FILE=openssl-millegrilles-signing.cnf
-
 # Remote parameters
 GIT_SCRIPT=git/MilleGrilles.consignation
 SCRIPT_PATH=certificates/leaf
 SCRIPT_CREATION=creer_cert.sh
-REMOTE_CSR=$GIT_SCRIPT/${SCRIPT_PATH}/${NOM_OU}.csr
-
-if [ -z $NOM_OU ]; then
-  echo "Il faut fournir les parametres suivants: server nom_ou"
-fi
 
 preparer_creation() {
   SERVER=$1
@@ -36,6 +25,8 @@ preparer_creation() {
 downloader_csr() {
   SERVER=$1
   NOM_OU=$2
+
+  REMOTE_CSR=$GIT_SCRIPT/${SCRIPT_PATH}/${NOM_OU}.csr
 
   ssh $SERVER cat $REMOTE_CSR > db/requests/$NOM_OU.csr
 
@@ -77,7 +68,7 @@ transmettre_certificat() {
 }
 
 # Creer et signer un nouveau certificat
-preparer_creation $SERVER $NOM_OU
-downloader_csr $SERVER $NOM_OU
-signer_certificat $NOM_OU db/requests/$NOM_OU.csr db/named_certs/$NOM_OU.cert.pem
-transmettre_certificat $SERVER db/named_certs/$NOM_OU.cert.pem
+# preparer_creation $SERVER $NOM_OU
+# downloader_csr $SERVER $NOM_OU
+# signer_certificat $NOM_OU db/requests/$NOM_OU.csr db/named_certs/$NOM_OU.cert.pem
+# transmettre_certificat $SERVER db/named_certs/$NOM_OU.cert.pem
