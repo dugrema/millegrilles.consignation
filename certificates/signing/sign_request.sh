@@ -9,5 +9,5 @@ if [ -z $NOM_OU ]; then
 fi
 
 # Creer et signer un nouveau certificat
-#signer_certificat $NOM_OU db/requests/$NOM_OU.csr db/named_certs/$NOM_OU.cert.pem
+signer_certificat $NOM_OU db/requests/$NOM_OU.csr db/named_certs/$NOM_OU.cert.pem
 concatener_chaine db/named_certs/$NOM_OU.cert.pem
