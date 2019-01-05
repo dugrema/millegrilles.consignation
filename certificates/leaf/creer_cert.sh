@@ -7,6 +7,8 @@ if [ -z $NOM_OU ]; then
   exit 1
 fi
 
+export NOM_OU
+
 CNF_FILE=openssl-millegrille.cnf
 SECURE_PATH=~/certificates/millegrilles
 PRIVATE_PATH=$SECURE_PATH/privkeys
@@ -45,4 +47,3 @@ requete() {
 
 preparer_path
 requete $CNF_FILE $NOM_OU $KEY
-
