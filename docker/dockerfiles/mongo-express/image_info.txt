@@ -1,5 +1,5 @@
 REPO=registry.maple.mdugre.info:5000
-NAME=mg_md_mongo_express
+NAME=mg_mongo_express
 BRANCH=`git name-rev --name-only HEAD`
 BUILD=1
 ARCH_SUPPORTEES=( x86_64 aarch64 )
