@@ -52,7 +52,7 @@ services:
       MG_MQ_SSL: "on"
       MG_MQ_USER: cedule
     hostname: ceduleur-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.1
     networks:
       mg_net: null
     secrets:
@@ -89,7 +89,7 @@ services:
       MG_MQ_SSL: "on"
       MG_MQ_USER: mgdomaines
     hostname: domaines-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.1
     networks:
       mg_net: null
     secrets:
@@ -132,7 +132,7 @@ services:
       MG_MQ_SSL: "on"
       MG_MQ_USER: mgprocessus
     hostname: processus-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.1
     networks:
       mg_net: null
     secrets:
@@ -168,7 +168,7 @@ services:
       MG_MQ_SSL: "on"
       MG_MQ_USER: transaction
     hostname: transactions-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.1
     networks:
       mg_net: null
     secrets:
