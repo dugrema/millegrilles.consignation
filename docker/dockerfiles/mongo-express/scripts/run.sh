@@ -13,12 +13,12 @@ if [ ! -z $ME_CONFIG_BASICAUTH_PASSWORD_FILE ]; then
   echo "Mot de passe ME_CONFIG_BASICAUTH_PASSWORD charge"
 fi
 
-if [ -z $ME_CONFIG_MONGODB_URL ]; then
-  echo "Il faut fournir le URL de connexion a mongo: ME_CONFIG_MONGODB_URL"
-  exit 1
-fi
+# if [ -z $ME_CONFIG_MONGODB_URL ]; then
+#   echo "Il faut fournir le URL de connexion a mongo: ME_CONFIG_MONGODB_URL"
+#   exit 1
+# fi
 
-echo "Demarrer mongo-express URL $ME_CONFIG_MONGODB_URL"
+echo "Demarrer mongo-express"
 # mongodb://mongo:27017/admin?ssl=true
-node app --url $ME_CONFIG_MONGODB_URL
-
+#node app --url $ME_CONFIG_MONGODB_URL
+node app

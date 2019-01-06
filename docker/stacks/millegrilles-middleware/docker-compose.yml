@@ -122,7 +122,6 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: mathieu
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
 # Environnement production
-      ME_CONFIG_MONGODB_URL: ${MONGODB_URL}
       MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
       ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/mongoexpress.web.password
       VCAP_APP_HOST: '::'
@@ -130,11 +129,12 @@ services:
       ME_CONFIG_SITE_SSL_ENABLED: 'true'
       ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/pki.millegrilles.web.cert'
       ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/pki.millegrilles.web.key'
-      ME_CONFIG_MONGODB_SSL: true
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_SSL: 'true'
       ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
       ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
       ME_CONFIG_MONGODB_CACERT: /usr/local/etc/millegrilles/certs/millegrilles.authority.pem
-      ME_CONFIG_MONGODB_SSLVALIDATE: true
+      ME_CONFIG_MONGODB_SSLVALIDATE: 'false'
     networks:
       - mg_net
     secrets:
@@ -160,15 +160,21 @@ secrets:
     external: true
   mongoexpress.web.password:
     external: true
+  pki.millegrilles.web.cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.cert.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.web.chain:
     external: true
-    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.chain.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.web.key:
     external: true
-    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.privkey.${PKI_MILLEGRILLES_WEB_VERSION}
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.ssl.key:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.privkey.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.key_cert:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
