@@ -44,8 +44,12 @@ nsComment            = "OpenSSL Generated Certificate"
 ####################################################################
 [ alternate_names ]
 
-DNS.1  = www.$DOMAIN_SUFFIX
-DNS.2  = mongo.$DOMAIN_SUFFIX
-DNS.3  = mongo-express.$DOMAIN_SUFFIX
-DNS.4  = mq.$DOMAIN_SUFFIX
-DNS.5  = coupdoeil.$DOMAIN_SUFFIX
+# Faire nom generique pour serveurs utilises dans le swarm
+DNS.1  = mongo
+DNS.2  = mq
+
+DNS.3  = www.$DOMAIN_SUFFIX
+DNS.4  = mongo.$DOMAIN_SUFFIX
+DNS.5  = mongo-express.$DOMAIN_SUFFIX
+DNS.6  = mq.$DOMAIN_SUFFIX
+DNS.7  = coupdoeil.$DOMAIN_SUFFIX
