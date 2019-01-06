@@ -76,16 +76,14 @@ services:
     networks:
       mg_net: null
     ports:
-    - published: 5671
-      target: 5671
     - published: 5673
-      target: 5672
-    - published: 15672
-      target: 15672
+      target: 5673
+    - published: 15671
+      target: 443
     secrets:
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.key
-    - source: pki.millegrilles.web.chain
+    - source: pki.millegrilles.web.cert
     - source: pki.millegrilles.web.key
     volumes:
     - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
@@ -112,7 +110,7 @@ services:
     - published: 31443
       target: 443
     secrets:
-    - source: pki.millegrilles.web.cert
+    - source: pki.millegrilles.web.chain
     - source: pki.millegrilles.web.key
     volumes:
     - mg-middleware-nginx-conf:/etc/nginx/conf.d:rw
@@ -172,4 +170,3 @@ volumes:
     name: mg-middleware-nginx-www
   mg-middleware-rabbitmq:
     name: mg-middleware-rabbitmq
-

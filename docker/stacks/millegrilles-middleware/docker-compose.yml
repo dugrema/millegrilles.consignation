@@ -58,16 +58,14 @@ services:
         condition: any
         delay: 30s
     ports:
-      - "5671:5671"
-      - "5673:5672"
-#      - "15671:443"
-      - "15672:15672"
+      - "5673:5673"
+      - "15671:443"
     networks:
       - mg_net
     secrets:
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
-      - pki.millegrilles.web.chain
+      - pki.millegrilles.web.cert
       - pki.millegrilles.web.key
 
   # Proxy avec nginx
@@ -95,7 +93,7 @@ services:
     networks:
       - mg_net
     secrets:
-      - pki.millegrilles.web.cert
+      - pki.millegrilles.web.chain
       - pki.millegrilles.web.key
 
   # Utilitaires pour gerer / debugger les services
