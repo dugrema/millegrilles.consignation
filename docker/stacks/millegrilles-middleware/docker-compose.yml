@@ -68,7 +68,7 @@ services:
     secrets:
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
-      - pki.millegrilles.web.cert
+      - pki.millegrilles.web.chain
       - pki.millegrilles.web.key
 
   # Proxy avec nginx

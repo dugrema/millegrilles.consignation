@@ -1,19 +1,21 @@
 [
    {rabbit, [
       {loopback_users, []},
-      {vm_memory_high_watermark, 0.7},
-      {vm_memory_high_watermark_paging_ratio, 0.8},
+      {vm_memory_high_watermark, {absolute, "600MiB"}},
+      {vm_memory_high_watermark_paging_ratio, 0.5},
       {log_levels, [{channel, warning}, {connection, warning}, {federation, warning}, {mirroring, info}]},
-      {heartbeat, 10},
+      {heartbeat, 60},
       {tcp_listeners, [
          {"0.0.0.0", 5672}
        ]},
       {ssl_listeners, [
-         {"0.0.0.0", 5671}
+        {"0.0.0.0", 5671},
+        {"::", 5671}
        ]},
       {ssl_options, [
-        {certfile, "/run/secrets/ssl.maple.millegrilles.cert"},
-        {keyfile,  "/run/secrets/ssl.maple.millegrilles.key"},
+        {cacertfile, "/usr/local/etc/millegrilles/certs/millegrilles.authority.pem"},
+        {certfile, "/run/secrets/pki.millegrilles.ssl.cert"},
+        {keyfile,  "/run/secrets/pki.millegrilles.ssl.key"},
         {verify,   verify_peer},
         {fail_if_no_peer_cert, true}
       ]}
@@ -21,12 +23,13 @@
     {rabbitmq_management, [
         {load_definitions, "/opt/rabbitmq/dist/definitions.json"},
         {listener, [
-             {port,     15671},
+             {ip, "::"},
+             {port,     443},
              {ssl,      true},
              {ssl_opts, [
-                         {cacertfile, "/run/secrets/ssl.maple.millegrilles.chain"},
-                         {certfile, "/run/secrets/ssl.maple.millegrilles.simpcert"},
-                         {keyfile,  "/run/secrets/ssl.maple.millegrilles.key"}]}
+                 {certfile, "/run/secrets/pki.millegrilles.web.chain"},
+                 {keyfile,  "/run/secrets/pki.millegrilles.web.key"}
+              ]}
          ]}
      ]}
 ].

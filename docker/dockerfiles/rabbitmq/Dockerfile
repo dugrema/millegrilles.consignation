@@ -1,14 +1,19 @@
 # Use management image for RabbitMQ
 FROM rabbitmq:3.7-management
 
-ENV SRC_FOLDER=/opt/rabbitmq/src \
-    BUNDLE_FOLDER=/opt/rabbitmq/dist
+ENV APP_SOURCE_FOLDER=/opt/rabbitmq/src \
+    APP_BUNDLE_FOLDER=/opt/rabbitmq/dist \
+    MG_CERTS_FOLDER=/usr/local/etc/millegrilles/certs
 
-COPY ./scripts $SRC_FOLDER/scripts
-COPY ./config $SRC_FOLDER/config
+COPY ./scripts $APP_SOURCE_FOLDER/scripts
+COPY ./config $APP_SOURCE_FOLDER/config
+COPY certs $MG_CERTS_FOLDER/
 
-RUN $SRC_FOLDER/scripts/setup.sh
+RUN $APP_SOURCE_FOLDER/scripts/setup.sh
 
-#RUN rabbitmq-plugins enable --offline rabbitmq_shovel && \
-#    rabbitmq-plugins enable --offline rabbitmq_shovel_management
+VOLUME /opt/rabbitmq/conf
 
+EXPOSE 443
+EXPOSE 15671
+
+EXPOSE 15672
