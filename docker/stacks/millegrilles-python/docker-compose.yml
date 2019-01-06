@@ -26,6 +26,7 @@ services:
     env_file:
       - services.env
     environment:
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
       MG_CONFIG_JSON: /run/secrets/mg.transactions.json
       MG_MQ_USER: ${MG_MQ_USER_TRANSACTION}
       MG_MONGO_USERNAME: ${MG_MONGO_USER_TRANSACTION}
@@ -58,6 +59,7 @@ services:
     env_file:
       - services.env
     environment:
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
       MG_CONFIG_JSON: /run/secrets/mg.ceduleur.json
       MG_MQ_USER: ${MG_MQ_USER_CEDULE}
     networks:
@@ -89,6 +91,7 @@ services:
     env_file:
       - services.env
     environment:
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
       MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
       MG_MQ_USER: ${MG_MQ_USER_MGPROCESSUS}
       MG_MONGO_USERNAME: ${MG_MONGO_USER_MGPROCESSUS}
@@ -128,6 +131,7 @@ services:
     env_file:
       - services.env
     environment:
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
       MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
       MG_MQ_USER: ${MG_MQ_USER_DOMAINES}
       MG_MONGO_USERNAME: ${MG_MONGO_USER_DOMAINES}
