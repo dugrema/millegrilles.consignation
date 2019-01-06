@@ -134,7 +134,7 @@ services:
       ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
       ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
       ME_CONFIG_MONGODB_CACERT: /usr/local/etc/millegrilles/certs/millegrilles.authority.pem
-      ME_CONFIG_MONGODB_SSLVALIDATE: 'false'
+      ME_CONFIG_MONGODB_SSLVALIDATE: 'true'
     networks:
       - mg_net
     secrets:
