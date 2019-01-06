@@ -28,11 +28,14 @@ services:
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.transactions.json
       MG_MQ_USER: ${MG_MQ_USER_TRANSACTION}
-      MG_MONGO_USER: ${MG_MONGO_USER_TRANSACTION}
+      MG_MONGO_USERNAME: ${MG_MONGO_USER_TRANSACTION}
     networks:
       - mg_net
     secrets:
       - mg.transactions.json
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.key_cert
 
   # Ceduleur Python qui transmet un message a toutes les minutes
   ceduleur-python:
@@ -61,6 +64,8 @@ services:
       - mg_net
     secrets:
       - mg.ceduleur.json
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
 
   # Script Python pour executer les processus
   processus-python:
@@ -86,7 +91,7 @@ services:
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
       MG_MQ_USER: ${MG_MQ_USER_MGPROCESSUS}
-      MG_MONGO_USER: ${MG_MONGO_USER_MGPROCESSUS}
+      MG_MONGO_USERNAME: ${MG_MONGO_USER_MGPROCESSUS}
       MG_EMAIL_HOST: ${MG_EMAIL_HOST}
       MG_EMAIL_PORT: ${MG_EMAIL_PORT}
       MG_EMAIL_USER: ${MG_EMAIL_USER}
@@ -97,6 +102,9 @@ services:
       - mg_net
     secrets:
       - mg.mgpprocessus.json
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.key_cert
 
   # Script Python pour executer les domaines
   domaines-python:
@@ -122,12 +130,15 @@ services:
     environment:
       MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
       MG_MQ_USER: ${MG_MQ_USER_DOMAINES}
-      MG_MONGO_USER: ${MG_MONGO_USER_DOMAINES}
+      MG_MONGO_USERNAME: ${MG_MONGO_USER_DOMAINES}
       MG_DOMAINES_JSON: /opt/millegrilles/dist/domaines.json
     networks:
       - mg_net
     secrets:
       - mg.mgdomaines.json
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.key_cert
 
 networks:
   mg_net:
@@ -147,3 +158,12 @@ secrets:
   mg.mgdomaines.json:
     external: true
     name: mg.mgdomaines.json.${CONFIGURATION_MGDOMAINES_VERSION}
+  pki.millegrilles.ssl.key:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.key_cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
