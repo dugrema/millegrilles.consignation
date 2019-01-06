@@ -170,3 +170,4 @@ volumes:
     name: mg-middleware-nginx-www
   mg-middleware-rabbitmq:
     name: mg-middleware-rabbitmq
+
