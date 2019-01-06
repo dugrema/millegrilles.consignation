@@ -37,7 +37,6 @@ services:
     secrets:
       - mongo.root.password
       - pki.millegrilles.ssl.key_cert
-      - pki.millegrilles.ssl.ca
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:
@@ -101,8 +100,7 @@ services:
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
-    image: ${REGISTRY}/mg_md_mongo_express${MONGO_EXPRESS_IMAGE_VERSION}
-#    command: node app --url mongodb://mongo:27017/admin?ssl=true
+    image: ${REGISTRY}/mg_mongo_express${MONGO_EXPRESS_IMAGE_VERSION}
     depends_on:
         - mongo
     deploy:
@@ -132,6 +130,11 @@ services:
       ME_CONFIG_SITE_SSL_ENABLED: 'true'
       ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/pki.millegrilles.web.cert'
       ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/pki.millegrilles.web.key'
+      ME_CONFIG_MONGODB_SSL: true
+      ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
+      ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
+      ME_CONFIG_MONGODB_CACERT: /usr/local/etc/millegrilles/certs/millegrilles.authority.pem
+      ME_CONFIG_MONGODB_SSLVALIDATE: true
     networks:
       - mg_net
     secrets:
@@ -139,6 +142,8 @@ services:
       - mongoexpress.web.password
       - pki.millegrilles.web.cert
       - pki.millegrilles.web.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.key
 
 volumes:
   mg-middleware-mongodata:
@@ -161,15 +166,6 @@ secrets:
   pki.millegrilles.web.key:
     external: true
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.privkey.${PKI_MILLEGRILLES_WEB_VERSION}
-  pki.millegrilles.web.key_cert:
-    external: true
-    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key_cert.${PKI_MILLEGRILLES_WEB_VERSION}
-  pki.millegrilles.ssl.ca:
-    external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.ca.${PKI_MILLEGRILLES_SSL_VERSION}
-  pki.millegrilles.ssl.chain:
-    external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.fullchain.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.key:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.privkey.${PKI_MILLEGRILLES_SSL_VERSION}
