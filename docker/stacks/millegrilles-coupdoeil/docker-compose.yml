@@ -58,6 +58,8 @@ services:
     ports:
      - "30080:80"
      - "30443:443"
+    environment:
+      NGINX_CONFIG_FILE: meteor.conf     
     networks:
       - mg_net
     secrets:

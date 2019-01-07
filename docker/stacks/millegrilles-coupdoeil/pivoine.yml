@@ -69,6 +69,8 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+    environment:
+      NGINX_CONFIG_FILE: meteor.conf
     hostname: coupdoeil.pivoine.millegrilles.mdugre.info
     image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15.1
     networks:
