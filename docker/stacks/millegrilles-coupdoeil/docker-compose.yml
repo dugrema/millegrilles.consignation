@@ -5,8 +5,8 @@ services:
 
   # Application Meteor pour Coup D'Oeil
   coupdoeilmeteor:
-    image:  registry.maple.mdugre.info:5000/coupdoeil_meteor.x86_64:v1.2-pivoine.1
-    hostname: coupdoeilmeteor.maple.millegrilles.mdugre.info
+    image:  ${REGISTRY}/coupdoeil_meteor${MG_COUPDOEILMETEOR_IMAGE_VERSION}
+    hostname: coupdoeilmeteor.${URL_DOMAIN}
     deploy:
       replicas: 1
       placement:
@@ -22,25 +22,27 @@ services:
         delay: 30s
     ports:
       - "3001:3000"
+    env_file:
+      - services.env
     environment:
-      MG_NOM_MILLEGRILLE: pivoine
-      MONGO_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/mg-pivoine?ssl=true
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
+      MONGO_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/mg-${MG_NOM_MILLEGRILLE}?ssl=true
       MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=admin
-      MG_MQ_HOST: mq
-      MG_MQ_PORT: 5672
       MG_MQ_USER: coupdoeil
       MG_MQ_PASSWORD: gLOUj3xLAj82
-      MG_MQ_PROTOCOL: amqp
     networks:
       - mg_net
+    secrets:
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
 
   # Proxy avec nginx
   coupdoeilnginx:
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:v1.1-pivoine.1-pivoine
-    hostname: www.pivoine.millegrilles.mdugre.info
+    image: ${REGISTRY}/mg_nginx${MG_COUPDOEILNGINX_IMAGE_VERSION}
+    hostname: coupdoeil.${URL_DOMAIN}
     volumes:
-      - /usr/share/nginx/pivoine.millegrilles/conf.d:/etc/nginx/conf.d
-      - /usr/share/nginx/pivoine.millegrilles/html:/etc/nginx/html
+      - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
+      - ${NGINX_WWW_PATH}:/etc/nginx/html
     deploy:
       replicas: 1
       placement:
@@ -59,8 +61,8 @@ services:
     networks:
       - mg_net
     secrets:
-      - ssl.pivoine.millegrilles.cert
-      - ssl.pivoine.millegrilles.key
+      - pki.millegrilles.web.chain
+      - pki.millegrilles.web.key
 
 networks:
   mg_net:
@@ -68,10 +70,15 @@ networks:
     name: mg_net
 
 secrets:
-  ssl.pivoine.millegrilles.cert:
+  pki.millegrilles.web.chain:
     external: true
-    name: ssl.pivoine.millegrilles.fullchain.20181226
-  ssl.pivoine.millegrilles.key:
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.chain.${PKI_MILLEGRILLES_WEB_VERSION}
+  pki.millegrilles.web.key:
     external: true
-    name: ssl.pivoine.millegrilles.privkey.20181226
-
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key.${PKI_MILLEGRILLES_WEB_VERSION}
+  pki.millegrilles.ssl.key:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
