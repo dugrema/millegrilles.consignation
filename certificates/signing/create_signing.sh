@@ -2,7 +2,8 @@
 
 CNF_FILE=openssl-millegrilles-signing.cnf
 PRIVATE_PATH=~/certificates/millegrilles/privkeys
-CAKEY=$PRIVATE_PATH/millegrilles_signing_key.pem
+HOSTNAME=`hostname --fqdn`
+CAKEY=$PRIVATE_PATH/millegrilles_intermediaire_${HOSTNAME}.pem
 let "DAYS=365 * 5"  # 5 ans
 
 if [ -f $CAKEY ]; then
@@ -12,9 +13,8 @@ fi
 
 openssl req \
         -config $CNF_FILE \
-        -newkey rsa:8192 \
-        -sha512 \
-        -out millegrilles_signing_req.csr -outform PEM \
+        -newkey rsa:8192 -sha512 \
+        -out millegrilles_intermediaire_${HOSTNAME}.csr -outform PEM \
         -keyout $CAKEY -keyform PEM
 
 # Creer backup de la cle
@@ -22,9 +22,9 @@ chmod 400 $CAKEY
 cp $CAKEY $CAKEY.`date +%Y%m%d`
 
 # Signer avec le certificat CA ROOT
-CURRENT_PATH=$PWD
-export CERT_OUTPUT_FILE=$PWD/millegrilles_signing_cert.pem
-export REQUEST_FILE=$PWD/millegrilles_signing_req.csr
-cd ../root
-./sign_request.sh
-cd $CURRENT_PATH
+#CURRENT_PATH=$PWD
+#export CERT_OUTPUT_FILE=$PWD/millegrilles_signing_cert.pem
+#export REQUEST_FILE=$PWD/millegrilles_signing_req.csr
+#cd ../root
+#./sign_request.sh
+#cd $CURRENT_PATH
