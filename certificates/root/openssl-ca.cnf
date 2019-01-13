@@ -1,12 +1,12 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
+KEYS            = /home/pi/certificates/millegrilles/privkeys
 
 ####################################################################
 [ ca ]
 default_ca    = CA_default      # The default ca section
 
 [ CA_default ]
-base_dir      = .
 
 default_days     = 1830         # How long to certify for
 default_crl_days = 180          # How long before next CRL
@@ -18,11 +18,12 @@ x509_extensions = ca_extensions # The extensions to add to the cert
 email_in_dn     = no            # Don't concat the email in the DN
 copy_extensions = copy          # Required to copy SANs from CSR to cert
 
+base_dir      = .
 certificate   = $base_dir/millegrilles_cacert.pem   # The CA certifcate
-private_key   = $base_dir/millegrilles_cakey.pem    # The CA private key
-new_certs_dir = $base_dir              # Location for new certs after signing
-database      = $base_dir/index.txt    # Database index file
-serial        = $base_dir/serial.txt   # The current serial number
+private_key   = $KEYS/millegrilles_cakey.pem    # The CA private key
+new_certs_dir = $base_dir/db/certs              # Location for new certs after signing
+database      = $base_dir/db/index.txt    # Database index file
+serial        = $base_dir/db/serial.txt   # The current serial number
 
 unique_subject = no  # Set to 'no' to allow creation of
                      # several certificates with same subject.
@@ -50,13 +51,13 @@ organizationName            = Organization Name (eg, company)
 organizationName_default    = MilleGrilles
 
 organizationalUnitName         = Organizational Unit (eg, division)
-organizationalUnitName_default = CA ROOT
+organizationalUnitName_default = MGCAROOT
 
 commonName         = Common Name (e.g. server FQDN or YOUR name)
-commonName_default = millegrilles.com
+commonName_default = mgca.millegrilles.com
 
 emailAddress         = Email Address
-emailAddress_default = mail@mdugre.info
+emailAddress_default = mgca@millegrilles.com
 
 ####################################################################
 [ ca_extensions ]

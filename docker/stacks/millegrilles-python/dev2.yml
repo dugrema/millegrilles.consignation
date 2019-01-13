@@ -1,0 +1,199 @@
+networks:
+  mg_net:
+    external: true
+    name: mg_net
+secrets:
+  mg.ceduleur.json:
+    external: true
+    name: mg.ceduleur.json.1
+  mg.mgdomaines.json:
+    external: true
+    name: mg.mgdomaines.json.1
+  mg.mgpprocessus.json:
+    external: true
+    name: mg.mgpprocessus.json.1
+  mg.transactions.json:
+    external: true
+    name: mg.transactions.json.1
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: pki.millegrilles.ssl.CAchain.20190113
+  pki.millegrilles.ssl.cert:
+    external: true
+    name: pki.millegrilles.ssl.cert.20190113
+  pki.millegrilles.ssl.key:
+    external: true
+    name: pki.millegrilles.ssl.key.20190113
+  pki.millegrilles.ssl.key_cert:
+    external: true
+    name: pki.millegrilles.ssl.key_cert.20190113
+services:
+  ceduleur-python:
+    command: demarrer_ceduleur.py
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.python == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 50M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.ceduleur.json
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: "on"
+      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
+      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_HOST: mq
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_MQ_PORT: '5673'
+      MG_MQ_SSL: "on"
+      MG_MQ_USER: cedule
+      MG_NOM_MILLEGRILLE: dev2
+    hostname: ceduleur-python.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.4
+    networks:
+      mg_net: null
+    secrets:
+    - source: mg.ceduleur.json
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.CAchain
+  domaines-python:
+    command: demarrer_domaine.py --info
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.python == true
+        - node.labels.millegrilles.domaines == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 100M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
+      MG_DOMAINES_JSON: /opt/millegrilles/dist/domaines.json
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: "on"
+      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
+      MG_MONGO_USERNAME: mgdomaines
+      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_HOST: mq
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_MQ_PORT: '5673'
+      MG_MQ_SSL: "on"
+      MG_MQ_USER: mgdomaines
+      MG_NOM_MILLEGRILLE: dev2
+    hostname: domaines-python.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.4
+    networks:
+      mg_net: null
+    secrets:
+    - source: mg.mgdomaines.json
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key_cert
+    - source: pki.millegrilles.ssl.CAchain
+  processus-python:
+    command: demarrer_mgp.py --info
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.python == true
+        - node.labels.millegrilles.mgp == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 100M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
+      MG_EMAIL_FROM: maple.millegrilles@mdugre.info
+      MG_EMAIL_HOST: mail.mdugre.info
+      MG_EMAIL_PASSWORD: kikIL932cedWIC12
+      MG_EMAIL_PORT: '465'
+      MG_EMAIL_TO: mathieu.dugre@me.com
+      MG_EMAIL_USER: maple.millegrilles@mdugre.info
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: "on"
+      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
+      MG_MONGO_USERNAME: mgprocessus
+      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_HOST: mq
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_MQ_PORT: '5673'
+      MG_MQ_SSL: "on"
+      MG_MQ_USER: mgprocessus
+      MG_NOM_MILLEGRILLE: dev2
+    hostname: processus-python.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.4
+    networks:
+      mg_net: null
+    secrets:
+    - source: mg.mgpprocessus.json
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key_cert
+    - source: pki.millegrilles.ssl.CAchain
+  transactions-python:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.python == true
+        - node.labels.millegrilles.database == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.50'
+          memory: 200M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.transactions.json
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: "on"
+      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
+      MG_MONGO_USERNAME: transaction
+      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_HOST: mq
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_MQ_PORT: '5673'
+      MG_MQ_SSL: "on"
+      MG_MQ_USER: transaction
+      MG_NOM_MILLEGRILLE: dev2
+    hostname: transactions-python.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.4
+    networks:
+      mg_net: null
+    secrets:
+    - source: mg.transactions.json
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key_cert
+    - source: pki.millegrilles.ssl.CAchain
+version: '3.7'
+
