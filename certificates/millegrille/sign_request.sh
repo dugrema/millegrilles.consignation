@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ../fonctions_cert.sh
+source fonctions_cert.sh
 
 NOM_OU=$1
 
