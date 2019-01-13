@@ -3,6 +3,7 @@ RANDFILE        = $ENV::HOME/.rnd
 KEYS            = $ENV::HOME/certificates/millegrilles/privkeys
 NOM_MILLEGRILLE = $ENV::NOM_MILLEGRILLE
 FQDN_MILLEGRILLE = $ENV::NOM_MILLEGRILLE.$ENV::DOMAIN_SUFFIX
+DB_PATH         = $ENV::HOSTNAME
 
 ####################################################################
 [ ca ]
@@ -21,11 +22,11 @@ email_in_dn     = no            # Don't concat the email in the DN
 copy_extensions = copy          # Required to copy SANs from CSR to cert
 
 base_dir      = .
-certificate   = $base_dir/millegrilles.intermediaire.cert.pem  # The CA certifcate
-private_key   = $KEYS/millegrilles.intermediaire.key.pem       # The CA private key
-new_certs_dir = $base_dir/certs        # Location for new certs after signing
-database      = $base_dir/index.txt    # Database index file
-serial        = $base_dir/serial.txt   # The current serial number
+certificate   = $DB_PATH/millegrille.cert.pem  # The CA certifcate
+private_key   = $KEYS/millegrille.key.pem       # The CA private key
+new_certs_dir = $DB_PATH/certs        # Location for new certs after signing
+database      = $DB_PATH/index.txt    # Database index file
+serial        = $DB_PATH/serial.txt   # The current serial number
 
 unique_subject = no  # Set to 'no' to allow creation of
                      # several certificates with same subject.
@@ -33,7 +34,7 @@ unique_subject = no  # Set to 'no' to allow creation of
 ####################################################################
 [ req ]
 default_bits       = 8192
-default_keyfile    = $KEYS/millegrilles_signing_key.pem
+default_keyfile    = $KEYS/millegrille.key.pem
 distinguished_name = ca_distinguished_name
 x509_extensions    = ca_extensions
 string_mask        = utf8only
@@ -53,7 +54,7 @@ organizationName            = Organization Name (eg, company)
 organizationName_default    = $NOM_MILLEGRILLE
 
 organizationalUnitName         = Organizational Unit (eg, division)
-organizationalUnitName_default = Signature
+organizationalUnitName_default = MilleGrille
 
 commonName         = Common Name (e.g. server FQDN or YOUR name)
 commonName_default = $FQDN_MILLEGRILLE
@@ -83,7 +84,5 @@ emailAddress = optional
 [ signing_req ]
 subjectKeyIdentifier   = hash
 authorityKeyIdentifier = keyid,issuer
-#basicConstraints       = CA:FALSE
-#keyUsage               = digitalSignature, keyEncipherment
-basicConstraints       = CA:TRUE
-keyUsage               = keyCertSign, cRLSign
+basicConstraints       = CA:FALSE
+keyUsage               = digitalSignature, keyEncipherment

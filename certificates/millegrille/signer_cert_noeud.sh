@@ -1,20 +1,39 @@
 #!/usr/bin/env bash
 
-source fonctions_cert.sh
-
 SERVER=$1
-NOM_OU=$2
+NOM_MILLEGRILLE=$2
+NOM_NOEUD=$3
+DOMAIN_SUFFIX=$4
+TYPE_NOEUD=$5
+
+export CNF_FILE=openssl-millegrille.cnf
+
+if [ -z $DOMAIN_SUFFIX ]; then
+  echo "Il faut fournir les parametres suivants: server nom_millegrille nom_noeud domaine"
+  exit 1
+fi
+
+HOSTNAME=`hostname --fqdn`
+GIT_FOLDER=$HOME/git/MilleGrilles.consignation/certificates
+
+source $GIT_FOLDER/fonctions_cert.sh
 
 # Remote parameters
 SCRIPT_CREATION=creer_cert_noeud.sh
-
-if [ -z $NOM_OU ]; then
-  echo "Il faut fournir les parametres suivants: server nom_noeud"
+if [ -n $TYPE_NOEUD ]; then
+  if [ $TYPE_NOEUD = 'middleware' ]; then
+    SCRIPT_CREATION=creer_cert_millegrille_middleware.sh
+  fi
 fi
 
+NOM_NOEUD_COMPLET=$NOM_NOEUD.$DOMAIN_SUFFIX
+export HOSTNAME NOM_MILLEGRILLE DOMAIN_SUFFIX NOM_NOEUD_COMPLET
+
 # Creer et signer un nouveau certificat
-preparer_creation_cert_noeud $SERVER $NOM_OU $DOMAIN_SUFFIX
-downloader_csr $SERVER $NOM_OU
-signer_certificat $NOM_OU db/requests/$NOM_OU.csr db/named_certs/$NOM_OU.cert.pem
-concatener_chaine db/named_certs/$NOM_OU.cert.pem
-transmettre_certificat $SERVER db/named_certs/$NOM_OU.cert.pem
+preparer_creation_cert_noeud $SERVER $NOM_MILLEGRILLE $NOM_NOEUD $DOMAIN_SUFFIX $SCRIPT_CREATION
+downloader_csr $SERVER noeud ${NOM_NOEUD_COMPLET}
+signer_certificat \
+  $HOSTNAME/requests/${NOM_NOEUD_COMPLET}.csr \
+  $HOSTNAME/named_certs/${NOM_NOEUD_COMPLET}.cert.pem
+concatener_chaine_noeud $HOSTNAME/named_certs ${NOM_NOEUD_COMPLET}.cert.pem
+transmettre_certificat $SERVER $HOSTNAME/named_certs ${NOM_NOEUD_COMPLET}.cert.pem

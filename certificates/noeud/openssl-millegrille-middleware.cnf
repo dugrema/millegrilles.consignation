@@ -27,6 +27,9 @@ localityName_default = Russell
 organizationName            = Organization Name (eg, company)
 organizationName_default    = $NOM_MILLEGRILLE
 
+organizationalUnitName         = Organizational Unit (eg, division)
+organizationalUnitName_default = Middleware
+
 commonName           = Common Name (e.g. server FQDN or YOUR name)
 commonName_default   = $NOM_NOEUD
 
@@ -50,9 +53,8 @@ DNS.1  = $NOM_NOEUD
 DNS.2  = mongo
 DNS.3  = mq
 
-DNS.4  = $NOM_NOEUD.$DOMAIN_SUFFIX
-DNS.5  = www.$DOMAIN_SUFFIX
-DNS.6  = mongo.$DOMAIN_SUFFIX
-DNS.7  = mongo-express.$DOMAIN_SUFFIX
-DNS.8  = mq.$DOMAIN_SUFFIX
-DNS.9  = coupdoeil.$DOMAIN_SUFFIX
+DNS.4  = www.$DOMAIN_SUFFIX
+DNS.5  = mongo.$DOMAIN_SUFFIX
+DNS.6  = mongo-express.$DOMAIN_SUFFIX
+DNS.7  = mq.$DOMAIN_SUFFIX
+DNS.8  = coupdoeil.$DOMAIN_SUFFIX

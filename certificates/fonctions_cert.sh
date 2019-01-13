@@ -32,17 +32,21 @@ preparer_creation_cert_millegrille() {
 
 preparer_creation_cert_noeud() {
   SERVER=$1
-  NOM_OU=$2
+  NOM_MILLEGRILLE=$2
+  NOM_NOEUD=$3
+  DOMAIN_SUFFIX=$4
+  SCRIPT_CREATION_NOEUD=$5
 
-  SCRIPT_PATH_NOEUD=certificates/noeud
-  SCRIPT_CREATION_NOEUD=creer_cert.sh
+  echo "Preparation cert $NOM_NOEUD.$DOMAIN_SUFFIX sur $SERVER pour MilleGrille $NOM_MILLEGRILLE avec script $SCRIPT_CREATION_NOEUD"
+
+  SCRIPT_PATH_NOEUD=noeud
 
   # Uploader le script et l'executer
   ssh $SERVER \
-    cd $GIT_SCRIPT \;\
+    cd $GIT_CERT_FOLDER \;\
     git pull \;\
     cd $SCRIPT_PATH_NOEUD \;\
-    ./$SCRIPT_CREATION_NOEUD $NOM_OU
+    ./$SCRIPT_CREATION_NOEUD $NOM_MILLEGRILLE $NOM_NOEUD $DOMAIN_SUFFIX
 
   if [ $? -ne 0 ]; then
     echo "Erreur de preparation de la requete de certificat"
@@ -56,6 +60,8 @@ downloader_csr() {
   NOM_REQUETE=$3
 
   REMOTE_CSR=$GIT_CERT_FOLDER/${SCRIPT_PATH}/${NOM_REQUETE}.csr
+
+  mkdir -p $HOSTNAME/requests
 
   ssh $SERVER cat $REMOTE_CSR > $HOSTNAME/requests/$NOM_REQUETE.csr
 
@@ -87,6 +93,14 @@ concatener_chaine() {
   CERT_FILE=$2
 
   cat $NAMED_CERT_FOLDER/../millegrilles.intermediaire.cert.pem $NAMED_CERT_FOLDER/$CERT_FILE > $NAMED_CERT_FOLDER/$CERT_FILE.fullchain
+}
+
+concatener_chaine_noeud() {
+  # Fonction qui concatene le certificat de signature et le leaf.
+  NAMED_CERT_FOLDER=$1
+  CERT_FILE=$2
+
+  cat $NAMED_CERT_FOLDER/../millegrille.cert.pem $NAMED_CERT_FOLDER/$CERT_FILE > $NAMED_CERT_FOLDER/$CERT_FILE.fullchain
 }
 
 transmettre_certificat() {
