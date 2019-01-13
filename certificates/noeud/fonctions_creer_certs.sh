@@ -12,7 +12,7 @@ preparer_path() {
 
 requete() {
   CNF_FILE=$1
-  NOM_NOEUD=$2
+  NOM_NOEUD_COMPLET=$2
   KEY=$3
 
   openssl req \
@@ -20,7 +20,7 @@ requete() {
           -newkey rsa \
           -sha512 \
           -nodes \
-          -out ${NOM_NOEUD}.csr -outform PEM \
+          -out ${NOM_NOEUD_COMPLET}.csr -outform PEM \
           -keyout $KEY -keyform PEM
 
   if [ $? -ne 0 ]; then
