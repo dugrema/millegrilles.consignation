@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ../fonctions_cert.sh
+source ../../fonctions_cert.sh
 
 SERVER=$1
 NOM_OU=$2

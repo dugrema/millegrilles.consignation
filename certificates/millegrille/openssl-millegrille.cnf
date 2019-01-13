@@ -1,6 +1,8 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
-KEYS            = /home/mathieu/certificates/millegrilles/privkeys
+KEYS            = $ENV::HOME/certificates/millegrilles/privkeys
+NOM_MILLEGRILLE = $ENV::NOM_MILLEGRILLE
+FQDN_MILLEGRILLE = $ENV::NOM_MILLEGRILLE.$ENV::DOMAIN_SUFFIX
 
 ####################################################################
 [ ca ]
@@ -48,13 +50,13 @@ localityName                = Locality Name (eg, city)
 localityName_default        = Russell
 
 organizationName            = Organization Name (eg, company)
-organizationName_default    = MilleGrilles
+organizationName_default    = $NOM_MILLEGRILLE
 
 organizationalUnitName         = Organizational Unit (eg, division)
 organizationalUnitName_default = Signature
 
 commonName         = Common Name (e.g. server FQDN or YOUR name)
-commonName_default = millegrilles.com
+commonName_default = $FQDN_MILLEGRILLE
 
 emailAddress         = Email Address
 emailAddress_default = mail@mdugre.info

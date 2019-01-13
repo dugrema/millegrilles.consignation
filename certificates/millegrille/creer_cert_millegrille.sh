@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-NOM_OU=$1
-if [ -z $NOM_OU ]; then
+GIT_CERT_FOLDER=$HOME/git/MilleGrilles.consignation/certificates
+MG_FOLDER=$GIT_CERT_FOLDER/millegrille
+
+NOM_MILLEGRILLE=$1
+if [ -z $NOM_MILLEGRILLE ]; then
   echo "Il faut fournir un nom de la MilleGrille pour le certificat"
   exit 1
 fi
-export NOM_OU  # Utilise par CNF
+export NOM_MILLEGRILLE  # Utilise par CNF
 
 DOMAIN_SUFFIX=$2
 if [ -z $DOMAIN_SUFFIX ]; then
@@ -15,11 +18,11 @@ fi
 export DOMAIN_SUFFIX  # Utilise par CNF
 
 # Importer fonctions
-source ../fonctions_creer_certs.sh
+source $MG_FOLDER/fonctions_creer_certs.sh
 
 # Executer code creation d'un nouveau certificat de MilleGrille
-KEY=$PRIVATE_PATH/${NOM_OU}.pem
-CNF_FILE=openssl-millegrille.cnf
+KEY=$PRIVATE_PATH/millegrille_${NOM_MILLEGRILLE}.${DOMAIN_SUFFIX}.pem
+CNF_FILE=$MG_FOLDER/openssl-millegrille.cnf
 
 preparer_path
-requete $CNF_FILE $NOM_OU $KEY
+requete $CNF_FILE $NOM_MILLEGRILLE.$DOMAIN_SUFFIX $KEY
