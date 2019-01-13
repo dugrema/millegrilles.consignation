@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
 # Remote parameters
+GIT_CERT_FOLDER=$HOME/git/MilleGrilles.consignation/certificates
+
 GIT_SCRIPT=git/MilleGrilles.consignation
 SCRIPT_PATH=certificates/noeud
 SCRIPT_CREATION=creer_cert.sh
-CNF_FILE=openssl-millegrilles-signing.cnf
+#CNF_FILE=openssl-millegrilles-signing.cnf
 CERT_SIGNING=millegrilles_signing.cert
 
 preparer_creation_cert_millegrille() {
@@ -50,11 +52,12 @@ preparer_creation_cert_noeud() {
 
 downloader_csr() {
   SERVER=$1
-  NOM_REQUETE=$2
+  SCRIPT_PATH=$2
+  NOM_REQUETE=$3
 
-  REMOTE_CSR=$GIT_SCRIPT/${SCRIPT_PATH}/${NOM_REQUETE}.csr
+  REMOTE_CSR=$GIT_CERT_FOLDER/${SCRIPT_PATH}/${NOM_REQUETE}.csr
 
-  ssh $SERVER cat $REMOTE_CSR > db/requests/$NOM_REQUETE.csr
+  ssh $SERVER cat $REMOTE_CSR > $HOSTNAME/requests/$NOM_REQUETE.csr
 
   if [ $? -ne 0 ]; then
     echo "Erreur de recuperation de la requete de certificat"
@@ -80,20 +83,20 @@ signer_certificat() {
 
 concatener_chaine() {
   # Fonction qui concatene le certificat de signature et le leaf.
-  CERT_FILE=$1
+  NAMED_CERT_FOLDER=$1
+  CERT_FILE=$2
 
-  csplit -f tmp-cert- $CERT_FILE '/-----BEGIN CERTIFICATE-----/' '{*}'
-  cat $CERT_SIGNING tmp-cert-01 > $CERT_FILE.fullchain
-  rm tmp-cert*
+  cat $NAMED_CERT_FOLDER/../millegrilles.intermediaire.cert.pem $NAMED_CERT_FOLDER/$CERT_FILE > $NAMED_CERT_FOLDER/$CERT_FILE.fullchain
 }
 
 transmettre_certificat() {
   SERVER=$1
-  CERT_FILE=$2
+  NAMED_CERT_FOLDER=$2
+  CERT_FILE=$3
 
-  cat $CERT_FILE |
+  (cd $NAMED_CERT_FOLDER; tar -cvzf - ${CERT_FILE}*) |
   ssh $SERVER \
-    cat - \> certificates/millegrilles/certs/$NOM_OU.cert.pem
+    tar -zxC certificates/millegrilles/certs -f -
 
   if [ $? -ne 0 ]; then
     echo "Erreur d'upload du certificat $CERT_FILE"
