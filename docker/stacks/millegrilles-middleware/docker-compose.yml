@@ -37,6 +37,7 @@ services:
     secrets:
       - mongo.root.password
       - pki.millegrilles.ssl.key_cert
+      - pki.millegrilles.ssl.CAcerts
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:
@@ -65,6 +66,7 @@ services:
     secrets:
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.CAcerts
       - pki.millegrilles.web.cert
       - pki.millegrilles.web.key
 
@@ -131,7 +133,7 @@ services:
       ME_CONFIG_MONGODB_SSL: 'true'
       ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
       ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
-      ME_CONFIG_MONGODB_CACERT: /usr/local/etc/millegrilles/certs/millegrilles.authority.pem
+      ME_CONFIG_MONGODB_CACERT: /run/secrets/pki.millegrilles.ssl.CAcerts
       ME_CONFIG_MONGODB_SSLVALIDATE: 'true'
     networks:
       - mg_net
@@ -142,6 +144,7 @@ services:
       - pki.millegrilles.web.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.CAcerts
 
 volumes:
   mg-middleware-mongodata:
