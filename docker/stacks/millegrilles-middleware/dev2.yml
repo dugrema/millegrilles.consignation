@@ -78,7 +78,7 @@ services:
         condition: any
         delay: 30s
     hostname: mq.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_3
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_4
     networks:
       mg_net: null
     ports:
