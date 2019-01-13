@@ -10,4 +10,4 @@ COPY certs $MG_CERTS_FOLDER
 
 VOLUME /opt/mongodb/conf
 
-CMD ["mongod", "--replSet", "rs0", "--sslMode", "requireSSL", "--sslPEMKeyFile", "/run/secrets/pki.millegrilles.ssl.key_cert", "--sslCAFile", "/run/secrets/pki.millegrilles.ssl.CAcerts"]
+CMD ["mongod", "--replSet", "rs0", "--sslMode", "requireSSL", "--sslPEMKeyFile", "/run/secrets/pki.millegrilles.ssl.key_cert", "--sslCAFile", "/run/secrets/pki.millegrilles.ssl.CAchain"]

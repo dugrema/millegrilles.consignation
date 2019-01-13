@@ -54,7 +54,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
       MONGO_INITDB_ROOT_USERNAME: root
     hostname: mongo.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_mongo.x86_64:4.0_3
+    image: registry.maple.mdugre.info:5000/mg_mongo.x86_64:4.0_4
     networks:
       mg_net: null
     ports:
@@ -81,7 +81,7 @@ services:
         condition: any
         delay: 30s
     hostname: mq.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_2
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_3
     networks:
       mg_net: null
     ports:
@@ -92,7 +92,7 @@ services:
     secrets:
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.key
-    - source: pki.millegrilles.ssl.CAcerts
+    - source: pki.millegrilles.ssl.CAchain
     - source: pki.millegrilles.web.cert
     - source: pki.millegrilles.web.key
     volumes:
