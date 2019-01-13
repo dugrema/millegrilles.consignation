@@ -37,6 +37,7 @@ services:
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key_cert
+      - pki.millegrilles.ssl.CAchain
 
   # Ceduleur Python qui transmet un message a toutes les minutes
   ceduleur-python:
@@ -68,6 +69,7 @@ services:
       - mg.ceduleur.json
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
 
   # Script Python pour executer les processus
   processus-python:
@@ -108,6 +110,7 @@ services:
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key_cert
+      - pki.millegrilles.ssl.CAchain
 
   # Script Python pour executer les domaines
   domaines-python:
@@ -143,6 +146,7 @@ services:
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key_cert
+      - pki.millegrilles.ssl.CAchain
 
 networks:
   mg_net:
@@ -171,3 +175,6 @@ secrets:
   pki.millegrilles.ssl.key_cert:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
