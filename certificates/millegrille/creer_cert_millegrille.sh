@@ -23,6 +23,8 @@ source $MG_FOLDER/fonctions_creer_certs.sh
 # Executer code creation d'un nouveau certificat de MilleGrille
 KEY=$PRIVATE_PATH/millegrille_${NOM_MILLEGRILLE}.${DOMAIN_SUFFIX}.pem
 CNF_FILE=$MG_FOLDER/openssl-millegrille.cnf
+HOSTNAME=`hostname --fqdn`
+export HOSTNAME
 
 preparer_path
-requete $CNF_FILE $NOM_MILLEGRILLE.$DOMAIN_SUFFIX $KEY
+requete $CNF_FILE $NOM_MILLEGRILLE $NOM_MILLEGRILLE.$DOMAIN_SUFFIX $KEY

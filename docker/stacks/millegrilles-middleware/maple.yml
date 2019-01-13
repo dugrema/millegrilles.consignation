@@ -1,0 +1,173 @@
+networks:
+  mg_net:
+    external: true
+    name: mg_net
+secrets:
+  mongo.root.password:
+    external: true
+    name: mongo.root.password
+  mongoexpress.web.password:
+    external: true
+    name: mongoexpress.web.password
+  pki.millegrilles.ssl.cert:
+    external: true
+    name: pki.millegrilles.ssl.cert.20181226
+  pki.millegrilles.ssl.key:
+    external: true
+    name: pki.millegrilles.ssl.key.20181226
+  pki.millegrilles.ssl.key_cert:
+    external: true
+    name: pki.millegrilles.ssl.key_cert.20181226
+  pki.millegrilles.web.cert:
+    external: true
+    name: pki.millegrilles.web.cert.20181226
+  pki.millegrilles.web.chain:
+    external: true
+    name: pki.millegrilles.web.chain.20181226
+  pki.millegrilles.web.key:
+    external: true
+    name: pki.millegrilles.web.key.20181226
+services:
+  mongo:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.database == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1.0G
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
+      MONGO_INITDB_ROOT_USERNAME: root
+    hostname: mongo.maple.millegrilles.mdugre.info
+    image: registry.maple.mdugre.info:5000/mg_mongo.x86_64:4.0_1
+    networks:
+      mg_net: null
+    ports:
+    - published: 27017
+      target: 27017
+    secrets:
+    - source: mongo.root.password
+    - source: pki.millegrilles.ssl.key_cert
+    volumes:
+    - /mnt/mongodata1:/data/db:rw
+  mq:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.mq == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '2.00'
+          memory: 750M
+      restart_policy:
+        condition: any
+        delay: 30s
+    hostname: mq.maple.millegrilles.mdugre.info
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_0
+    networks:
+      mg_net: null
+    ports:
+    - published: 5673
+      target: 5673
+    - published: 15671
+      target: 443
+    secrets:
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.web.cert
+    - source: pki.millegrilles.web.key
+    volumes:
+    - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
+  nginx:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.public == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 192M
+      restart_policy:
+        condition: any
+        delay: 30s
+    hostname: www.maple.millegrilles.mdugre.info
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15.1
+    networks:
+      mg_net: null
+    ports:
+    - published: 31080
+      target: 80
+    - published: 31443
+      target: 443
+    secrets:
+    - source: pki.millegrilles.web.chain
+    - source: pki.millegrilles.web.key
+    volumes:
+    - /usr/share/nginx/conf.d:/etc/nginx/conf.d:rw
+    - /usr/share/nginx/html:/usr/share/nginx/html:rw
+  web-mongo-express:
+    depends_on:
+    - mongo
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.consoles == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 75M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/mongoexpress.web.password
+      ME_CONFIG_BASICAUTH_USERNAME: mathieu
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_CACERT: /usr/local/etc/millegrilles/certs/millegrilles.authority.pem
+      ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
+      ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_SSL: "true"
+      ME_CONFIG_MONGODB_SSLVALIDATE: "true"
+      ME_CONFIG_SITE_SSL_CRT_PATH: /run/secrets/pki.millegrilles.web.cert
+      ME_CONFIG_SITE_SSL_ENABLED: "true"
+      ME_CONFIG_SITE_SSL_KEY_PATH: /run/secrets/pki.millegrilles.web.key
+      MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
+      VCAP_APP_HOST: '::'
+      VCAP_APP_PORT: 443
+    image: registry.maple.mdugre.info:5000/mg_mongo_express.x86_64:0.49_4
+    networks:
+      mg_net: null
+    ports:
+    - published: 8081
+      target: 443
+    secrets:
+    - source: mongo.root.password
+    - source: mongoexpress.web.password
+    - source: pki.millegrilles.web.cert
+    - source: pki.millegrilles.web.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key
+version: '3.7'
+volumes:
+  mg-middleware-mongodata:
+    name: mg-middleware-mongodata
+  mg-middleware-nginx-conf:
+    name: mg-middleware-nginx-conf
+  mg-middleware-nginx-www:
+    name: mg-middleware-nginx-www
+  mg-middleware-rabbitmq:
+    name: mg-middleware-rabbitmq
+

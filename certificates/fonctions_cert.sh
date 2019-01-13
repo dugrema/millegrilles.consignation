@@ -96,11 +96,11 @@ concatener_chaine() {
 }
 
 concatener_chaine_noeud() {
-  # Fonction qui concatene le certificat de signature et le leaf.
+  # Fonction qui concatene les certificats de signature et le noeud.
   NAMED_CERT_FOLDER=$1
   CERT_FILE=$2
 
-  cat $NAMED_CERT_FOLDER/../millegrille.cert.pem $NAMED_CERT_FOLDER/$CERT_FILE > $NAMED_CERT_FOLDER/$CERT_FILE.fullchain
+  cat $NAMED_CERT_FOLDER/../millegrille.cert.pem.fullchain $NAMED_CERT_FOLDER/$CERT_FILE > $NAMED_CERT_FOLDER/$CERT_FILE.fullchain
 }
 
 transmettre_certificat() {

@@ -12,10 +12,13 @@ preparer_path() {
 
 requete() {
   CNF_FILE=$1
-  FQDN_MILLEGRILLE=$2
-  KEY=$3
+  NOM_MILLEGRILLE=$2
+  FQDN_MILLEGRILLE=$3
+  KEY=$4
 
   DATE=`date +%Y%m%d`
+
+  echo "fonctions_creer_certs.sh#requete(): Parametres CNF_FILE=$CNF_FILE, NOM_MILLEGRILLE=$NOM_MILLEGRILLE, FQDN_MILLEGRILLE=$FQDN_MILLEGRILLE, KEY=$KEY"
 
   openssl req \
           -config $CNF_FILE \
@@ -25,7 +28,7 @@ requete() {
           -keyout $KEY -keyform PEM
 
   if [ $? -ne 0 ]; then
-    echo "Erreur creation certificat"
+    echo "fonctions_creer_certs.sh#requete(): Erreur creation certificat"
     exit 2
   fi
 
