@@ -9,9 +9,6 @@ secrets:
   mongoexpress.web.password:
     external: true
     name: mongoexpress.web.password
-  pki.millegrilles.ssl.CAcerts:
-    external: true
-    name: pki.millegrilles.ssl.CAcerts.20190113
   pki.millegrilles.ssl.CAchain:
     external: true
     name: pki.millegrilles.ssl.CAchain.20190113
