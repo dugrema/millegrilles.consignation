@@ -1,7 +1,8 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
-MG_NOM          = $ENV::NOM_OU
+NOM_NOEUD       = $ENV::NOM_NOEUD
 DOMAIN_SUFFIX   = $ENV::DOMAIN_SUFFIX
+NOM_MILLEGRILLE = $ENV::NOM_MILLEGRILLE
 EMAIL           = millegrilles@mdugre.info
 
 ####################################################################
@@ -24,13 +25,13 @@ localityName         = Locality Name (eg, city)
 localityName_default = Russell
 
 organizationName            = Organization Name (eg, company)
-organizationName_default    = Millegrilles
+organizationName_default    = $NOM_MILLEGRILLE
 
 commonName           = Common Name (e.g. server FQDN or YOUR name)
-commonName_default   = $MG_NOM
+commonName_default   = $NOM_NOEUD
 
 emailAddress         = Email Address
-emailAddress_default = $MG_NOM.$EMAIL
+emailAddress_default = $NOM_MILLEGRILLE.$EMAIL
 
 ####################################################################
 [ server_req_extensions ]
@@ -39,17 +40,19 @@ subjectKeyIdentifier = hash
 basicConstraints     = CA:FALSE
 keyUsage             = digitalSignature, keyEncipherment
 subjectAltName       = @alternate_names
-nsComment            = "OpenSSL Generated Certificate"
+# nsComment            = "OpenSSL Generated Certificate"
 
 ####################################################################
 [ alternate_names ]
 
 # Faire nom generique pour serveurs utilises dans le swarm
-DNS.1  = mongo
-DNS.2  = mq
+DNS.1  = $NOM_NOEUD
+DNS.2  = mongo
+DNS.3  = mq
 
-DNS.3  = www.$DOMAIN_SUFFIX
-DNS.4  = mongo.$DOMAIN_SUFFIX
-DNS.5  = mongo-express.$DOMAIN_SUFFIX
-DNS.6  = mq.$DOMAIN_SUFFIX
-DNS.7  = coupdoeil.$DOMAIN_SUFFIX
+DNS.4  = $NOM_NOEUD.$DOMAIN_SUFFIX
+DNS.5  = www.$DOMAIN_SUFFIX
+DNS.6  = mongo.$DOMAIN_SUFFIX
+DNS.7  = mongo-express.$DOMAIN_SUFFIX
+DNS.8  = mq.$DOMAIN_SUFFIX
+DNS.9  = coupdoeil.$DOMAIN_SUFFIX
