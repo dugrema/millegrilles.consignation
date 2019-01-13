@@ -11,22 +11,22 @@ secrets:
     name: mongoexpress.web.password
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.millegrilles.ssl.cert.20181226
+    name: pki.millegrilles.ssl.cert.20190113
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.millegrilles.ssl.key.20181226
+    name: pki.millegrilles.ssl.key.20190113
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: pki.millegrilles.ssl.key_cert.20181226
+    name: pki.millegrilles.ssl.key_cert.20190113
   pki.millegrilles.web.cert:
     external: true
-    name: pki.millegrilles.web.cert.20181226
+    name: pki.millegrilles.web.cert.20190113
   pki.millegrilles.web.chain:
     external: true
-    name: pki.millegrilles.web.chain.20181226
+    name: pki.millegrilles.web.chain.20190113
   pki.millegrilles.web.key:
     external: true
-    name: pki.millegrilles.web.key.20181226
+    name: pki.millegrilles.web.key.20190113
 services:
   mongo:
     deploy:

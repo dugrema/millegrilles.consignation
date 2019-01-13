@@ -176,6 +176,9 @@ secrets:
   pki.millegrilles.ssl.key_cert:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.CAcerts:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAcerts.${PKI_MILLEGRILLES_SSL_VERSION}
 
 networks:
   mg_net:

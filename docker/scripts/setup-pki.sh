@@ -12,6 +12,7 @@ CLES_SSL=( \
   pki.millegrilles.ssl.cert \
   pki.millegrilles.ssl.key \
   pki.millegrilles.ssl.key_cert \
+  pki.millegrilles.ssl.CAcerts \
 )
 CLES_WEB=( \
   pki.millegrilles.web.cert \
