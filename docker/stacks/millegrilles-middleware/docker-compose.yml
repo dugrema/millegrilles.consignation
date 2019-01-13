@@ -6,11 +6,11 @@ services:
   # Base de donnees MongoDB
   mongo:
     image: ${REGISTRY}/mg_mongo${MONGO_IMAGE_VERSION}
-#    command:
-#      --replSet rs0
-#      --sslMode requireSSL
-#      --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
-#      --sslCAFile /run/secrets/pki.millegrilles.ssl.ca
+    command:
+      --replSet rs0
+      --sslMode requireSSL
+      --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
+      --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
     hostname: mongo.${URL_DOMAIN}
     volumes:
       - ${MONGODB_DATA_MAPPING}:/data/db
@@ -37,7 +37,7 @@ services:
     secrets:
       - mongo.root.password
       - pki.millegrilles.ssl.key_cert
-      - pki.millegrilles.ssl.CAcerts
+      - pki.millegrilles.ssl.CAchain
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:
@@ -133,7 +133,7 @@ services:
       ME_CONFIG_MONGODB_SSL: 'true'
       ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
       ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
-      ME_CONFIG_MONGODB_CACERT: /run/secrets/pki.millegrilles.ssl.CAcerts
+      ME_CONFIG_MONGODB_CACERT: /run/secrets/pki.millegrilles.ssl.CAchain
       ME_CONFIG_MONGODB_SSLVALIDATE: 'true'
     networks:
       - mg_net
@@ -144,7 +144,7 @@ services:
       - pki.millegrilles.web.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
-      - pki.millegrilles.ssl.CAcerts
+      - pki.millegrilles.ssl.CAchain
 
 volumes:
   mg-middleware-mongodata:
@@ -182,6 +182,9 @@ secrets:
   pki.millegrilles.ssl.CAcerts:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAcerts.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
 
 networks:
   mg_net:
