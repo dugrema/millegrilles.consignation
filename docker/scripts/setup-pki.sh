@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PKI_FOLDER=$HOME/certificates/millegrilles
+PKI_FOLDER=/usr/local/etc/millegrilles
 CERT_FOLDER=$PKI_FOLDER/certs
 KEY_FOLDER=$PKI_FOLDER/keys
 
@@ -12,7 +12,6 @@ CLES_SSL=( \
   pki.millegrilles.ssl.cert \
   pki.millegrilles.ssl.key \
   pki.millegrilles.ssl.key_cert \
-  pki.millegrilles.ssl.CAcerts \
   pki.millegrilles.ssl.CAchain \
 )
 CLES_WEB=( \
@@ -21,7 +20,8 @@ CLES_WEB=( \
   pki.millegrilles.web.key \
 )
 
-CLES=( "${CLES_SSL[@]}" "${CLES_WEB[@]}" )  # Liste complete
+CLES=( "${CLES_SSL[@]}" )  # Liste SSL seulement
+#CLES=( "${CLES_SSL[@]}" "${CLES_WEB[@]}" )  # Liste complete
 
 # Verifier que tous les fichiers de cles peuvent etre lus
 for CLE in ${CLES[@]}; do
