@@ -23,7 +23,7 @@ fi
 
 #apt-get install -y --no-install-recommends curl bzip2 bsdtar build-essential python git wget
 #apt-get install -y --no-install-recommends curl bzip2 bsdtar python git wget
-apt-get install -y --no-install-recommends curl bzip2 bsdtar git wget python make
+apt-get install -y --no-install-recommends curl bzip2 bsdtar git wget python make g++
 
 
 # install gosu

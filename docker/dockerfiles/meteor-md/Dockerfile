@@ -32,7 +32,7 @@ RUN \
   $BUILD_SCRIPTS_DIR/install-deps.sh && \
   $BUILD_SCRIPTS_DIR/install-node.sh && \
   $BUILD_SCRIPTS_DIR/install-meteor.sh && \
-  $BUILD_SCRIPTS_DIR/post-install-cleanup.sh 
+  $BUILD_SCRIPTS_DIR/post-install-cleanup.sh
 
 # Define all --build-arg options
 ONBUILD ARG APT_GET_INSTALL
