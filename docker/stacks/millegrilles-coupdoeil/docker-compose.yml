@@ -59,7 +59,7 @@ services:
      - "30080:80"
      - "30443:443"
     environment:
-      NGINX_CONFIG_FILE: meteor.conf     
+      NGINX_CONFIG_FILE: meteor.conf
     networks:
       - mg_net
     secrets:
@@ -84,3 +84,10 @@ secrets:
   pki.millegrilles.ssl.cert:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+
+volumes:
+  mg-coupdoeil-nginx-conf:
+    name: mg-coupdoeil-nginx-conf
+  mg-coupdoeil-nginx-www:
+    name: mg-coupdoeil-nginx-www
+  
