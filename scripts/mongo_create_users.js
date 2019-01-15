@@ -139,10 +139,10 @@ db.createUser(
 db.createUser(
    {
      user: "coupdoeilmeteor",
-     pwd: "PWD",
+     pwd: "higCYUD096aQUI67",
      roles:
        [
-         { role: "read", db: "mg-pivoine" },
+         { role: "read", db: "mg-dev2" },
          { role: "read", db: "local" }
        ]
    }

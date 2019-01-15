@@ -6,7 +6,7 @@ services:
   # Application Meteor pour Coup D'Oeil
   coupdoeilmeteor:
     image:  ${REGISTRY}/coupdoeil_meteor${MG_COUPDOEILMETEOR_IMAGE_VERSION}
-    hostname: coupdoeilmeteor.${URL_DOMAIN}
+    hostname: coupdoeil.${URL_DOMAIN}
     deploy:
       replicas: 1
       placement:
@@ -27,7 +27,7 @@ services:
     environment:
       MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
       MONGO_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/mg-${MG_NOM_MILLEGRILLE}?ssl=true
-      MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=admin
+      MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=mg-${MG_NOM_MILLEGRILLE}
       MG_MQ_USER: coupdoeil
       MG_MQ_PASSWORD: gLOUj3xLAj82
     networks:
@@ -35,6 +35,7 @@ services:
     secrets:
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
 
   # Proxy avec nginx
   coupdoeilnginx:
@@ -84,10 +85,12 @@ secrets:
   pki.millegrilles.ssl.cert:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
 
 volumes:
   mg-coupdoeil-nginx-conf:
     name: mg-coupdoeil-nginx-conf
   mg-coupdoeil-nginx-www:
     name: mg-coupdoeil-nginx-www
-  

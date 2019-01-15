@@ -3,6 +3,9 @@ networks:
     external: true
     name: mg_net
 secrets:
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: pki.millegrilles.ssl.CAchain.20190113
   pki.millegrilles.ssl.cert:
     external: true
     name: pki.millegrilles.ssl.cert.20190113
@@ -45,10 +48,10 @@ services:
       MG_MQ_SSL: "on"
       MG_MQ_USER: coupdoeil
       MG_NOM_MILLEGRILLE: dev2
-      MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=admin
+      MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=mg-dev2
       MONGO_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/mg-dev2?ssl=true
-    hostname: coupdoeilmeteor.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/coupdoeil_meteor.x86_64:v1.3.1
+    hostname: coupdoeil.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/coupdoeil_meteor.x86_64:v1.3.3
     networks:
       mg_net: null
     ports:
@@ -57,6 +60,7 @@ services:
     secrets:
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.CAchain
   coupdoeilnginx:
     deploy:
       placement:
