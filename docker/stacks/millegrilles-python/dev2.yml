@@ -58,7 +58,7 @@ services:
       MG_MQ_USER: cedule
       MG_NOM_MILLEGRILLE: dev2
     hostname: ceduleur-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:
@@ -66,6 +66,7 @@ services:
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.CAchain
+    - source: pki.millegrilles.ssl.key_cert
   domaines-python:
     command: demarrer_domaine.py --info
     deploy:
@@ -99,7 +100,7 @@ services:
       MG_MQ_USER: mgdomaines
       MG_NOM_MILLEGRILLE: dev2
     hostname: domaines-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:
@@ -109,7 +110,7 @@ services:
     - source: pki.millegrilles.ssl.key_cert
     - source: pki.millegrilles.ssl.CAchain
   processus-python:
-    command: demarrer_mgp.py --info
+    command: demarrer_mgp.py
     deploy:
       placement:
         constraints:
@@ -146,7 +147,7 @@ services:
       MG_MQ_USER: mgprocessus
       MG_NOM_MILLEGRILLE: dev2
     hostname: processus-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:
@@ -186,7 +187,7 @@ services:
       MG_MQ_USER: transaction
       MG_NOM_MILLEGRILLE: dev2
     hostname: transactions-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:

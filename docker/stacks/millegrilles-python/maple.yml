@@ -58,7 +58,7 @@ services:
       MG_MQ_USER: cedule
       MG_NOM_MILLEGRILLE: maple
     hostname: ceduleur-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:
@@ -66,6 +66,7 @@ services:
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.CAchain
+    - source: pki.millegrilles.ssl.key_cert
   domaines-python:
     command: demarrer_domaine.py --info
     deploy:
@@ -99,7 +100,7 @@ services:
       MG_MQ_USER: mgdomaines
       MG_NOM_MILLEGRILLE: maple
     hostname: domaines-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:
@@ -109,7 +110,7 @@ services:
     - source: pki.millegrilles.ssl.key_cert
     - source: pki.millegrilles.ssl.CAchain
   processus-python:
-    command: demarrer_mgp.py --info
+    command: demarrer_mgp.py
     deploy:
       placement:
         constraints:
@@ -146,7 +147,7 @@ services:
       MG_MQ_USER: mgprocessus
       MG_NOM_MILLEGRILLE: maple
     hostname: processus-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:
@@ -186,7 +187,7 @@ services:
       MG_MQ_USER: transaction
       MG_NOM_MILLEGRILLE: maple
     hostname: transactions-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.5
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python.x86_64:v1.3.7
     networks:
       mg_net: null
     secrets:
