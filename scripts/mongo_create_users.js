@@ -99,6 +99,17 @@ db.createUser(
    }
 )
 
+db.createUser(
+   {
+     user: "cedule",
+     pwd: "PWD_CEDULE",
+     roles:
+       [
+         { role: "read", db: "mg-maple" }
+       ]
+   }
+)
+
 // Creation d'usagers pour les appareils
 db.createUser(
    {
