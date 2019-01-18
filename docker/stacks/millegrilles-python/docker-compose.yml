@@ -64,6 +64,7 @@ services:
       MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
       MG_CONFIG_JSON: /run/secrets/mg.ceduleur.json
       MG_MQ_USER: ${MG_MQ_USER_CEDULE}
+      MG_MONGO_USERNAME: ${MG_MONGO_USER_CEDULE}
     networks:
       - mg_net
     secrets:
