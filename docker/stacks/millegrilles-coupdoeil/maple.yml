@@ -78,7 +78,7 @@ services:
       NGINX_CONFIG_FILE: meteor.conf
       URL_DOMAIN: maple.millegrilles.mdugre.info
     hostname: coupdoeil.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15_2
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15_3
     networks:
       mg_net: null
     ports:
