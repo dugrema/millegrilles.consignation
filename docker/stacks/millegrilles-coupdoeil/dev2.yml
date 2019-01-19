@@ -51,7 +51,7 @@ services:
       MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=mg-dev2
       MONGO_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/mg-dev2?ssl=true
     hostname: coupdoeil.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/coupdoeil_meteor.x86_64:v1.3.3
+    image: registry.maple.mdugre.info:5000/coupdoeil_meteor.x86_64:v1.3.4
     networks:
       mg_net: null
     ports:
@@ -76,8 +76,9 @@ services:
         delay: 30s
     environment:
       NGINX_CONFIG_FILE: meteor.conf
+      URL_DOMAIN: dev2.maple.mdugre.info
     hostname: coupdoeil.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15.1
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15_2
     networks:
       mg_net: null
     ports:

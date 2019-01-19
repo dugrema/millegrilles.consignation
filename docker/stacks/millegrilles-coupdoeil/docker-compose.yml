@@ -61,6 +61,7 @@ services:
      - "30443:443"
     environment:
       NGINX_CONFIG_FILE: meteor.conf
+      URL_DOMAIN: ${URL_DOMAIN}
     networks:
       - mg_net
     secrets:
