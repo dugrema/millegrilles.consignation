@@ -17,16 +17,16 @@ secrets:
     name: mg.transactions.json.1
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.millegrilles.ssl.CAchain.20190113
+    name: pki.millegrilles.ssl.CAchain.20190207
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.millegrilles.ssl.cert.20190113
+    name: pki.millegrilles.ssl.cert.20190207
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.millegrilles.ssl.key.20190113
+    name: pki.millegrilles.ssl.key.20190207
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: pki.millegrilles.ssl.key_cert.20190113
+    name: pki.millegrilles.ssl.key_cert.20190207
 services:
   ceduleur-python:
     command: demarrer_ceduleur.py
