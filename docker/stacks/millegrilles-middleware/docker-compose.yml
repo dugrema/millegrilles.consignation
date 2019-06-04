@@ -4,40 +4,40 @@ version: '3.7'
 services:
 
   # Base de donnees MongoDB
-  mongo:
-    image: ${REGISTRY}/mg_mongo${MONGO_IMAGE_VERSION}
-    command:
-      --replSet rs0
-      --sslMode requireSSL
-      --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
-      --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
-    hostname: mongo.${URL_DOMAIN}
-    volumes:
-      - ${MONGODB_DATA_MAPPING}:/data/db
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.netzone.private == true
-          - node.labels.millegrilles.database == true
-      resources:
-        limits:
-          cpus: "1.5"
-          memory: 1.5G
-      restart_policy:
-        condition: any
-        delay: 30s
-    ports:
-      - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
-    networks:
-      - mg_net
-    secrets:
-      - mongo.root.password
-      - pki.millegrilles.ssl.key_cert
-      - pki.millegrilles.ssl.CAchain
+  # mongo:
+  #   image: ${REGISTRY}/mg_mongo${MONGO_IMAGE_VERSION}
+  #   command:
+  #     --replSet rs0
+  #     --sslMode requireSSL
+  #     --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
+  #     --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
+  #   hostname: mongo.${URL_DOMAIN}
+    # volumes:
+    #   - ${MONGODB_DATA_MAPPING}:/data/db
+    # deploy:
+    #   replicas: 1
+    #   placement:
+    #     constraints:
+    #       - node.labels.netzone.private == true
+    #       - node.labels.millegrilles.database == true
+    #   resources:
+    #     limits:
+    #       cpus: "1.5"
+    #       memory: 1.5G
+    #   restart_policy:
+    #     condition: any
+    #     delay: 30s
+    # ports:
+    #   - "27017:27017"
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+    #   MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
+    # networks:
+    #   - mg_net
+    # secrets:
+    #   - mongo.root.password
+    #   - pki.millegrilles.ssl.key_cert
+    #   - pki.millegrilles.ssl.CAchain
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:
@@ -71,80 +71,80 @@ services:
       - pki.millegrilles.web.key
 
   # Proxy avec nginx
-  nginx:
-    image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
-    hostname: www.${URL_DOMAIN}
-    volumes:
-      - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
-      - ${NGINX_WWW_PATH}:/usr/share/nginx/html
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.netzone.public == true
-      resources:
-        limits:
-          cpus: "1.00"
-          memory: 192M
-      restart_policy:
-        condition: any
-        delay: 30s
-    ports:
-     - "31080:80"
-     - "31443:443"
-    networks:
-      - mg_net
-    secrets:
-      - pki.millegrilles.web.chain
-      - pki.millegrilles.web.key
+  # nginx:
+  #   image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
+  #   hostname: www.${URL_DOMAIN}
+  #   volumes:
+  #     - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
+  #     - ${NGINX_WWW_PATH}:/usr/share/nginx/html
+  #   deploy:
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.netzone.public == true
+  #     resources:
+  #       limits:
+  #         cpus: "1.00"
+  #         memory: 192M
+  #     restart_policy:
+  #       condition: any
+  #       delay: 30s
+  #   ports:
+  #    - "31080:80"
+  #    - "31443:443"
+  #   networks:
+  #     - mg_net
+  #   secrets:
+  #     - pki.millegrilles.web.chain
+  #     - pki.millegrilles.web.key
 
   # Utilitaires pour gerer / debugger les services
-  web-mongo-express:
-    image: ${REGISTRY}/mg_mongo_express${MONGO_EXPRESS_IMAGE_VERSION}
-    depends_on:
-        - mongo
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.netzone.private == true
-          - node.labels.millegrilles.consoles == true
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 75M
-      restart_policy:
-        condition: any
-        delay: 30s
-    ports:
-      - 8081:443
-    environment:
-      ME_CONFIG_BASICAUTH_USERNAME: mathieu
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-# Environnement production
-      MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
-      ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/mongoexpress.web.password
-      VCAP_APP_HOST: '::'
-      VCAP_APP_PORT: 443
-      ME_CONFIG_SITE_SSL_ENABLED: 'true'
-      ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/pki.millegrilles.web.cert'
-      ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/pki.millegrilles.web.key'
-      ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_MONGODB_SSL: 'true'
-      ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
-      ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
-      ME_CONFIG_MONGODB_CACERT: /run/secrets/pki.millegrilles.ssl.CAchain
-      ME_CONFIG_MONGODB_SSLVALIDATE: 'true'
-    networks:
-      - mg_net
-    secrets:
-      - mongo.root.password
-      - mongoexpress.web.password
-      - pki.millegrilles.web.cert
-      - pki.millegrilles.web.key
-      - pki.millegrilles.ssl.cert
-      - pki.millegrilles.ssl.key
-      - pki.millegrilles.ssl.CAchain
+#   web-mongo-express:
+#     image: ${REGISTRY}/mg_mongo_express${MONGO_EXPRESS_IMAGE_VERSION}
+#     depends_on:
+#         - mongo
+#     deploy:
+#       replicas: 1
+#       placement:
+#         constraints:
+#           - node.labels.netzone.private == true
+#           - node.labels.millegrilles.consoles == true
+#       resources:
+#         limits:
+#           cpus: "0.5"
+#           memory: 75M
+#       restart_policy:
+#         condition: any
+#         delay: 30s
+#     ports:
+#       - 8081:443
+#     environment:
+#       ME_CONFIG_BASICAUTH_USERNAME: mathieu
+#       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+# # Environnement production
+#       MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
+#       ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/mongoexpress.web.password
+#       VCAP_APP_HOST: '::'
+#       VCAP_APP_PORT: 443
+#       ME_CONFIG_SITE_SSL_ENABLED: 'true'
+#       ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/pki.millegrilles.web.cert'
+#       ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/pki.millegrilles.web.key'
+#       ME_CONFIG_MONGODB_SERVER: mongo
+#       ME_CONFIG_MONGODB_SSL: 'true'
+#       ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
+#       ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert
+#       ME_CONFIG_MONGODB_CACERT: /run/secrets/pki.millegrilles.ssl.CAchain
+#       ME_CONFIG_MONGODB_SSLVALIDATE: 'true'
+#     networks:
+#       - mg_net
+#     secrets:
+#       - mongo.root.password
+#       - mongoexpress.web.password
+#       - pki.millegrilles.web.cert
+#       - pki.millegrilles.web.key
+#       - pki.millegrilles.ssl.cert
+#       - pki.millegrilles.ssl.key
+#       - pki.millegrilles.ssl.CAchain
 
 volumes:
   mg-middleware-mongodata:
