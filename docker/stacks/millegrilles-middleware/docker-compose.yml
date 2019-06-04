@@ -4,40 +4,40 @@ version: '3.7'
 services:
 
   # Base de donnees MongoDB
-  # mongo:
-  #   image: ${REGISTRY}/mg_mongo${MONGO_IMAGE_VERSION}
-  #   command:
-  #     --replSet rs0
-  #     --sslMode requireSSL
-  #     --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
-  #     --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
-  #   hostname: mongo.${URL_DOMAIN}
-    # volumes:
-    #   - ${MONGODB_DATA_MAPPING}:/data/db
-    # deploy:
-    #   replicas: 1
-    #   placement:
-    #     constraints:
-    #       - node.labels.netzone.private == true
-    #       - node.labels.millegrilles.database == true
-    #   resources:
-    #     limits:
-    #       cpus: "1.5"
-    #       memory: 1.5G
-    #   restart_policy:
-    #     condition: any
-    #     delay: 30s
-    # ports:
-    #   - "27017:27017"
-    # environment:
-    #   MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-    #   MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
-    # networks:
-    #   - mg_net
-    # secrets:
-    #   - mongo.root.password
-    #   - pki.millegrilles.ssl.key_cert
-    #   - pki.millegrilles.ssl.CAchain
+  mongo:
+    image: ${REGISTRY}/mg_mongo${MONGO_IMAGE_VERSION}
+    command:
+      --replSet rs0
+      --sslMode requireSSL
+      --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
+      --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
+    hostname: mongo.${URL_DOMAIN}
+    volumes:
+      - ${MONGODB_DATA_MAPPING}:/data/db
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.database == true
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1.5G
+      restart_policy:
+        condition: any
+        delay: 30s
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
+    networks:
+      - mg_net
+    secrets:
+      - mongo.root.password
+      - pki.millegrilles.ssl.key_cert
+      - pki.millegrilles.ssl.CAchain
 
   # Systeme de messagerie RabbitMQ, incluant web manager
   mq:

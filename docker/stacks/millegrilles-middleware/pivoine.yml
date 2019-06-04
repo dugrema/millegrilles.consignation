@@ -31,6 +31,38 @@ secrets:
     external: true
     name: pki.millegrilles.web.key.20190604
 services:
+  mongo:
+    command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
+      --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.database == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1.5G
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
+      MONGO_INITDB_ROOT_USERNAME: root
+    hostname: mongo.pivoine.millegrilles.mdugre.info
+    image: registry.maple.mdugre.info:5000/mg_mongo:4.0_4
+    networks:
+      mg_net: null
+    ports:
+    - published: 27017
+      target: 27017
+    secrets:
+    - source: mongo.root.password
+    - source: pki.millegrilles.ssl.key_cert
+    - source: pki.millegrilles.ssl.CAchain
+    volumes:
+    - /mnt/mongodata1:/data/db:rw
   mq:
     deploy:
       placement:
