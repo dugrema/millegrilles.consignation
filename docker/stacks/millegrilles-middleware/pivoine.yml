@@ -62,7 +62,7 @@ services:
     - source: pki.millegrilles.ssl.key_cert
     - source: pki.millegrilles.ssl.CAchain
     volumes:
-    - /mnt/mongodata1:/data/db:rw
+    - mg-middleware-mongodata:/data/db:rw
   mq:
     deploy:
       placement:
