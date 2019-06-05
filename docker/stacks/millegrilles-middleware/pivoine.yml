@@ -11,25 +11,25 @@ secrets:
     name: mongoexpress.web.password
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.millegrilles.ssl.CAchain.20190604
+    name: pki.millegrilles.ssl.CAchain.20190605
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.millegrilles.ssl.cert.20190604
+    name: pki.millegrilles.ssl.cert.20190605
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.millegrilles.ssl.key.20190604
+    name: pki.millegrilles.ssl.key.20190605
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: pki.millegrilles.ssl.key_cert.20190604
+    name: pki.millegrilles.ssl.key_cert.20190605
   pki.millegrilles.web.cert:
     external: true
-    name: pki.millegrilles.web.cert.20190604
+    name: pki.millegrilles.web.cert.20190605
   pki.millegrilles.web.chain:
     external: true
-    name: pki.millegrilles.web.chain.20190604
+    name: pki.millegrilles.web.chain.20190605
   pki.millegrilles.web.key:
     external: true
-    name: pki.millegrilles.web.key.20190604
+    name: pki.millegrilles.web.key.20190605
 services:
   mongo:
     command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
@@ -150,3 +150,4 @@ volumes:
     name: mg-middleware-nginx-www
   mg-middleware-rabbitmq:
     name: mg-middleware-rabbitmq
+
