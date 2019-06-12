@@ -3,6 +3,7 @@
 echo "Executer l'ajout de plugins pour RabbitMQ"
 rabbitmq-plugins enable --offline rabbitmq_shovel
 rabbitmq-plugins enable --offline rabbitmq_shovel_management
+rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
 echo "Plugins ajoutes"
 
 echo "Copier la configuration des usagers"
