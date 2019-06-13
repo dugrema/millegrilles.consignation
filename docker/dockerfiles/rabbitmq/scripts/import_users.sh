@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+FILE_PATH=/opt/rabbitmq/conf
+
 function ajouter_usager {
   FAU_USER=$1
   rabbitmqctl add_user $FAU_USER CLEAR_ME < /dev/null
@@ -34,9 +36,10 @@ function ajouter_usager_inter {
 filename=$1
 while IFS= read -r line; do
   IFS=';' read -r -a parametres <<< "$line"
-  USAGER=${parametres[0]}
-  VHOST=${parametres[1]}
-  ROLE=${parametres[2]}
+  DOCID=${parametres[0]}
+  USAGER=${parametres[1]}
+  VHOST=${parametres[2]}
+  ROLE=${parametres[3]}
   echo "Usager: $USAGER, Role: $ROLE"
 
   if [ $ROLE == "noeud" ]; then
@@ -45,8 +48,6 @@ while IFS= read -r line; do
     ajouter_usager_inter $USAGER $VHOST
   fi
 
-  if [ $RT_USERADD -eq 0 ] || [ $RT_USERADD -eq 70 ]; then
-    echo "$USAGER;$VHOST;$ROLE" >> processed_users.txt
-  fi
+  echo "$DOCID;$RT_USERADD;$USAGER;$VHOST;$ROLE" >> $FILE_PATH/processed_users.txt
 
 done < "$filename"

@@ -12,6 +12,10 @@ else
   echo "Erreur preparation definitions.json, utilisation du fichier par defaut."
 fi
 
-echo "Demarrage rabbitmq-server"
 cd /
+
+echo "Demarrage script de traitement des usagers"
+/opt/rabbitmq/dist/monitor_user_operations.sh &
+
+echo "Demarrage rabbitmq-server"
 docker-entrypoint.sh rabbitmq-server

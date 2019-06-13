@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SCRIPT_PATH=/opt/rabbitmq/conf
+SCRIPT_PATH=/opt/rabbitmq/dist
 FILE_PATH=/opt/rabbitmq/conf
 USER_FILE=$FILE_PATH/new_users.txt
 PROCESS_FILE=$FILE_PATH/processing_users.txt
