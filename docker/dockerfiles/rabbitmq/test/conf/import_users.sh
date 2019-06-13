@@ -3,6 +3,7 @@
 function ajouter_usager {
   FAU_USER=$1
   rabbitmqctl add_user $FAU_USER CLEAR_ME < /dev/null
+  RT_USERADD=$?
   rabbitmqctl clear_password $FAU_USER < /dev/null
 }
 
@@ -42,6 +43,10 @@ while IFS= read -r line; do
     ajouter_usager_noeud $USAGER $VHOST
   elif [ $ROLE == "inter" ]; then
     ajouter_usager_inter $USAGER $VHOST
+  fi
+
+  if [ $RT_USERADD -eq 0 ] || [ $RT_USERADD -eq 70 ]; then
+    echo "$USAGER;$VHOST;$ROLE" >> processed_users.txt
   fi
 
 done < "$filename"
