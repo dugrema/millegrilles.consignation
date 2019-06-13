@@ -9,6 +9,21 @@ function ajouter_usager {
   rabbitmqctl clear_password $FAU_USER < /dev/null
 }
 
+function ajouter_usager_middleware {
+  F_USER=$1
+  F_VHOST=$2
+
+  echo "Ajouter $F_USER sur nouveau vhost $F_VHOST"
+  ajouter_usager $F_USER
+
+  # Input via /dev/null pour eviter d'arreter la boucle
+  rabbitmqctl add_vhost $F_VHOST < /dev/null
+  rabbitmqctl set_permissions -p $F_VHOST $F_USER ".*" ".*" ".*" < /dev/null
+  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.middleware" ".*" ".*" < /dev/null
+  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.inter" ".*" ".*" < /dev/null
+  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.noeuds" ".*" ".*" < /dev/null
+}
+
 function ajouter_usager_noeud {
   F_USER=$1
   F_VHOST=$2
@@ -42,7 +57,9 @@ while IFS= read -r line; do
   ROLE=${parametres[3]}
   echo "Usager: $USAGER, Role: $ROLE"
 
-  if [ $ROLE == "noeud" ]; then
+  if [ $ROLE == "middleware" ]; then
+    ajouter_usager_middleware $USAGER $VHOST
+  elif [ $ROLE == "noeud" ]; then
     ajouter_usager_noeud $USAGER $VHOST
   elif [ $ROLE == "inter" ]; then
     ajouter_usager_inter $USAGER $VHOST

@@ -1,0 +1,6 @@
+124hsdkhufdxuka;0;CN=cuisine.maple.mdugre.info,OU=Middleware,O=dev2,L=Russell,ST=Ontario,C=CA;sansnom;middleware
+123hsdkhufdxuka;70;CN=cuisine.maple.mdugre.info,OU=Middleware,O=dev2,L=Russell,ST=Ontario,C=CA;sansnom;noeud
+236hsdfdsffddkv;0;CN=garage.maple.mdugre.info,OU=Middleware,O=dev2,L=Russell,ST=Ontario,C=CA;sansnom;noeud
+124hsdkhufdxuka;0;CN=dev2.maple.mdugre.info,OU=Middleware,O=dev2,L=Russell,ST=Ontario,C=CA;sansnom;middleware
+123hsdkhufdxuka;0;CN=cuisine.maple.mdugre.info,OU=Middleware,O=dev2,L=Russell,ST=Ontario,C=CA;sansnom;noeud
+236hsdfdsffddkv;0;CN=garage.maple.mdugre.info,OU=Middleware,O=dev2,L=Russell,ST=Ontario,C=CA;sansnom;noeud
