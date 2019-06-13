@@ -9,7 +9,7 @@ echo "Plugins ajoutes"
 echo "Copier la configuration des usagers"
 mkdir -p $APP_BUNDLE_FOLDER
 cp $APP_SOURCE_FOLDER/config/rabbitmq.config /etc/rabbitmq
-cp $APP_SOURCE_FOLDER/config/definitions.json $APP_BUNDLE_FOLDER/
+cp $APP_SOURCE_FOLDER/config/definitions_template.json $APP_BUNDLE_FOLDER
 
 # Installer setcap pour permettre de demarrer sur port 443
 apt-get update
