@@ -22,6 +22,7 @@ function ajouter_usager_middleware {
   rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.middleware" ".*" ".*" < /dev/null
   rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.inter" ".*" ".*" < /dev/null
   rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.noeuds" ".*" ".*" < /dev/null
+  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.public" ".*" ".*" < /dev/null
 }
 
 function ajouter_usager_noeud {
@@ -32,8 +33,8 @@ function ajouter_usager_noeud {
   ajouter_usager $F_USER
 
   # Input via /dev/null pour eviter d'arreter la boucle
-  rabbitmqctl set_permissions -p $F_VHOST $F_USER "^amq\.gen\-.*$" "^amq\.gen\-.*$" "^(amq\.gen\-.*|millegrilles\.noeuds)$" < /dev/null
-  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.noeuds" "nouvelle\.transaction" "topic\.test" < /dev/null
+  rabbitmqctl set_permissions -p $F_VHOST $F_USER "^amq\.gen\-.*$" "^(amq\.gen\-.*|millegrilles\.noeuds)$" "^(amq\.gen\-.*|millegrilles\.noeuds)$" < /dev/null
+  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.noeuds" "transaction\.nouvelle|pki\.certificat.*" "^$" < /dev/null
 }
 
 function ajouter_usager_inter {
@@ -44,8 +45,8 @@ function ajouter_usager_inter {
   ajouter_usager $F_USER
 
   # Input via /dev/null pour eviter d'arreter la boucle
-  rabbitmqctl set_permissions -p $F_VHOST $F_USER "^amq\.gen\-.*$" "^amq\.gen\-.*$" "^(amq\.gen\-.*|millegrilles\.inter)$" < /dev/null
-  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.inter" "nouvelle\.transaction" "topic\.test" < /dev/null
+  rabbitmqctl set_permissions -p $F_VHOST $F_USER "^amq\.gen\-.*$" "^(amq\.gen\-.*|millegrilles\.inter)$" "^(amq\.gen\-.*|millegrilles\.inter)$" < /dev/null
+  rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.inter" "transaction\.nouvelle|pki\.certificat.*" "^$" < /dev/null
 }
 
 filename=$1
