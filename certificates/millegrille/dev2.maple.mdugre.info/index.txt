@@ -1,2 +1,3 @@
 V	200114155913Z		00	unknown	/C=CA/ST=Ontario/L=Russell/O=dev2/OU=Middleware/CN=dev2.maple.mdugre.info
 V	200114160032Z		01	unknown	/C=CA/ST=Ontario/L=Russell/O=dev2/OU=Middleware/CN=dev2.maple.mdugre.info
+V	200604192751Z		02	unknown	/C=CA/ST=Quebec/L=NDMontCarmel/O=pivoine/OU=MilleGrille/CN=pivoine.millegrilles.mdugre.info

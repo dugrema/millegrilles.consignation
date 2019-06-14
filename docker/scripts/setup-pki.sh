@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-PKI_FOLDER=/usr/local/etc/millegrilles
-CERT_FOLDER=$PKI_FOLDER/certs
+PKI_FOLDER=/etc/opt/millegrilles/pivoine/pki
+# CERT_FOLDER=$PKI_FOLDER
 KEY_FOLDER=$PKI_FOLDER/keys
 
 # Ce script utilise des links existants pour importer les cles dans docker
@@ -17,6 +17,7 @@ CLES_SSL=( \
 CLES_WEB=( \
   pki.millegrilles.web.cert \
   pki.millegrilles.web.chain \
+  pki.millegrilles.web.fullchain \
   pki.millegrilles.web.key \
 )
 

@@ -45,6 +45,7 @@ services:
     hostname: mq.${URL_DOMAIN}
     volumes:
       - mg-middleware-rabbitmq:/var/lib/rabbitmq
+      - ${MQ_CONF_MAPPING}:/opt/rabbitmq/conf
     deploy:
       replicas: 1
       placement:
@@ -71,32 +72,32 @@ services:
       - pki.millegrilles.web.key
 
   # Proxy avec nginx
-  nginx:
-    image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
-    hostname: www.${URL_DOMAIN}
-    volumes:
-      - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
-      - ${NGINX_WWW_PATH}:/usr/share/nginx/html
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.netzone.public == true
-      resources:
-        limits:
-          cpus: "1.00"
-          memory: 192M
-      restart_policy:
-        condition: any
-        delay: 30s
-    ports:
-     - "31080:80"
-     - "31443:443"
-    networks:
-      - mg_net
-    secrets:
-      - pki.millegrilles.web.chain
-      - pki.millegrilles.web.key
+  # nginx:
+  #   image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
+  #   hostname: www.${URL_DOMAIN}
+  #   volumes:
+  #     - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
+  #     - ${NGINX_WWW_PATH}:/usr/share/nginx/html
+  #   deploy:
+  #     replicas: 1
+  #     placement:
+  #       constraints:
+  #         - node.labels.netzone.public == true
+  #     resources:
+  #       limits:
+  #         cpus: "1.00"
+  #         memory: 192M
+  #     restart_policy:
+  #       condition: any
+  #       delay: 30s
+  #   ports:
+  #    - "31080:80"
+  #    - "31443:443"
+  #   networks:
+  #     - mg_net
+  #   secrets:
+  #     - pki.millegrilles.web.chain
+  #     - pki.millegrilles.web.key
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
@@ -151,6 +152,8 @@ volumes:
     name: mg-middleware-mongodata
   mg-middleware-rabbitmq:
     name: mg-middleware-rabbitmq
+  mg-middleware-rabbitmq-conf:
+    name: mg-middleware-rabbitmq-conf
   mg-middleware-nginx-conf:
     name: mg-middleware-nginx-conf
   mg-middleware-nginx-www:

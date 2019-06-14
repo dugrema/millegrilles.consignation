@@ -5,3 +5,4 @@ V	210104154800Z		03	unknown	/C=CA/ST=Ontario/L=Russell/O=dev2/OU=MilleGrille/CN=
 V	210104155548Z		04	unknown	/C=CA/ST=Ontario/L=Russell/O=dev2/OU=MilleGrille/CN=dev2.maple.mdugre.info
 V	210104233606Z		05	unknown	/C=CA/ST=Ontario/L=Russell/O=maple/OU=MilleGrille/CN=maple.millegrilles.mdugre.info
 V	210122155321Z		06	unknown	/C=CA/ST=Ontario/L=Russell/O=pivoine/OU=MilleGrille/CN=pivoine.millegrilles.mdugre.info
+V	210527004006Z		07	unknown	/C=CA/ST=Quebec/L=NDMontCarmel/O=pivoine/OU=MilleGrille/CN=pivoine.millegrilles.mdugre.info

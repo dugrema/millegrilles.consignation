@@ -21,8 +21,8 @@ source $GIT_FOLDER/fonctions_cert.sh
 export HOSTNAME NOM_MILLEGRILLE DOMAIN_SUFFIX
 
 # Creer et signer un nouveau certificat
-preparer_creation_cert_millegrille $SERVER $NOM_MILLEGRILLE $DOMAIN_SUFFIX
-downloader_csr $SERVER millegrille millegrille_${NOM_MILLEGRILLE}.${DOMAIN_SUFFIX}
+# preparer_creation_cert_millegrille $SERVER $NOM_MILLEGRILLE $DOMAIN_SUFFIX
+# downloader_csr $SERVER millegrille millegrille_${NOM_MILLEGRILLE}.${DOMAIN_SUFFIX}
 signer_certificat \
   $HOSTNAME/requests/millegrille_${NOM_MILLEGRILLE}.${DOMAIN_SUFFIX}.csr \
   $HOSTNAME/named_certs/millegrille_${NOM_MILLEGRILLE}.${DOMAIN_SUFFIX}.cert.pem
