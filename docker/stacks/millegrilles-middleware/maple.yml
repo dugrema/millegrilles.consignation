@@ -51,7 +51,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
       MONGO_INITDB_ROOT_USERNAME: root
     hostname: mongo.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_mongo.x86_64:4.0_4
+    image: registry.maple.mdugre.info:5000/mg_mongo:4.0_4
     networks:
       mg_net: null
     ports:
@@ -78,7 +78,7 @@ services:
         condition: any
         delay: 30s
     hostname: mq.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_4
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq:3.7-management_5
     networks:
       mg_net: null
     ports:
@@ -94,34 +94,7 @@ services:
     - source: pki.millegrilles.web.key
     volumes:
     - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
-  nginx:
-    deploy:
-      placement:
-        constraints:
-        - node.labels.netzone.public == true
-      replicas: 1
-      resources:
-        limits:
-          cpus: '1.00'
-          memory: 192M
-      restart_policy:
-        condition: any
-        delay: 30s
-    hostname: www.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15.1
-    networks:
-      mg_net: null
-    ports:
-    - published: 31080
-      target: 80
-    - published: 31443
-      target: 443
-    secrets:
-    - source: pki.millegrilles.web.chain
-    - source: pki.millegrilles.web.key
-    volumes:
-    - /usr/share/nginx/maple/conf.d:/etc/nginx/conf.d:rw
-    - /usr/share/nginx/maple/html:/usr/share/nginx/html:rw
+    - mg-middleware-rabbitmq-conf:/opt/rabbitmq/conf:rw
   web-mongo-express:
     depends_on:
     - mongo
@@ -154,7 +127,7 @@ services:
       MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
       VCAP_APP_HOST: '::'
       VCAP_APP_PORT: 443
-    image: registry.maple.mdugre.info:5000/mg_mongo_express.x86_64:0.49_4
+    image: registry.maple.mdugre.info:5000/mg_mongo_express:0.49_4
     networks:
       mg_net: null
     ports:
@@ -178,4 +151,6 @@ volumes:
     name: mg-middleware-nginx-www
   mg-middleware-rabbitmq:
     name: mg-middleware-rabbitmq
+  mg-middleware-rabbitmq-conf:
+    name: mg-middleware-rabbitmq-conf
 
