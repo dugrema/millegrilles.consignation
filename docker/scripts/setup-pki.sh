@@ -20,8 +20,8 @@ CLES_WEB=( \
   pki.millegrilles.web.key \
 )
 
-#CLES=( "${CLES_SSL[@]}" )  # Liste SSL seulement
-CLES=( "${CLES_WEB[@]}" )  # Liste web seulement
+CLES=( "${CLES_SSL[@]}" )  # Liste SSL seulement
+#CLES=( "${CLES_WEB[@]}" )  # Liste web seulement
 #CLES=( "${CLES_SSL[@]}" "${CLES_WEB[@]}" )  # Liste complete
 
 # Verifier que tous les fichiers de cles peuvent etre lus
