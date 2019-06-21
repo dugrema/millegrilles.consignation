@@ -60,7 +60,7 @@ services:
       MG_MQ_USER: cedule
       MG_NOM_MILLEGRILLE: dev2
     hostname: ceduleur-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
     networks:
       mg_net: null
     secrets:
@@ -103,7 +103,7 @@ services:
       MG_MQ_USER: mgdomaines
       MG_NOM_MILLEGRILLE: dev2
     hostname: domaines-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
     networks:
       mg_net: null
     secrets:
@@ -151,7 +151,7 @@ services:
       MG_MQ_USER: mgprocessus
       MG_NOM_MILLEGRILLE: dev2
     hostname: processus-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
     networks:
       mg_net: null
     secrets:
@@ -192,7 +192,7 @@ services:
       MG_MQ_USER: transaction
       MG_NOM_MILLEGRILLE: dev2
     hostname: transactions-python.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
     networks:
       mg_net: null
     secrets:
