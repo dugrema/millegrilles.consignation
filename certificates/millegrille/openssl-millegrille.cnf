@@ -67,7 +67,7 @@ emailAddress_default = mail@mdugre.info
 
 subjectKeyIdentifier   = hash
 authorityKeyIdentifier = keyid:always, issuer
-basicConstraints       = critical, CA:true
+basicConstraints       = critical, CA:TRUE
 keyUsage               = keyCertSign, cRLSign
 
 ####################################################################
