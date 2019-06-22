@@ -60,7 +60,7 @@ services:
       MG_MQ_USER: cedule
       MG_NOM_MILLEGRILLE: pivoine
     hostname: ceduleur-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.7.0
     networks:
       mg_net: null
     secrets:
@@ -103,59 +103,11 @@ services:
       MG_MQ_USER: mgdomaines
       MG_NOM_MILLEGRILLE: pivoine
     hostname: domaines-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.7.0
     networks:
       mg_net: null
     secrets:
     - source: mg.mgdomaines.json
-    - source: pki.millegrilles.ssl.key
-    - source: pki.millegrilles.ssl.cert
-    - source: pki.millegrilles.ssl.key_cert
-    - source: pki.millegrilles.ssl.CAchain
-  processus-python:
-    command: demarrer_mgp.py
-    deploy:
-      placement:
-        constraints:
-        - node.labels.netzone.private == true
-        - node.labels.millegrilles.python == true
-        - node.labels.millegrilles.mgp == true
-      replicas: 1
-      resources:
-        limits:
-          cpus: '1.00'
-          memory: 100M
-      restart_policy:
-        condition: any
-        delay: 30s
-    environment:
-      MG_CONFIG_JSON: /run/secrets/mg.mgpprocessus.json
-      MG_EMAIL_FROM: maple.millegrilles@mdugre.info
-      MG_EMAIL_HOST: mail.mdugre.info
-      MG_EMAIL_PASSWORD: kikIL932cedWIC12
-      MG_EMAIL_PORT: '465'
-      MG_EMAIL_TO: mathieu.dugre@me.com
-      MG_EMAIL_USER: maple.millegrilles@mdugre.info
-      MG_MONGO_HOST: mongo
-      MG_MONGO_SSL: "on"
-      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
-      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
-      MG_MONGO_USERNAME: mgprocessus
-      MG_MQ_AUTH_CERT: "on"
-      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
-      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
-      MG_MQ_HOST: mq
-      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
-      MG_MQ_PORT: '5673'
-      MG_MQ_SSL: "on"
-      MG_MQ_USER: mgprocessus
-      MG_NOM_MILLEGRILLE: pivoine
-    hostname: processus-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
-    networks:
-      mg_net: null
-    secrets:
-    - source: mg.mgpprocessus.json
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.key_cert
@@ -192,7 +144,7 @@ services:
       MG_MQ_USER: transaction
       MG_NOM_MILLEGRILLE: pivoine
     hostname: transactions-python.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.6.2
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.7.0
     networks:
       mg_net: null
     secrets:
