@@ -15,5 +15,6 @@ VOLUME /opt/rabbitmq/conf
 
 EXPOSE 443
 EXPOSE 15671
-
 EXPOSE 15672
+
+CMD run.sh

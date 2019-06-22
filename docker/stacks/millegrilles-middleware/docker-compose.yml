@@ -45,6 +45,7 @@ services:
     hostname: mq.${URL_DOMAIN}
     volumes:
       - mg-middleware-rabbitmq:/var/lib/rabbitmq
+      - ${MQ_CONF_MAPPING}:/opt/rabbitmq/conf
     deploy:
       replicas: 1
       placement:
@@ -151,6 +152,8 @@ volumes:
     name: mg-middleware-mongodata
   mg-middleware-rabbitmq:
     name: mg-middleware-rabbitmq
+  mg-middleware-rabbitmq-conf:
+    name: mg-middleware-rabbitmq-conf
   mg-middleware-nginx-conf:
     name: mg-middleware-nginx-conf
   mg-middleware-nginx-www:
