@@ -15,6 +15,9 @@ secrets:
   pki.millegrilles.web.chain:
     external: true
     name: pki.millegrilles.web.chain.20190708
+  pki.millegrilles.web.fullchain:
+    external: true
+    name: pki.millegrilles.web.fullchain.20190708
   pki.millegrilles.web.key:
     external: true
     name: pki.millegrilles.web.key.20190708
@@ -87,6 +90,7 @@ services:
     - published: 30443
       target: 443
     secrets:
+    - source: pki.millegrilles.web.fullchain
     - source: pki.millegrilles.web.chain
     - source: pki.millegrilles.web.key
     volumes:
