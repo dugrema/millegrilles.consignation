@@ -23,13 +23,13 @@ secrets:
     name: pki.millegrilles.ssl.key_cert.20190207
   pki.millegrilles.web.cert:
     external: true
-    name: pki.millegrilles.web.cert.20190411
+    name: pki.millegrilles.web.cert.20190708
   pki.millegrilles.web.chain:
     external: true
-    name: pki.millegrilles.web.chain.20190411
+    name: pki.millegrilles.web.chain.20190708
   pki.millegrilles.web.key:
     external: true
-    name: pki.millegrilles.web.key.20190411
+    name: pki.millegrilles.web.key.20190708
 services:
   mongo:
     command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
