@@ -60,7 +60,7 @@ services:
         condition: any
         delay: 30s
     ports:
-      - "15671:8443"
+      - "15671:443"
     #   - "5671:5671"
     networks:
       - mg_net
@@ -70,6 +70,8 @@ services:
       - pki.millegrilles.ssl.CAchain
       - pki.millegrilles.wadmin.cert
       - pki.millegrilles.wadmin.key
+      - pki.millegrilles.web.cert
+      - pki.millegrilles.web.key
 
   # Proxy avec nginx
   nginx:
@@ -170,6 +172,9 @@ secrets:
   pki.millegrilles.wadmin.key:
     external: true
     name: ${PKI_MILLEGRILLES_WADMIN_PREFIX}.key.${PKI_MILLEGRILLES_WADMIN_VERSION}
+  pki.millegrilles.web.cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.cert.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.web.chain:
     external: true
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}

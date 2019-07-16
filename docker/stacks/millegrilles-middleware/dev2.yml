@@ -27,6 +27,9 @@ secrets:
   pki.millegrilles.wadmin.key:
     external: true
     name: pki.millegrilles.web.key.20190716
+  pki.millegrilles.web.cert:
+    external: true
+    name: pki.millegrilles.web.cert.20190716
   pki.millegrilles.web.chain:
     external: true
     name: pki.millegrilles.web.fullchain.20190716
@@ -81,7 +84,7 @@ services:
         condition: any
         delay: 30s
     hostname: mq.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_5
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_7
     networks:
       mg_net: null
     ports:
@@ -93,6 +96,8 @@ services:
     - source: pki.millegrilles.ssl.CAchain
     - source: pki.millegrilles.wadmin.cert
     - source: pki.millegrilles.wadmin.key
+    - source: pki.millegrilles.web.cert
+    - source: pki.millegrilles.web.key
     volumes:
     - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
     - /home/mathieu/git/MilleGrilles.consignation/docker/dockerfiles/rabbitmq/test/conf:/opt/rabbitmq/conf:rw
