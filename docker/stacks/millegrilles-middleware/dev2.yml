@@ -23,13 +23,13 @@ secrets:
     name: pki.millegrilles.ssl.key_cert.20190113
   pki.millegrilles.web.cert:
     external: true
-    name: pki.millegrilles.web.cert.20190113
+    name: pki.millegrilles.web.cert.20190716
   pki.millegrilles.web.chain:
     external: true
-    name: pki.millegrilles.web.chain.20190113
+    name: pki.millegrilles.web.fullchain.20190716
   pki.millegrilles.web.key:
     external: true
-    name: pki.millegrilles.web.key.20190113
+    name: pki.millegrilles.web.key.20190716
 services:
   mongo:
     command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
@@ -82,8 +82,6 @@ services:
     networks:
       mg_net: null
     ports:
-    - published: 5673
-      target: 5673
     - published: 15671
       target: 443
     secrets:
@@ -95,6 +93,34 @@ services:
     volumes:
     - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
     - /home/mathieu/git/MilleGrilles.consignation/docker/dockerfiles/rabbitmq/test/conf:/opt/rabbitmq/conf:rw
+  nginx:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.public == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 192M
+      restart_policy:
+        condition: any
+        delay: 30s
+    hostname: www.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/mg_nginx:1.16_0
+    networks:
+      mg_net: null
+    ports:
+    - published: 31080
+      target: 80
+    - published: 31443
+      target: 443
+    secrets:
+    - source: pki.millegrilles.web.chain
+    - source: pki.millegrilles.web.key
+    volumes:
+    - mg-middleware-nginx-conf:/etc/nginx/conf.d:rw
+    - mg-middleware-nginx-www:/usr/share/nginx/html:rw
   web-mongo-express:
     depends_on:
     - mongo

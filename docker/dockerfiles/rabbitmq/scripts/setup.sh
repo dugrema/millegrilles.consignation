@@ -10,7 +10,7 @@ echo "Copier la configuration des usagers"
 mkdir -p $APP_BUNDLE_FOLDER
 cp $APP_SOURCE_FOLDER/config/rabbitmq.config /etc/rabbitmq
 cp $APP_SOURCE_FOLDER/config/definitions.json $APP_BUNDLE_FOLDER
-cp $APP_SOURCE_FOLDER/config/definitions_template.json $APP_BUNDLE_FOLDER
+# cp $APP_SOURCE_FOLDER/config/definitions_template.json $APP_BUNDLE_FOLDER
 
 cp $APP_SOURCE_FOLDER/scripts/run.sh /usr/local/sbin
 cp $APP_SOURCE_FOLDER/scripts/import_users.sh $APP_BUNDLE_FOLDER
