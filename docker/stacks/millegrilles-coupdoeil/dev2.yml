@@ -42,7 +42,7 @@ services:
       MG_NOM_MILLEGRILLE: dev2
       PRIVKEY: /run/secrets/pki.millegrilles.web.key
     hostname: coupdoeil.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/coupdoeil_react.x86_64:1.5.0
+    image: registry.maple.mdugre.info:5000/coupdoeil_react:1.5.1
     networks:
       mg_net: null
     ports:

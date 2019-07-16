@@ -3,20 +3,23 @@ networks:
     external: true
     name: mg_net
 secrets:
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: pki.millegrilles.ssl.CAchain.20190106
   pki.millegrilles.ssl.cert:
     external: true
     name: pki.millegrilles.ssl.cert.20190106
   pki.millegrilles.ssl.key:
     external: true
     name: pki.millegrilles.ssl.key.20190106
-  pki.millegrilles.web.chain:
+  pki.millegrilles.web.fullchain:
     external: true
-    name: pki.millegrilles.web.chain.20190106
+    name: pki.millegrilles.web.fullchain.20190106
   pki.millegrilles.web.key:
     external: true
     name: pki.millegrilles.web.key.20190106
 services:
-  coupdoeilmeteor:
+  coupdoeilreact:
     deploy:
       placement:
         constraints:
@@ -31,60 +34,25 @@ services:
         condition: any
         delay: 30s
     environment:
-      MG_MONGO_CAFILE: /usr/local/etc/millegrilles/certs/millegrilles.authority.pem
-      MG_MONGO_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
-      MG_MONGO_HOST: mongo
-      MG_MONGO_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
-      MG_MQ_CAFILE: /usr/local/etc/millegrilles/certs/millegrilles.authority.pem
+      CERT: /run/secrets/pki.millegrilles.web.fullchain
+      MG_MQ_CAFILE: /run/secrets/pki.millegrilles.ssl.CAchain
       MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
-      MG_MQ_HOST: mq
       MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
-      MG_MQ_PASSWORD: gLOUj3xLAj82
-      MG_MQ_PORT: '5673'
-      MG_MQ_SSL: "on"
-      MG_MQ_USER: coupdoeil
+      MG_MQ_URL: amqps://mq:5673/pivoine
       MG_NOM_MILLEGRILLE: pivoine
-      MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=admin
-      MONGO_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/mg-pivoine?ssl=true
-    hostname: coupdoeilmeteor.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/coupdoeil_meteor.x86_64:v1.3.1
+      PRIVKEY: /run/secrets/pki.millegrilles.web.key
+    hostname: coupdoeil.pivoine.millegrilles.mdugre.info
+    image: registry.maple.mdugre.info:5000/coupdoeil_react:1.5.1
     networks:
       mg_net: null
     ports:
-    - published: 3001
-      target: 3000
+    - published: 8443
+      target: 443
     secrets:
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.cert
-  coupdoeilnginx:
-    deploy:
-      placement:
-        constraints:
-        - node.labels.netzone.public == true
-      replicas: 1
-      resources:
-        limits:
-          cpus: '1.00'
-          memory: 192M
-      restart_policy:
-        condition: any
-        delay: 30s
-    environment:
-      NGINX_CONFIG_FILE: meteor.conf
-    hostname: coupdoeil.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.15.1
-    networks:
-      mg_net: null
-    ports:
-    - published: 30080
-      target: 80
-    - published: 30443
-      target: 443
-    secrets:
-    - source: pki.millegrilles.web.chain
+    - source: pki.millegrilles.ssl.CAchain
+    - source: pki.millegrilles.web.fullchain
     - source: pki.millegrilles.web.key
-    volumes:
-    - /usr/share/nginx/pivoine.millegrilles/conf.d:/etc/nginx/conf.d:rw
-    - /usr/share/nginx/pivoine.millegrilles/html:/etc/nginx/html:rw
 version: '3.7'
 
