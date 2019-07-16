@@ -21,9 +21,12 @@ secrets:
   pki.millegrilles.ssl.key_cert:
     external: true
     name: pki.millegrilles.ssl.key_cert.20190113
-  pki.millegrilles.web.cert:
+  pki.millegrilles.wadmin.cert:
     external: true
     name: pki.millegrilles.web.cert.20190716
+  pki.millegrilles.wadmin.key:
+    external: true
+    name: pki.millegrilles.web.key.20190716
   pki.millegrilles.web.chain:
     external: true
     name: pki.millegrilles.web.fullchain.20190716
@@ -88,8 +91,8 @@ services:
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.CAchain
-    - source: pki.millegrilles.web.cert
-    - source: pki.millegrilles.web.key
+    - source: pki.millegrilles.wadmin.cert
+    - source: pki.millegrilles.wadmin.key
     volumes:
     - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
     - /home/mathieu/git/MilleGrilles.consignation/docker/dockerfiles/rabbitmq/test/conf:/opt/rabbitmq/conf:rw
@@ -147,9 +150,9 @@ services:
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_SSL: "true"
       ME_CONFIG_MONGODB_SSLVALIDATE: "true"
-      ME_CONFIG_SITE_SSL_CRT_PATH: /run/secrets/pki.millegrilles.web.cert
+      ME_CONFIG_SITE_SSL_CRT_PATH: /run/secrets/pki.millegrilles.wadmin.cert
       ME_CONFIG_SITE_SSL_ENABLED: "true"
-      ME_CONFIG_SITE_SSL_KEY_PATH: /run/secrets/pki.millegrilles.web.key
+      ME_CONFIG_SITE_SSL_KEY_PATH: /run/secrets/pki.millegrilles.wadmin.key
       MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
       VCAP_APP_HOST: '::'
       VCAP_APP_PORT: 443
@@ -162,8 +165,8 @@ services:
     secrets:
     - source: mongo.root.password
     - source: mongoexpress.web.password
-    - source: pki.millegrilles.web.cert
-    - source: pki.millegrilles.web.key
+    - source: pki.millegrilles.wadmin.cert
+    - source: pki.millegrilles.wadmin.key
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.CAchain

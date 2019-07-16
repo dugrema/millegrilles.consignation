@@ -21,8 +21,8 @@ cp $APP_SOURCE_FOLDER/scripts/update_definitions.sh $APP_BUNDLE_FOLDER
 apt-get update
 apt-get install -y libcap2-bin
 
-RABBITMQ_SERVER_FILE=/opt/rabbitmq/sbin/rabbitmq-server
-ERTS_FOLDER=/usr/local/lib/erlang/erts-10.4.4
+RABBITMQ_SERVER_FILE=/usr/lib/rabbitmq/lib/rabbitmq_server-3.7.8/sbin/rabbitmq-server
+ERTS_FOLDER=/usr/lib/erlang/erts-9.3.3.3
 setcap 'cap_net_bind_service=+ep' $RABBITMQ_SERVER_FILE
 setcap 'cap_net_bind_service=+ep' $ERTS_FOLDER/bin/epmd
 setcap 'cap_net_bind_service=+ep' $ERTS_FOLDER/bin/beam.smp

@@ -60,7 +60,7 @@ services:
         condition: any
         delay: 30s
     ports:
-      - "15671:443"
+      - "15671:8443"
     #   - "5671:5671"
     networks:
       - mg_net
@@ -141,8 +141,8 @@ services:
     secrets:
       - mongo.root.password
       - mongoexpress.web.password
-      - pki.millegrilles.web.cert
-      - pki.millegrilles.web.key
+      - pki.millegrilles.wadmin.cert
+      - pki.millegrilles.wadmin.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.CAchain
