@@ -5,7 +5,7 @@ services:
 
   # Application Meteor pour Coup D'Oeil
   coupdoeilreact:
-    image:  ${REGISTRY}/coupdoeil_react${MG_COUPDOEILMETEOR_IMAGE_VERSION}
+    image:  ${REGISTRY}/coupdoeil_react${MG_COUPDOEILREACT_IMAGE_VERSION}
     hostname: coupdoeil.${URL_DOMAIN}
     deploy:
       replicas: 1
@@ -16,7 +16,7 @@ services:
       resources:
        limits:
           cpus: "1.00"
-          memory: 512M
+          memory: 200M
       restart_policy:
         condition: any
         delay: 30s
