@@ -1,4 +1,4 @@
-FROM nginx:1.15
+FROM nginx:1.16
 MAINTAINER Mathieu Dugre <mail@mdugre.info>
 
 ENV APP_SOURCE_DIR=/opt/nginx/src
