@@ -68,8 +68,8 @@ services:
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.CAchain
-      - pki.millegrilles.web.cert
-      - pki.millegrilles.web.key
+      - pki.millegrilles.wadmin.cert
+      - pki.millegrilles.wadmin.key
 
   # Proxy avec nginx
   nginx:
@@ -128,8 +128,8 @@ services:
       VCAP_APP_HOST: '::'
       VCAP_APP_PORT: 443
       ME_CONFIG_SITE_SSL_ENABLED: 'true'
-      ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/pki.millegrilles.web.cert'
-      ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/pki.millegrilles.web.key'
+      ME_CONFIG_SITE_SSL_CRT_PATH: '/run/secrets/pki.millegrilles.wadmin.cert'
+      ME_CONFIG_SITE_SSL_KEY_PATH: '/run/secrets/pki.millegrilles.wadmin.key'
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_SSL: 'true'
       ME_CONFIG_MONGODB_KEY: /run/secrets/pki.millegrilles.ssl.key
@@ -164,9 +164,12 @@ secrets:
     external: true
   mongoexpress.web.password:
     external: true
-  pki.millegrilles.web.cert:
+  pki.millegrilles.wadmin.cert:
     external: true
-    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.cert.${PKI_MILLEGRILLES_WEB_VERSION}
+    name: ${PKI_MILLEGRILLES_WADMIN_PREFIX}.cert.${PKI_MILLEGRILLES_WADMIN_VERSION}
+  pki.millegrilles.wadmin.key:
+    external: true
+    name: ${PKI_MILLEGRILLES_WADMIN_PREFIX}.key.${PKI_MILLEGRILLES_WADMIN_VERSION}
   pki.millegrilles.web.chain:
     external: true
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}

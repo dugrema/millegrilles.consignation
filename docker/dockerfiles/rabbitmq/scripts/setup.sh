@@ -20,9 +20,12 @@ cp $APP_SOURCE_FOLDER/scripts/update_definitions.sh $APP_BUNDLE_FOLDER
 # Installer setcap pour permettre de demarrer sur port 443
 apt-get update
 apt-get install -y libcap2-bin
-setcap 'cap_net_bind_service=+ep' /usr/lib/rabbitmq/lib/rabbitmq_server-3.7.8/sbin/rabbitmq-server
-setcap 'cap_net_bind_service=+ep' /usr/lib/erlang/erts-9.3.3.3/bin/epmd
-setcap 'cap_net_bind_service=+ep' /usr/lib/erlang/erts-9.3.3.3/bin/beam.smp
+
+RABBITMQ_SERVER_FILE=/opt/rabbitmq/sbin/rabbitmq-server
+ERTS_FOLDER=/usr/local/lib/erlang/erts-10.4.4
+setcap 'cap_net_bind_service=+ep' $RABBITMQ_SERVER_FILE
+setcap 'cap_net_bind_service=+ep' $ERTS_FOLDER/bin/epmd
+setcap 'cap_net_bind_service=+ep' $ERTS_FOLDER/bin/beam.smp
 
 # Cleanup, supprimer le repertoire src/
 cd /
