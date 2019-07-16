@@ -4,8 +4,8 @@ version: '3.7'
 services:
 
   # Application Meteor pour Coup D'Oeil
-  coupdoeilmeteor:
-    image:  ${REGISTRY}/coupdoeil_meteor${MG_COUPDOEILMETEOR_IMAGE_VERSION}
+  coupdoeilreact:
+    image:  ${REGISTRY}/coupdoeil_react${MG_COUPDOEILMETEOR_IMAGE_VERSION}
     hostname: coupdoeil.${URL_DOMAIN}
     deploy:
       replicas: 1
@@ -21,52 +21,19 @@ services:
         condition: any
         delay: 30s
     ports:
-      - "3001:3000"
+      - "8443:443"
     env_file:
       - services.env
     environment:
       MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
-      MONGO_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/mg-${MG_NOM_MILLEGRILLE}?ssl=true
-      MONGO_OPLOG_URL: mongodb://coupdoeilmeteor:higCYUD096aQUI67@mongo/local?ssl=true&authSource=mg-${MG_NOM_MILLEGRILLE}
-      MG_MQ_USER: coupdoeil
-      MG_MQ_PASSWORD: gLOUj3xLAj82
+      MG_MQ_URL: ${MG_MQ_PREFIX}/${MG_NOM_MILLEGRILLE}
     networks:
       - mg_net
     secrets:
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.CAchain
-
-  # Proxy avec nginx
-  coupdoeilnginx:
-    image: ${REGISTRY}/mg_nginx${MG_COUPDOEILNGINX_IMAGE_VERSION}
-    hostname: coupdoeil.${URL_DOMAIN}
-    volumes:
-      - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
-      - ${NGINX_WWW_PATH}:/etc/nginx/html
-    deploy:
-      replicas: 1
-      placement:
-        constraints:
-          - node.labels.netzone.public == true
-      resources:
-        limits:
-          cpus: "1.00"
-          memory: 192M
-      restart_policy:
-        condition: any
-        delay: 30s
-    ports:
-     - "30080:80"
-     - "30443:443"
-    environment:
-      NGINX_CONFIG_FILE: meteor.conf
-      URL_DOMAIN: ${URL_DOMAIN}
-    networks:
-      - mg_net
-    secrets:
       - pki.millegrilles.web.fullchain
-      - pki.millegrilles.web.chain
       - pki.millegrilles.web.key
 
 networks:
@@ -75,9 +42,6 @@ networks:
     name: mg_net
 
 secrets:
-  pki.millegrilles.web.chain:
-    external: true
-    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.chain.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.web.fullchain:
     external: true
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}
@@ -93,9 +57,3 @@ secrets:
   pki.millegrilles.ssl.CAchain:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
-
-volumes:
-  mg-coupdoeil-nginx-conf:
-    name: mg-coupdoeil-nginx-conf
-  mg-coupdoeil-nginx-www:
-    name: mg-coupdoeil-nginx-www
