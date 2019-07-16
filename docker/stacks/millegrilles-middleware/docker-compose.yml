@@ -70,8 +70,8 @@ services:
       - pki.millegrilles.ssl.CAchain
       - pki.millegrilles.wadmin.cert
       - pki.millegrilles.wadmin.key
-      - pki.millegrilles.web.cert
-      - pki.millegrilles.web.key
+      # - pki.millegrilles.web.cert
+      # - pki.millegrilles.web.key
 
   # Proxy avec nginx
   nginx:
