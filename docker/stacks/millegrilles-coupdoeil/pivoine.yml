@@ -5,19 +5,19 @@ networks:
 secrets:
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.millegrilles.ssl.CAchain.20190106
+    name: pki.millegrilles.ssl.CAchain.20190605
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.millegrilles.ssl.cert.20190106
+    name: pki.millegrilles.ssl.cert.20190605
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.millegrilles.ssl.key.20190106
+    name: pki.millegrilles.ssl.key.20190605
   pki.millegrilles.web.fullchain:
     external: true
-    name: pki.millegrilles.web.fullchain.20190106
+    name: pki.millegrilles.web.fullchain.20190605
   pki.millegrilles.web.key:
     external: true
-    name: pki.millegrilles.web.key.20190106
+    name: pki.millegrilles.web.key.20190605
 services:
   coupdoeilreact:
     deploy:
