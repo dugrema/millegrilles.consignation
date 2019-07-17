@@ -1,7 +1,7 @@
 #!/bin/sh
 
-MESSAGE_AIDE_1='Il manque les parametres: DOMAIN WEBROOT'
-MESSAGE_AIDE_2='Exemple: letsencrypt_www.sh maple.millegrilles.mdugre.info /opt/millegrilles/maple/webroot'
+MESSAGE_AIDE_1='Il manque les parametres: DOMAIN OPT_MILLEGRILLES_FOLDER'
+MESSAGE_AIDE_2='Exemple: letsencrypt_www.sh maple.millegrilles.mdugre.info /opt/millegrilles/maple'
 
 if [ -z $2 ]; then
   echo $MESSAGE_AIDE_1
@@ -10,7 +10,9 @@ if [ -z $2 ]; then
 fi
 
 DOMAIN=$1
-WEBROOT=$2
+OPT_MILLEGRILLES_FOLDER=$2
 
-sudo certbot certonly -d www.$DOMAIN --expand --webroot -w $WEBROOT \
--d coupdoeil.$DOMAIN
+sudo certbot certonly --staple-oscp \
+--config-dir $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt \
+--expand --webroot -w $OPT_MILLEGRILLES_FOLDER/webroot \
+-d www.$DOMAIN -d coupdoeil.$DOMAIN
