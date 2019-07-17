@@ -12,13 +12,13 @@ fi
 DOMAIN=$1
 OPT_MILLEGRILLES_FOLDER=$2
 
-sudo certbot certonly --must-staple --staple-ocsp \
---config-dir $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt \
---expand --webroot -w $OPT_MILLEGRILLES_FOLDER/nginx/webroot \
--d www.$DOMAIN -d coupdoeil.$DOMAIN
-
-# sudo certbot renew -n --must-staple --staple-ocsp \
+# sudo certbot certonly \
 # --config-dir $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt \
 # --expand --webroot -w $OPT_MILLEGRILLES_FOLDER/nginx/webroot \
-# --post-hook "./letsencrypt_renewhook.sh $1 $2"
+# -d www.$DOMAIN -d coupdoeil.$DOMAIN
+
+sudo certbot renew -n \
+--config-dir $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt \
+--expand --webroot -w $OPT_MILLEGRILLES_FOLDER/nginx/webroot \
+--post-hook "./letsencrypt_renewhook.sh $DOMAIN $OPT_MILLEGRILLES_FOLDER"
 
