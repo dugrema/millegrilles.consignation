@@ -33,6 +33,9 @@ secrets:
   pki.millegrilles.web.chain:
     external: true
     name: pki.millegrilles.web.chain.20190716
+  pki.millegrilles.web.fullchain:
+    external: true
+    name: pki.millegrilles.web.fullchain.20190716
   pki.millegrilles.web.key:
     external: true
     name: pki.millegrilles.web.key.20190716
