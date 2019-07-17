@@ -177,7 +177,7 @@ secrets:
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.cert.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.web.chain:
     external: true
-    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.chain.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.web.key:
     external: true
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key.${PKI_MILLEGRILLES_WEB_VERSION}
