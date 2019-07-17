@@ -14,10 +14,10 @@ secrets:
     name: pki.millegrilles.ssl.key.20190207
   pki.millegrilles.web.fullchain:
     external: true
-    name: pki.millegrilles.web.fullchain.20190716
+    name: pki.millegrilles.web.fullchain.20190717_1
   pki.millegrilles.web.key:
     external: true
-    name: pki.millegrilles.web.key.20190716
+    name: pki.millegrilles.web.key.20190717_1
 services:
   coupdoeilreact:
     deploy:
