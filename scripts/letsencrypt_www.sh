@@ -17,24 +17,24 @@ OPT_MILLEGRILLES_FOLDER=$2
 # --expand --webroot -w $OPT_MILLEGRILLES_FOLDER/nginx/webroot \
 # -d www.$DOMAIN -d coupdoeil.$DOMAIN
 
-sudo certbot renew --must-staple --staple-ocsp \
+sudo certbot renew -n --must-staple --staple-ocsp \
 --config-dir $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt \
 --expand --webroot -w $OPT_MILLEGRILLES_FOLDER/nginx/webroot \
--d www.$DOMAIN -d coupdoeil.$DOMAIN
+--post-hook "./letsencrypt_renewhook.sh $1 $2"
 
-RESULT_CB=$?
+# RESULT_CB=$?
 # Pour renew, utiliser commande renew et flag -n pour non-interactif
 
-if [ $RESULT_CB -eq 0 ]; then
-  # Ajouter les certificats dans docker secrets
-  # chain, fullchain et key
-  DATE_COURANTE=`date +%Y%m%d`
-  sudo docker secret create pki.millegrilles.web.fullchain.$DATE_COURANTE \
-    $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/fullchain.pem
-  sudo docker secret create pki.millegrilles.web.chain.$DATE_COURANTE \
-    $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/chain.pem
-  sudo docker secret create pki.millegrilles.web.cert.$DATE_COURANTE \
-    $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/cert.pem
-  sudo docker secret create pki.millegrilles.web.key.$DATE_COURANTE \
-    $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/privkey.pem
-fi
+# if [ $RESULT_CB -eq 0 ]; then
+#   # Ajouter les certificats dans docker secrets
+#   # chain, fullchain et key
+#   DATE_COURANTE=`date +%Y%m%d`
+#   sudo docker secret create pki.millegrilles.web.fullchain.$DATE_COURANTE \
+#     $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/fullchain.pem
+#   sudo docker secret create pki.millegrilles.web.chain.$DATE_COURANTE \
+#     $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/chain.pem
+#   sudo docker secret create pki.millegrilles.web.cert.$DATE_COURANTE \
+#     $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/cert.pem
+#   sudo docker secret create pki.millegrilles.web.key.$DATE_COURANTE \
+#     $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt/live/www.$DOMAIN/privkey.pem
+# fi
