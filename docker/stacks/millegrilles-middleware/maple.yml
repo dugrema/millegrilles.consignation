@@ -113,7 +113,7 @@ services:
         condition: any
         delay: 30s
     hostname: www.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_2
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_3
     networks:
       mg_net: null
     ports:
