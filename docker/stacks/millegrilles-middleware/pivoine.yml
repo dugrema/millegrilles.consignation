@@ -32,6 +32,9 @@ secrets:
     name: pki.millegrilles.web.cert.20190717
   pki.millegrilles.web.chain:
     external: true
+    name: pki.millegrilles.web.chain.20190717
+  pki.millegrilles.web.fullchain:
+    external: true
     name: pki.millegrilles.web.fullchain.20190717
   pki.millegrilles.web.key:
     external: true
@@ -113,7 +116,7 @@ services:
         condition: any
         delay: 30s
     hostname: www.pivoine.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_nginx:1.16_0
+    image: registry.maple.mdugre.info:5000/mg_nginx:1.16_7
     networks:
       mg_net: null
     ports:
@@ -122,7 +125,7 @@ services:
     - published: 31443
       target: 443
     secrets:
-    - source: pki.millegrilles.web.chain
+    - source: pki.millegrilles.web.fullchain
     - source: pki.millegrilles.web.key
     volumes:
     - /opt/millegrilles/pivoine/nginx/conf.d:/etc/nginx/conf.d:rw
