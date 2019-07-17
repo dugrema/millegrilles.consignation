@@ -12,7 +12,7 @@ fi
 DOMAIN=$1
 OPT_MILLEGRILLES_FOLDER=$2
 
-sudo certbot certonly --staple-oscp \
+sudo certbot certonly --must-staple --staple-ocsp \
 --config-dir $OPT_MILLEGRILLES_FOLDER/pki/letsencrypt \
---expand --webroot -w $OPT_MILLEGRILLES_FOLDER/webroot \
+--expand --webroot -w $OPT_MILLEGRILLES_FOLDER/nginx/webroot \
 -d www.$DOMAIN -d coupdoeil.$DOMAIN
