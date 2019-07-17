@@ -124,6 +124,7 @@ services:
     secrets:
     - source: pki.millegrilles.web.chain
     - source: pki.millegrilles.web.key
+    - source: pki.millegrilles.web.cert
     volumes:
     - /opt/millegrilles/maple/nginx/conf.d:/etc/nginx/conf.d:rw
     - /opt/millegrilles/maple/nginx/webroot:/usr/share/nginx/html:rw

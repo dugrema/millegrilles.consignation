@@ -100,6 +100,7 @@ services:
     secrets:
       - pki.millegrilles.web.chain
       - pki.millegrilles.web.key
+      - pki.millegrilles.web.cert
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
