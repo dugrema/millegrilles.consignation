@@ -61,7 +61,7 @@ services:
         delay: 30s
     ports:
       - "15671:443"
-    #   - "5671:5671"
+      - "5673:5673"
     networks:
       - mg_net
     secrets:
