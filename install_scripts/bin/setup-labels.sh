@@ -1,12 +1,18 @@
 #!/bin/bash
+if [ ! -z $1 ]; then
+  NODENAME=$1
+else
+  NODENAME=`hostname`  # Utiliser node local par defaut
+fi
+echo "Node name: $NODENAME"
 
 # Creer labels pour les machines de la MilleGrille
 # Le premier element de la liste est le label, les autres sont les nodes
-LABEL_NETZONE_PRIVATE=( "netzone.private=true" infraserv1 pi-host1 garage cuisine )
-LABEL_NETZONE_PUBLIC=( "netzone.public=true" public1 )
-LABEL_MILLEGRILLES_DATABASE=( "millegrilles.database=true" infraserv1 )
-LABEL_MILLEGRILLES_MQ=( "millegrilles.mq=true" infraserv1 )
-LABEL_MILLEGRILLES_CONSOLES=( "millegrilles.consoles=true" infraserv1 )
+LABEL_NETZONE_PRIVATE=( "netzone.private=true" $NODENAME)
+LABEL_NETZONE_PUBLIC=( "netzone.public=true" $NODENAME )
+LABEL_MILLEGRILLES_DATABASE=( "millegrilles.database=true" $NODENAME )
+LABEL_MILLEGRILLES_MQ=( "millegrilles.mq=true" $NODENAME )
+LABEL_MILLEGRILLES_CONSOLES=( "millegrilles.consoles=true" $NODENAME )
 
 label_add () {
   LABEL=$1  # Premier parametre est le label
@@ -34,4 +40,3 @@ label_add ${LABEL_NETZONE_PUBLIC[*]}
 label_add ${LABEL_MILLEGRILLES_DATABASE[*]}
 label_add ${LABEL_MILLEGRILLES_MQ[*]}
 label_add ${LABEL_MILLEGRILLES_CONSOLES[*]}
-

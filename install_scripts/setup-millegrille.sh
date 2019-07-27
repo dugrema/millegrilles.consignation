@@ -42,13 +42,17 @@ preparer_folder_millegrille() {
   MG_FOLDER_CERTS=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/certs
   MG_FOLDER_KEYS=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/keys
   MG_FOLDER_LETSENCRYPT=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/letsencrypt
+  MG_FOLDER_WEBROOT=$MG_FOLDER_ROOT/nginx/webroot
+  MG_FOLDER_WEBCONF=$MG_FOLDER_ROOT/nginx/conf.d
   echo "Preparer $MG_FOLDER_ROOT"
 
   sudo mkdir -p $MG_FOLDER_BIN $MG_FOLDER_ETC $MG_FOLDER_CACERTS
   sudo mkdir -p $MG_FOLDER_CERTS $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT
   sudo chmod 750 $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT
 
-  # Copier scripts
+  sudo mkdir -p $MG_FOLDER_WEBROOT $MG_FOLDER_WEBCONF
+
+  # Copier scripts (bin)
   sudo cp -r $FOLDER_INSTALL_SRC/install_scripts/bin/* $MG_FOLDER_BIN
 
   # Copier configuration (etc)
