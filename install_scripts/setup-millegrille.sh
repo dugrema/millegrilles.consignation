@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-NOM_MILLEGRILLE=$1
-
 FOLDER_INSTALL_SRC=/home/mathieu/git/MilleGrilles.consignation
 
 echo "Installation MilleGrille"
@@ -19,7 +17,7 @@ echo "3. Mettre tous les secrets dans docker"
 
 verifier_parametres() {
   if [ -z $NOM_MILLEGRILLE ]; then
-    echo -e "\n[FAIL] Parametres requis: NOM_MILLEGRILLE"
+    echo -e "\n[FAIL] Parametres globaux requis: NOM_MILLEGRILLE"
     exit 1
   fi
 }
@@ -60,6 +58,16 @@ preparer_folder_millegrille() {
   # Copier certificats de reference
   sudo cp $FOLDER_INSTALL_SRC/certificates/millegrilles.*.pem $MG_FOLDER_CACERTS
 
+}
+
+creer_certificat_millegrille() {
+  echo Debut creation certificats pour la MilleGrille $NOM_MILLEGRILLE
+
+}
+
+installer_certificats_millegrille() {
+  echo "Installation des certificats de la MilleGrille dans les secrets docker"
+  $MG_FOLDER_BIN/setup-pki.sh
 }
 
 # Sequence execution
