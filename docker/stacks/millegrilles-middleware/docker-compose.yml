@@ -44,7 +44,7 @@ services:
     image: ${REGISTRY}/mg_rabbitmq${MQ_IMAGE_VERSION}
     hostname: mq.${URL_DOMAIN}
     volumes:
-      - mg-middleware-rabbitmq:/var/lib/rabbitmq
+      - ${MQ_DATA_MAPPING}:/var/lib/rabbitmq
       - ${MQ_CONF_MAPPING}:/opt/rabbitmq/conf
     deploy:
       replicas: 1
