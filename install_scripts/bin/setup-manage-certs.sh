@@ -190,8 +190,8 @@ importer_dans_docker() {
   cat $CA_CERT $MG_CERT | docker secret create pki.$NOM_MILLEGRILLE.millegrilles.ssl.CAchain.$CURDATE -
 
   # Cles middleware
-  docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.cert.$CURDATE $CERT_MIDDLEWARE
-  docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key.$CURDATE $CLE_MIDDLEWARE
+  cat $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.cert.$CURDATE -
+  cat $CLE_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key.$CURDATE -
   cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key_cert.$CURDATE -
 }
 
