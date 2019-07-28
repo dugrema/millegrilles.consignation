@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
+
+# Parametres obligatoires
 if [ -z $NOM_MILLEGRILLE ] || [ -z $DOMAIN_SUFFIX ]; then
   echo "Les parametres NOM_MILLEGRILLE et DOMAIN_SUFFIX doivent etre definis globalement"
   exit 1
 fi
 
+# Parametres optionnel
+if [ -z $CURDATE ]; then
+  CURDATE=`date +%Y%m%d%H%M`
+fi
+
 HOSTNAME=`hostname --fqdn`
-# DOMAIN_SUFFIX=$2
 
 PRIVATE_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/keys
 CERT_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/certs
@@ -14,8 +20,6 @@ CA_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_ssroot.key.pem
 ETC_FOLDER=../etc
 SSROOT_PASSWD_FILE=$ETC_FOLDER/cert_ssroot_password.txt
 MILLEGRILLE_PASSWD_FILE=$ETC_FOLDER/cert_millegrille_password.txt
-
-CURDATE=`date +%Y%m%d%H%M`
 
 creer_ssrootcert() {
   NOMCLE=$1
@@ -168,16 +172,29 @@ signer_cert_par_millegrille() {
           -infiles $REQ
 }
 
-# Sequence
-creer_ssrootcert \
-  ${NOM_MILLEGRILLE}_ssroot \
-  ../etc/openssl-rootca.cnf
+importer_dans_docker() {
+  CERT_MIDDLEWARE=$CERT_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.cert.pem
+  CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
+  CERT_MILLEGRILLE=$CERT_PATH/${NOM_MILLEGRILLE}_millegrille_${CURDATE}.cert.pem
+  CERT_SSROOT=$CERT_PATH/${NOM_MILLEGRILLE}_ssroot_${CURDATE}.cert.pem
+  docker secret create pki.millegrilles.ssl.cert $CERT_MIDDLEWARE
+  docker secret create pki.millegrilles.ssl.key $CLE_MIDDLEWARE
+  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.millegrilles.ssl.key_cert -
+  cat $CERT_SSROOT $CERT_MILLEGRILLE | docker secret create pki.millegrilles.ssl.CAchain -
+}
 
-creer_certca_millegrille \
-  ${NOM_MILLEGRILLE}_millegrille \
-  ../etc/openssl-millegrille.cnf
+# Sequence
+#creer_ssrootcert \
+#  ${NOM_MILLEGRILLE}_ssroot \
+#  ../etc/openssl-rootca.cnf
+
+#creer_certca_millegrille \
+#  ${NOM_MILLEGRILLE}_millegrille \
+#  ../etc/openssl-millegrille.cnf
 
 # Creer le noeud middleware
-creer_cert_noeud \
- ${NOM_MILLEGRILLE}_middleware \
-  ../etc/openssl-millegrille-middleware.cnf
+#creer_cert_noeud \
+# ${NOM_MILLEGRILLE}_middleware \
+#  ../etc/openssl-millegrille-middleware.cnf
+
+importer_dans_docker

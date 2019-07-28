@@ -30,6 +30,15 @@ verifier_presence_docker() {
     exit 2
   fi
   echo "[OK] Docker est detecte"
+
+  sudo docker node ls > /dev/null 2> /dev/null
+  if [ $? -ne 0 ];
+    echo "Tenter d'initialiser docker swarm"
+    sudo docker swarm init --advertise-addr 127.0.0.1
+    if [ $? -ne 0 ]; then
+      echo "Erreur initialisation docker swarm"
+    fi
+  fi
 }
 
 preparer_folder_millegrille() {
@@ -62,7 +71,6 @@ preparer_folder_millegrille() {
 
 creer_certificat_millegrille() {
   echo Debut creation certificats pour la MilleGrille $NOM_MILLEGRILLE
-
 }
 
 installer_certificats_millegrille() {
