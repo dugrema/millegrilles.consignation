@@ -7,23 +7,37 @@ echo "2. certbot"
 echo " "
 
 installer_certbot_ppa() {
-  echo "Debut installation certbot"
-  sudo apt update
-  sudo apt install -y certbot
-  echo "[OK] Certbot installe"
+  certbot -h > /dev/null 2> /dev/null
+  if [ $? -ne 0 ]; then
+    echo "Debut installation certbot"
+    sudo apt update
+    sudo apt install -y certbot
+    echo "[OK] Certbot installe"
+  else
+    echo "[INFO] Certbot deja installe"
+  fi
 }
 
 installer_docker() {
-  echo "Debut installation docker"
-  sudo apt install -y docker.io
-  echo "[OK] docker installe"
+  docker -v > /dev/null 2> /dev/null
+  if [ $? -ne 0 ]; then
+    echo "Debut installation docker"
+    sudo apt install -y docker.io
+    echo "[OK] docker installe"
+  else
+    echo "[INFO] docker deja installe"
+  fi
 }
 
 installer_dockercompose() {
   docker-compose version > /dev/null 2> /dev/null
-  if [ $? -ne 1 ]; then
-    echo "Tenter d'installer docker-compose"
+  if [ $? -ne 0 ]; then
+    apt install curl
     curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    chmod 755 /usr/local/bin/docker-compose
+    echo "[OK] docker-compose installe"
+  else
+    echo "[INFO] docker-compose est deja installe"
   fi
 }
 
