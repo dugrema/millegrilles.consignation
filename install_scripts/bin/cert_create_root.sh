@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-if [ -z $NOM_MILLEGRILLE ]; then
-  echo "Le parametre NOM_MILLEGRILLE doit etre definie globalement"
+if [ -z $NOM_MILLEGRILLE ] || [ -z $DOMAIN_SUFFIX ]; then
+  echo "Les parametres NOM_MILLEGRILLE et DOMAIN_SUFFIX doivent etre definis globalement"
   exit 1
 fi
+
+HOSTNAME=`hostname --fqdn`
+# DOMAIN_SUFFIX=$2
 
 PRIVATE_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/keys
 CERT_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/certs
@@ -44,8 +47,8 @@ creer_ssrootcert() {
   # Creer lien generique pour la cle root
   chmod 400 $KEY
   chmod 444 $SSCERT
-  ln -s $KEY $CA_KEY
-  ln -s $SSCERT $CERT_PATH/${NOMCLE}.cert.pem
+  ln -sf $KEY $CA_KEY
+  ln -sf $SSCERT $CERT_PATH/${NOMCLE}.cert.pem
 
   if [ ! -d $DBS_PATH/$HOSTNAME ]; then
     # Preparer le repertoire de DB pour signature
@@ -63,7 +66,6 @@ creer_certca_millegrille() {
 
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
-  HOSTNAME=`hostname --fqdn`
 
   SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=MilleGrille/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
 
@@ -71,7 +73,7 @@ creer_certca_millegrille() {
     echo "Cle $KEY existe deja - on abandonne"
   fi
 
-  HOSTNAME=$HOSTNAME DOMAIN_SUFFIX=com \
+  HOSTNAME=$HOSTNAME DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
   openssl req \
           -config $CNF_FILE \
           -newkey rsa:4096 -sha512 \
@@ -83,6 +85,13 @@ creer_certca_millegrille() {
     echo "Erreur openssl creer_certca_millegrille()"
     exit 1
   fi
+
+  signer_cert_par_ssroot $NOMCLE ../etc/openssl-rootca.cnf
+
+  # Creer lien generique pour la cle root
+  chmod 400 $KEY
+  ln -sf $KEY $CA_KEY
+  ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
 
   if [ ! -d $DBS_PATH/$HOSTNAME ]; then
     mkdir -p $DBS_PATH/$HOSTNAME/certs
@@ -106,6 +115,56 @@ signer_cert_par_ssroot() {
           -keyfile $CA_KEY -keyform PEM \
           -out $CERT \
           -passin file:$ETC_FOLDER/$SSROOT_PASSWD_FILE \
+          -batch \
+          -infiles $REQ
+}
+
+creer_cert_noeud() {
+  NOMCLE=$1
+  CNF_FILE=$2
+
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+
+  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=Noeud/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
+
+  if [ -f $KEY ]; then
+    echo "Cle $KEY existe deja - on abandonne"
+  fi
+
+  HOSTNAME=$HOSTNAME DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  openssl req \
+          -config $CNF_FILE \
+          -newkey rsa:2048 -sha512 \
+          -out $REQ -outform PEM \
+          -keyout $KEY -keyform PEM \
+          -subj $SUBJECT \
+          -nodes
+
+  if [ $? -ne 0 ]; then
+    echo "Erreur openssl creer_cert_noeud()"
+    exit 1
+  fi
+
+  HOSTNAME=$HOSTNAME DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  signer_cert_par_millegrille $NOMCLE ../etc/openssl-millegrille.cnf
+
+}
+
+signer_cert_par_millegrille() {
+  NOMCLE=$1
+  CNF_FILE=$2
+
+  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+
+  openssl ca -config $CNF_FILE \
+          -policy signing_policy \
+          -extensions signing_req \
+          -keyfile $CA_KEY -keyform PEM \
+          -out $CERT \
+          -passin file:$ETC_FOLDER/$MILLEGRILLE_PASSWD_FILE \
+          -batch \
           -infiles $REQ
 }
 
@@ -118,6 +177,7 @@ creer_certca_millegrille \
   ${NOM_MILLEGRILLE}_millegrille \
   ../etc/openssl-millegrille.cnf
 
-signer_cert_par_ssroot \
- ${NOM_MILLEGRILLE}_millegrille \
-  ../etc/openssl-rootca.cnf
+# Creer le noeud middleware
+creer_cert_noeud \
+ ${NOM_MILLEGRILLE}_middleware \
+  ../etc/openssl-millegrille-middleware.cnf

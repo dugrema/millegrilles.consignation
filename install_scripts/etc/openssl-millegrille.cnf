@@ -24,8 +24,8 @@ email_in_dn     = no            # Don't concat the email in the DN
 copy_extensions = copy          # Required to copy SANs from CSR to cert
 
 base_dir      = .
-# certificate   = $DB/millegrille.cert.pem  # The CA certifcate
-# private_key   = $KEYS/millegrille.key.pem       # The CA private key
+certificate   = $CERTS/${NOM_MILLEGRILLE}_millegrille.cert.pem  # The CA certifcate
+private_key   = $KEYS/${NOM_MILLEGRILLE}_millegrille.key.pem       # The CA private key
 new_certs_dir = $DB/certs        # Location for new certs after signing
 database      = $DB/index.txt    # Database index file
 serial        = $DB/serial.txt   # The current serial number
