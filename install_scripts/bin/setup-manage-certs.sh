@@ -11,7 +11,7 @@ if [ -z $CURDATE ]; then
   CURDATE=`date +%Y%m%d%H%M`
 fi
 
-source ../etc/variables.txt
+source /opt/millegrilles/etc/variables.txt
 
 creer_ssrootcert() {
   NOMCLE=$1

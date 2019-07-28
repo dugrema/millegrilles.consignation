@@ -42,17 +42,12 @@ verifier_presence_docker() {
 }
 
 preparer_folder_millegrille() {
-  MG_FOLDER_CACERTS=$MG_FOLDER_ROOT/cacerts
-  MG_FOLDER_CERTS=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/certs
-  MG_FOLDER_KEYS=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/keys
-  MG_FOLDER_LETSENCRYPT=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/letsencrypt
-  MG_FOLDER_WEBROOT=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/nginx/webroot
-  MG_FOLDER_WEBCONF=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/nginx/conf.d
   echo "Preparer $MG_FOLDER_ROOT"
 
   sudo mkdir -p $MG_FOLDER_BIN $MG_FOLDER_ETC $MG_FOLDER_CACERTS
-  sudo mkdir -p $MG_FOLDER_CERTS $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT
-  sudo chmod 750 $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT
+  sudo mkdir -p $MG_FOLDER_CERTS $MG_FOLDER_KEYS \
+                $PASSWORDS_PATH $MG_FOLDER_LETSENCRYPT
+  sudo chmod 750 $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT $PASSWORDS_PATH
 
   sudo mkdir -p $MG_FOLDER_WEBROOT $MG_FOLDER_WEBCONF
 
@@ -73,14 +68,9 @@ installer_certificats_millegrille() {
   $MG_FOLDER_BIN/setup-manage-certs.sh
 }
 
-preparer_comptes_mongo() {
-  # Les scripts python ont besoin d'avoir des comptes crees dans
-  # la base de donnees Mongo. Les mots de passe sont generes aleatoirement
-  # et le script de creation de comptes est prepare pour Mongo.
-
-  # Compte pour transactions
-
-}
+#preparer_comptes_mongo() {
+#
+#}
 
 # Sequence execution
 verifier_parametres
