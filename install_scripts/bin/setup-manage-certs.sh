@@ -25,7 +25,7 @@ creer_ssrootcert() {
 
   if [ -f $KEY ]; then
     echo "Cle $KEY existe deja - on abandonne"
-    exit 1
+    exit 2
   fi
 
   # Generer un mot de passe (s'il n'existe pas deja - pas overwrite)
@@ -40,7 +40,7 @@ creer_ssrootcert() {
 
   if [ $? -ne 0 ]; then
     echo "Erreur openssl creer_ssrootcert()"
-    exit 2
+    exit 3
   fi
 
   # Creer lien generique pour la cle root
@@ -85,7 +85,7 @@ creer_certca_millegrille() {
           -passout file:$MILLEGRILLE_PASSWD_FILE
   if [ $? -ne 0 ]; then
     echo "Erreur openssl creer_certca_millegrille()"
-    exit 1
+    exit 4
   fi
 
   signer_cert_par_ssroot $NOMCLE $ETC_FOLDER/openssl-rootca.cnf
@@ -119,6 +119,9 @@ signer_cert_par_ssroot() {
           -passin file:$SSROOT_PASSWD_FILE \
           -batch \
           -infiles $REQ
+
+  # La requete CSR n'est plus necessaire
+  rm $REQ
 }
 
 creer_cert_noeud() {
@@ -145,7 +148,7 @@ creer_cert_noeud() {
 
   if [ $? -ne 0 ]; then
     echo "Erreur openssl creer_cert_noeud()"
-    exit 1
+    exit 5
   fi
 
   HOSTNAME=$HOSTNAME DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
@@ -168,6 +171,14 @@ signer_cert_par_millegrille() {
           -passin file:$MILLEGRILLE_PASSWD_FILE \
           -batch \
           -infiles $REQ
+
+  if [ $? -ne 0 ]; then
+    echo "Erreur openssl signer_cert_par_millegrille()"
+    exit 6
+  fi
+
+  # La requete CSR n'est plus necessaire
+  rm $REQ
 }
 
 importer_dans_docker() {

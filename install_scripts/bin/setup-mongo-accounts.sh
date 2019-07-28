@@ -55,11 +55,12 @@ preparer_configuration() {
 
 ajouter_docker_secrets() {
   # Ajoute les fichiers json a docker secrets
-  docker secret create mg.transactions.json.$CURDATE $MG_FOLDER_ETC/mg.transactions.json
-  docker secret create mg.mgdomaines.json.$CURDATE $MG_FOLDER_ETC/mg.mgdomaines.json
-  docker secret create mg.backup.json.$CURDATE $MG_FOLDER_ETC/mg.backup.json
+  cat $PASSWORDS_PATH/mg.transactions.json | docker secret create mg.$NOM_MILLEGRILLE.transactions.json.$CURDATE -
+  cat $PASSWORDS_PATH/mg.mgdomaines.json | docker secret create mg.$NOM_MILLEGRILLE.mgdomaines.json.$CURDATE -
+  cat $PASSWORDS_PATH/mg.backup.json | docker secret create mg.$NOM_MILLEGRILLE.backup.json.$CURDATE -
 }
 
 
 # Executer
 preparer_comptes_mongo
+ajouter_docker_secrets

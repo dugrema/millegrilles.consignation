@@ -68,12 +68,15 @@ installer_certificats_millegrille() {
   $MG_FOLDER_BIN/setup-manage-certs.sh
 }
 
-#preparer_comptes_mongo() {
-#
-#}
+preparer_comptes_mongo() {
+  echo "Preparation des comptes pour MongoDB"
+  NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
+  $MG_FOLDER_BIN/setup-mongo-accounts.sh
+}
 
 # Sequence execution
 verifier_parametres
 verifier_presence_docker
 preparer_folder_millegrille
 installer_certificats_millegrille
+preparer_comptes_mongo
