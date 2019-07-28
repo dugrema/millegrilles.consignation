@@ -100,7 +100,7 @@ creer_certca_millegrille() {
     exit 1
   fi
 
-  signer_cert_par_ssroot $NOMCLE ../etc/openssl-rootca.cnf
+  signer_cert_par_ssroot $NOMCLE $ETC_FOLDER/openssl-rootca.cnf
 
   # Creer lien generique pour la cle root
   chmod 400 $KEY
@@ -161,7 +161,7 @@ creer_cert_noeud() {
   fi
 
   HOSTNAME=$HOSTNAME DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
-  signer_cert_par_millegrille $NOMCLE ../etc/openssl-millegrille.cnf
+  signer_cert_par_millegrille $NOMCLE $ETC_FOLDER/openssl-millegrille.cnf
 
 }
 
@@ -189,12 +189,12 @@ importer_dans_docker() {
   CERT_SSROOT=$CERT_PATH/${NOM_MILLEGRILLE}_ssroot_${CURDATE}.cert.pem
 
   # Certs root
-  cat $CA_CERT $MG_CERT | docker secret create pki.millegrilles.ssl.CAchain.$CURDATE -
+  cat $CA_CERT $MG_CERT | docker secret create pki.$NOM_MILLEGRILLE.millegrilles.ssl.CAchain.$CURDATE -
 
   # Cles middleware
-  docker secret create pki.middleware.ssl.cert.$CURDATE $CERT_MIDDLEWARE
-  docker secret create pki.middleware.ssl.key.$CURDATE $CLE_MIDDLEWARE
-  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.middleware.ssl.key_cert.$CURDATE -
+  docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.cert.$CURDATE $CERT_MIDDLEWARE
+  docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key.$CURDATE $CLE_MIDDLEWARE
+  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key_cert.$CURDATE -
 }
 
 generer_pass_random() {
@@ -211,7 +211,7 @@ sequence_chargement() {
     echo "Generer un certificat self-signed"
     creer_ssrootcert \
       ${NOM_MILLEGRILLE}_ssroot \
-      ../etc/openssl-rootca.cnf
+      $ETC_FOLDER/openssl-rootca.cnf
   fi
 
   # On ne regenere pas la cle MilleGrille (CA) si elle existe deja,
@@ -220,14 +220,14 @@ sequence_chargement() {
     echo "Generer un certificat MilleGrille (CA)"
     creer_certca_millegrille \
       ${NOM_MILLEGRILLE}_millegrille \
-      ../etc/openssl-millegrille.cnf
+      $ETC_FOLDER/openssl-millegrille.cnf
   fi
 
   # Creer le noeud middleware
   echo "Generer un certificat de noeud Middleware"
   creer_cert_noeud \
    ${NOM_MILLEGRILLE}_middleware \
-    ../etc/openssl-millegrille-middleware.cnf
+    $ETC_FOLDER/openssl-millegrille-middleware.cnf
 
   importer_dans_docker
 }

@@ -32,7 +32,7 @@ verifier_presence_docker() {
   echo "[OK] Docker est detecte"
 
   sudo docker node ls > /dev/null 2> /dev/null
-  if [ $? -ne 0 ];
+  if [ $? -ne 0 ]; then
     echo "Tenter d'initialiser docker swarm"
     sudo docker swarm init --advertise-addr 127.0.0.1
     if [ $? -ne 0 ]; then
@@ -63,6 +63,7 @@ preparer_folder_millegrille() {
   sudo cp -r $FOLDER_INSTALL_SRC/install_scripts/bin/* $MG_FOLDER_BIN
 
   # Copier configuration (etc)
+  sudo cp -r $FOLDER_INSTALL_SRC/install_scripts/etc/* $MG_FOLDER_ETC
 
   # Copier certificats de reference
   sudo cp $FOLDER_INSTALL_SRC/certificates/millegrilles.*.pem $MG_FOLDER_CACERTS
@@ -73,7 +74,7 @@ installer_certificats_millegrille() {
   echo "Installation des certificats de la MilleGrille dans les secrets docker"
   NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
   DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
-  $MG_FOLDER_BIN/setup-manager-certs.sh
+  $MG_FOLDER_BIN/setup-manage-certs.sh
 }
 
 # Sequence execution
