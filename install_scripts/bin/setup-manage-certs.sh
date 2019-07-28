@@ -11,19 +11,7 @@ if [ -z $CURDATE ]; then
   CURDATE=`date +%Y%m%d%H%M`
 fi
 
-HOSTNAME=`hostname --fqdn`
-
-MG_FOLDER_ROOT=/opt/millegrilles
-PRIVATE_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/keys
-CERT_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/certs
-DBS_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/dbs
-CA_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_ssroot.key.pem
-MG_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_millegrille.key.pem
-CA_CERT=$CERT_PATH/${NOM_MILLEGRILLE}_ssroot.cert.pem
-MG_CERT=$CERT_PATH/${NOM_MILLEGRILLE}_millegrille.cert.pem
-ETC_FOLDER=$MG_FOLDER_ROOT/etc
-SSROOT_PASSWD_FILE=$ETC_FOLDER/cert_ssroot_password.txt
-MILLEGRILLE_PASSWD_FILE=$ETC_FOLDER/cert_millegrille_password.txt
+source ../etc/variables.txt
 
 creer_ssrootcert() {
   NOMCLE=$1

@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-FOLDER_INSTALL_SRC=/home/mathieu/git/MilleGrilles.consignation
-MG_FOLDER_ROOT=/opt/millegrilles
-MG_FOLDER_BIN=$MG_FOLDER_ROOT/bin
-MG_FOLDER_ETC=$MG_FOLDER_ROOT/etc
+source etc/variables.txt
 
 echo "Installation MilleGrille"
 echo " "
@@ -82,7 +79,7 @@ preparer_comptes_mongo() {
   # et le script de creation de comptes est prepare pour Mongo.
 
   # Compte pour transactions
-  
+
 }
 
 # Sequence execution
