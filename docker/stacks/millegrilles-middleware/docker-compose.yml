@@ -92,6 +92,9 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+    environment:
+     WEB_CERT: ${WEB_CERT}
+     URL_DOMAIN: ${URL_DOMAIN}
     ports:
      - "31080:80"
      - "31443:443"
@@ -99,6 +102,8 @@ services:
       - mg_net
     secrets:
       - pki.millegrilles.web.fullchain
+      - pki.millegrilles.web.chain
+      - pki.millegrilles.web.cert
       - pki.millegrilles.web.key
 
   # Utilitaires pour gerer / debugger les services
