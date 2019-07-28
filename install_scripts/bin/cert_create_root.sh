@@ -8,6 +8,11 @@ PRIVATE_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/keys
 CERT_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/certs
 DBS_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/dbs
 CA_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_ssroot.key.pem
+ETC_FOLDER=../etc
+SSROOT_PASSWD_FILE=$ETC_FOLDER/cert_ssroot_password.txt
+MILLEGRILLE_PASSWD_FILE=$ETC_FOLDER/cert_millegrille_password.txt
+
+CURDATE=`date +%Y%m%d%H%M`
 
 creer_ssrootcert() {
   NOMCLE=$1
@@ -15,7 +20,6 @@ creer_ssrootcert() {
 
   SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=SSRoot/CN=ssroot.millegrilles.com/emailAddress=ssroot@millegrilles.com"
 
-  CURDATE=`date +%Y%m%d%H%M`
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   SSCERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
   let "DAYS=365 * 10"  # 10 ans
@@ -29,7 +33,8 @@ creer_ssrootcert() {
           -sha512 -days $DAYS \
           -out $SSCERT -outform PEM \
           -keyout $KEY -keyform PEM \
-          -subj $SUBJECT
+          -subj $SUBJECT \
+          -passout file:$ETC_FOLDER/$SSROOT_PASSWD_FILE
 
   if [ $? -ne 0 ]; then
     echo "Erreur openssl creer_ssrootcert()"
@@ -56,7 +61,6 @@ creer_certca_millegrille() {
   NOMCLE=$1
   CNF_FILE=$2
 
-  CURDATE=`date +%Y%m%d%H%M`
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
   HOSTNAME=`hostname --fqdn`
@@ -72,8 +76,9 @@ creer_certca_millegrille() {
           -config $CNF_FILE \
           -newkey rsa:4096 -sha512 \
           -out $REQ -outform PEM \
-          -keyout $KEY -keyform PEM
-
+          -keyout $KEY -keyform PEM \
+          -subj $SUBJECT \
+          -passout file:$ETC_FOLDER/$MILLEGRILLE_PASSWD_FILE
   if [ $? -ne 0 ]; then
     echo "Erreur openssl creer_certca_millegrille()"
     exit 1
@@ -92,7 +97,6 @@ signer_cert_par_ssroot() {
   NOMCLE=$1
   CNF_FILE=$2
 
-  CURDATE=`date +%Y%m%d`
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
   CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
 
@@ -101,6 +105,7 @@ signer_cert_par_ssroot() {
           -extensions signing_req \
           -keyfile $CA_KEY -keyform PEM \
           -out $CERT \
+          -passin file:$ETC_FOLDER/$SSROOT_PASSWD_FILE \
           -infiles $REQ
 }
 
@@ -109,10 +114,10 @@ creer_ssrootcert \
   ${NOM_MILLEGRILLE}_ssroot \
   ../etc/openssl-rootca.cnf
 
-#creer_certca_millegrille \
-#  ${NOM_MILLEGRILLE}_millegrille \
-#  ../etc/openssl-millegrille.cnf
+creer_certca_millegrille \
+  ${NOM_MILLEGRILLE}_millegrille \
+  ../etc/openssl-millegrille.cnf
 
-#signer_cert_par_ssroot \
-#  ${NOM_MILLEGRILLE}_millegrille \
-#  ../etc/openssl-rootca.cnf
+signer_cert_par_ssroot \
+ ${NOM_MILLEGRILLE}_millegrille \
+  ../etc/openssl-rootca.cnf
