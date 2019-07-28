@@ -2,7 +2,7 @@
 
 echo "Dependancies a installer: "
 echo " "
-echo "1. docker"
+echo "1. docker, docker-compose"
 echo "2. certbot"
 echo " "
 
@@ -19,7 +19,16 @@ installer_docker_snap() {
   echo "[OK] docker installe"
 }
 
+installer_dockercompose() {
+  docker-compose version > /dev/null 2> /dev/null
+  if [ $? -ne 1 ]; then
+    echo "Tenter d'installer docker-compose"
+    curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  fi
+}
+
 # Sequence d'Installation
 
 installer_certbot_ppa
 installer_docker_snap
+installer_dockercompose

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 FOLDER_INSTALL_SRC=/home/mathieu/git/MilleGrilles.consignation
+MG_FOLDER_ROOT=/opt/millegrilles
+MG_FOLDER_BIN=$MG_FOLDER_ROOT/bin
+MG_FOLDER_ETC=$MG_FOLDER_ROOT/etc
 
 echo "Installation MilleGrille"
 echo " "
@@ -42,15 +45,12 @@ verifier_presence_docker() {
 }
 
 preparer_folder_millegrille() {
-  MG_FOLDER_ROOT=/opt/millegrilles
-  MG_FOLDER_BIN=$MG_FOLDER_ROOT/bin
-  MG_FOLDER_ETC=$MG_FOLDER_ROOT/etc
   MG_FOLDER_CACERTS=$MG_FOLDER_ROOT/cacerts
   MG_FOLDER_CERTS=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/certs
   MG_FOLDER_KEYS=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/keys
   MG_FOLDER_LETSENCRYPT=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/letsencrypt
-  MG_FOLDER_WEBROOT=$MG_FOLDER_ROOT/nginx/webroot
-  MG_FOLDER_WEBCONF=$MG_FOLDER_ROOT/nginx/conf.d
+  MG_FOLDER_WEBROOT=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/nginx/webroot
+  MG_FOLDER_WEBCONF=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/nginx/conf.d
   echo "Preparer $MG_FOLDER_ROOT"
 
   sudo mkdir -p $MG_FOLDER_BIN $MG_FOLDER_ETC $MG_FOLDER_CACERTS
@@ -67,7 +67,6 @@ preparer_folder_millegrille() {
 
   # Copier certificats de reference
   sudo cp $FOLDER_INSTALL_SRC/certificates/millegrilles.*.pem $MG_FOLDER_CACERTS
-
 }
 
 installer_certificats_millegrille() {
@@ -75,6 +74,15 @@ installer_certificats_millegrille() {
   NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
   DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
   $MG_FOLDER_BIN/setup-manage-certs.sh
+}
+
+preparer_comptes_mongo() {
+  # Les scripts python ont besoin d'avoir des comptes crees dans
+  # la base de donnees Mongo. Les mots de passe sont generes aleatoirement
+  # et le script de creation de comptes est prepare pour Mongo.
+
+  # Compte pour transactions
+  
 }
 
 # Sequence execution

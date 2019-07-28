@@ -1,0 +1,57 @@
+# Stack pour stack web Coup D'Oeil de MilleGrilles
+version: '3.7'
+
+services:
+
+  mg-debug:
+    image:  ubuntu
+    hostname: mg-debug.${URL_DOMAIN}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 30s
+    networks:
+      - mg_net
+    secrets:
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
+      - pki.millegrilles.ssl.key_cert
+      - pki.millegrilles.web.fullchain
+      - pki.millegrilles.web.key
+      - mg.transactions.json
+      - mg.mgdomaines.json
+
+networks:
+  mg_net:
+    external: true
+    name: mg_net
+
+secrets:
+  pki.millegrilles.web.fullchain:
+    external: true
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}
+  pki.millegrilles.web.key:
+    external: true
+    name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key.${PKI_MILLEGRILLES_WEB_VERSION}
+
+  pki.millegrilles.ssl.key:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
+  pki.millegrilles.ssl.key_cert:
+    external: true
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
+
+  mg.transactions.json:
+    external: true
+    name: mg.transactions.json.${CONFIGURATION_TRANSACTION_VERSION}
+  mg.mgdomaines.json:
+    external: true
+    name: mg.mgdomaines.json.${CONFIGURATION_MGDOMAINES_VERSION}
