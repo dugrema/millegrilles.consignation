@@ -42,6 +42,17 @@ configurer_docker() {
 
   # Creer le network pour millegrilles
   docker network create -d overlay mg_net
+
+  # Ajouter les labels utilises pour les services
+  NODE=`hostname`
+  docker node update --label-add netzone.private=true $NODE
+  docker node update --label-add netzone.public=true $NODE
+  docker node update --label-add millegrilles.database=true $NODE
+  docker node update --label-add millegrilles.mq=true $NODE
+  docker node update --label-add millegrilles.consoles=true $NODE
+  docker node update --label-add millegrilles.python=true $NODE
+  docker node update --label-add millegrilles.domaines=true $NODE
+  docker node update --label-add millegrilles.coupdoeil=true $NODE
 }
 
 preparer_folder_millegrille() {

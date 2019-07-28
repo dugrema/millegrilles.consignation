@@ -5,40 +5,40 @@ networks:
 secrets:
   mongo.root.password:
     external: true
-    name: mg.test.mongo_root_password.201907281549
+    name: mg.test.mongo_root_password.201907281628
   mongoexpress.web.password:
     external: true
-    name: mg.test.mongoexpress_web_password.201907281549
+    name: mg.test.mongoexpress_web_password.201907281628
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.test.millegrilles.ssl.CAchain.201907281549
+    name: pki.test.millegrilles.ssl.CAchain.201907281628
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.test.middleware.ssl.cert.201907281549
+    name: pki.test.middleware.ssl.cert.201907281628
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.test.middleware.ssl.key.201907281549
+    name: pki.test.middleware.ssl.key.201907281628
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: pki.test.middleware.ssl.key_cert.201907281549
+    name: pki.test.middleware.ssl.key_cert.201907281628
   pki.millegrilles.wadmin.cert:
     external: true
-    name: pki.test.middleware.ssl.cert.201907281549
+    name: pki.test.middleware.ssl.cert.201907281628
   pki.millegrilles.wadmin.key:
     external: true
-    name: pki.test.middleware.ssl.key.201907281549
+    name: pki.test.middleware.ssl.key.201907281628
   pki.millegrilles.web.cert:
     external: true
-    name: pki.test.middleware.ssl.cert.201907281549
+    name: pki.test.middleware.ssl.cert.201907281628
   pki.millegrilles.web.chain:
     external: true
-    name: pki.test.middleware.ssl.chain.201907281549
+    name: pki.test.middleware.ssl.chain.201907281628
   pki.millegrilles.web.fullchain:
     external: true
-    name: pki.test.middleware.ssl.fullchain.201907281549
+    name: pki.test.middleware.ssl.fullchain.201907281628
   pki.millegrilles.web.key:
     external: true
-    name: pki.test.middleware.ssl.key.201907281549
+    name: pki.test.middleware.ssl.key.201907281628
 services:
   mongo:
     command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
