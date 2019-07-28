@@ -23,6 +23,8 @@ services:
       - pki.millegrilles.web.key
       - mg.transactions.json
       - mg.mgdomaines.json
+      - mongo.root.password
+      - mongoexpress.web.password
 
 networks:
   mg_net:
@@ -30,6 +32,13 @@ networks:
     name: mg_net
 
 secrets:
+  mongo.root.password:
+    external: true
+    name: ${MONGO_ROOT_PASSWORD}
+  mongoexpress.web.password:
+    external: true
+    name: ${MONGOEXPRESS_WEB_PASSWORD}
+
   pki.millegrilles.web.fullchain:
     external: true
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.fullchain.${PKI_MILLEGRILLES_WEB_VERSION}

@@ -37,6 +37,10 @@ preparer_comptes_mongo() {
 preparer_script_mongo() {
   cp $MONGO_ACCOUNT_SCRIPTS_TEMPLATE $MONGO_ACCOUNT_SCRIPTS
   sed -i 's,NOM_MILLEGRILLE,'"$NOM_MILLEGRILLE"',' $MONGO_ACCOUNT_SCRIPTS
+
+  openssl rand -base64 32 > $PASSWORDS_PATH/mongo.root.password
+  openssl rand -base64 32 > $PASSWORDS_PATH/mongoexpress.web.password
+  chmod 400 $PASSWORDS_PATH/mongo*
 }
 
 preparer_configuration() {
@@ -58,6 +62,8 @@ ajouter_docker_secrets() {
   cat $PASSWORDS_PATH/mg.transactions.json | docker secret create mg.$NOM_MILLEGRILLE.transactions.json.$CURDATE -
   cat $PASSWORDS_PATH/mg.mgdomaines.json | docker secret create mg.$NOM_MILLEGRILLE.mgdomaines.json.$CURDATE -
   cat $PASSWORDS_PATH/mg.backup.json | docker secret create mg.$NOM_MILLEGRILLE.backup.json.$CURDATE -
+  cat $PASSWORDS_PATH/mongo.root.password | docker secret create mg.$NOM_MILLEGRILLE.mongo_root_password.$CURDATE -
+  cat $PASSWORDS_PATH/mongoexpress.web.password | docker secret create mg.$NOM_MILLEGRILLE.mongoexpress_web_password.$CURDATE -
 }
 
 

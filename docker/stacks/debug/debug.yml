@@ -5,28 +5,34 @@ networks:
 secrets:
   mg.mgdomaines.json:
     external: true
-    name: mg.test.mgdomaines.json.201907281526
+    name: mg.test.mgdomaines.json.201907281549
   mg.transactions.json:
     external: true
-    name: mg.test.transactions.json.201907281526
+    name: mg.test.transactions.json.201907281549
+  mongo.root.password:
+    external: true
+    name: mg.test.mongo_root_password.201907281549
+  mongoexpress.web.password:
+    external: true
+    name: mg.test.mongoexpress_web_password.201907281549
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.test.millegrilles.ssl.CAchain.201907281526
+    name: pki.test.millegrilles.ssl.CAchain.201907281549
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.test.middleware.ssl.cert.201907281526
+    name: pki.test.middleware.ssl.cert.201907281549
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.test.middleware.ssl.key.201907281526
+    name: pki.test.middleware.ssl.key.201907281549
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: pki.test.middleware.ssl.key_cert.201907281526
+    name: pki.test.middleware.ssl.key_cert.201907281549
   pki.millegrilles.web.fullchain:
     external: true
-    name: pki.test.middleware.ssl.fullchain.201907281526
+    name: pki.test.middleware.ssl.fullchain.201907281549
   pki.millegrilles.web.key:
     external: true
-    name: pki.test.middleware.ssl.key.201907281526
+    name: pki.test.middleware.ssl.key.201907281549
 services:
   mg-debug:
     command: sleep 10000
@@ -48,5 +54,7 @@ services:
     - source: pki.millegrilles.web.key
     - source: mg.transactions.json
     - source: mg.mgdomaines.json
+    - source: mongo.root.password
+    - source: mongoexpress.web.password
 version: '3.7'
 
