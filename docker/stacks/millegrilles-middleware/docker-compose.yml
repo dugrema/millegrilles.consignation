@@ -164,8 +164,10 @@ volumes:
 secrets:
   mongo.root.password:
     external: true
+    name: ${MONGO_ROOT_PASSWORD}
   mongoexpress.web.password:
     external: true
+    name: ${MONGOEXPRESS_WEB_PASSWORD}
   pki.millegrilles.wadmin.cert:
     external: true
     name: ${PKI_MILLEGRILLES_WADMIN_PREFIX}.cert.${PKI_MILLEGRILLES_WADMIN_VERSION}
@@ -186,13 +188,13 @@ secrets:
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.ssl.key:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.cert:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.CAchain:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
