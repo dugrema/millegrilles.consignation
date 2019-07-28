@@ -16,8 +16,8 @@ echo "2. Generer le certificat de middleware"
 echo "3. Mettre tous les secrets dans docker"
 
 verifier_parametres() {
-  if [ -z $NOM_MILLEGRILLE ]; then
-    echo -e "\n[FAIL] Parametres globaux requis: NOM_MILLEGRILLE"
+  if [ -z $NOM_MILLEGRILLE ] || [ -z $DOMAIN_SUFFIX ]; then
+    echo -e "\n[FAIL] Parametres globaux requis: NOM_MILLEGRILLE DOMAIN_SUFFIX"
     exit 1
   fi
 }
@@ -69,16 +69,15 @@ preparer_folder_millegrille() {
 
 }
 
-creer_certificat_millegrille() {
-  echo Debut creation certificats pour la MilleGrille $NOM_MILLEGRILLE
-}
-
 installer_certificats_millegrille() {
   echo "Installation des certificats de la MilleGrille dans les secrets docker"
-  $MG_FOLDER_BIN/setup-pki.sh
+  NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
+  DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  $MG_FOLDER_BIN/setup-manager-certs.sh
 }
 
 # Sequence execution
 verifier_parametres
 verifier_presence_docker
 preparer_folder_millegrille
+installer_certificats_millegrille

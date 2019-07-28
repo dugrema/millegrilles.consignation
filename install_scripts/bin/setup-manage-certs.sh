@@ -13,11 +13,15 @@ fi
 
 HOSTNAME=`hostname --fqdn`
 
-PRIVATE_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/keys
-CERT_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/certs
-DBS_PATH=/opt/millegrilles/$NOM_MILLEGRILLE/pki/dbs
+MG_FOLDER_ROOT=/opt/millegrilles
+PRIVATE_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/keys
+CERT_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/certs
+DBS_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/dbs
 CA_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_ssroot.key.pem
-ETC_FOLDER=../etc
+MG_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_millegrille.key.pem
+CA_CERT=$CERT_PATH/${NOM_MILLEGRILLE}_ssroot.cert.pem
+MG_CERT=$CERT_PATH/${NOM_MILLEGRILLE}_millegrille.cert.pem
+ETC_FOLDER=$MG_FOLDER_ROOT/etc
 SSROOT_PASSWD_FILE=$ETC_FOLDER/cert_ssroot_password.txt
 MILLEGRILLE_PASSWD_FILE=$ETC_FOLDER/cert_millegrille_password.txt
 
@@ -36,12 +40,15 @@ creer_ssrootcert() {
     exit 1
   fi
 
+  # Generer un mot de passe (s'il n'existe pas deja - pas overwrite)
+  generer_pass_random $SSROOT_PASSWD_FILE
+
   openssl req -x509 -config $CNF_FILE \
           -sha512 -days $DAYS \
           -out $SSCERT -outform PEM \
           -keyout $KEY -keyform PEM \
           -subj $SUBJECT \
-          -passout file:$ETC_FOLDER/$SSROOT_PASSWD_FILE
+          -passout file:$SSROOT_PASSWD_FILE
 
   if [ $? -ne 0 ]; then
     echo "Erreur openssl creer_ssrootcert()"
@@ -77,6 +84,9 @@ creer_certca_millegrille() {
     echo "Cle $KEY existe deja - on abandonne"
   fi
 
+  # Generer un mot de passe (s'il n'existe pas deja - pas overwrite)
+  generer_pass_random $MILLEGRILLE_PASSWD_FILE
+
   HOSTNAME=$HOSTNAME DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
   openssl req \
           -config $CNF_FILE \
@@ -84,7 +94,7 @@ creer_certca_millegrille() {
           -out $REQ -outform PEM \
           -keyout $KEY -keyform PEM \
           -subj $SUBJECT \
-          -passout file:$ETC_FOLDER/$MILLEGRILLE_PASSWD_FILE
+          -passout file:$MILLEGRILLE_PASSWD_FILE
   if [ $? -ne 0 ]; then
     echo "Erreur openssl creer_certca_millegrille()"
     exit 1
@@ -94,7 +104,7 @@ creer_certca_millegrille() {
 
   # Creer lien generique pour la cle root
   chmod 400 $KEY
-  ln -sf $KEY $CA_KEY
+  ln -sf $KEY $MG_KEY
   ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
 
   if [ ! -d $DBS_PATH/$HOSTNAME ]; then
@@ -118,7 +128,7 @@ signer_cert_par_ssroot() {
           -extensions signing_req \
           -keyfile $CA_KEY -keyform PEM \
           -out $CERT \
-          -passin file:$ETC_FOLDER/$SSROOT_PASSWD_FILE \
+          -passin file:$SSROOT_PASSWD_FILE \
           -batch \
           -infiles $REQ
 }
@@ -165,9 +175,9 @@ signer_cert_par_millegrille() {
   openssl ca -config $CNF_FILE \
           -policy signing_policy \
           -extensions signing_req \
-          -keyfile $CA_KEY -keyform PEM \
+          -keyfile $MG_KEY -keyform PEM \
           -out $CERT \
-          -passin file:$ETC_FOLDER/$MILLEGRILLE_PASSWD_FILE \
+          -passin file:$MILLEGRILLE_PASSWD_FILE \
           -batch \
           -infiles $REQ
 }
@@ -177,24 +187,50 @@ importer_dans_docker() {
   CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
   CERT_MILLEGRILLE=$CERT_PATH/${NOM_MILLEGRILLE}_millegrille_${CURDATE}.cert.pem
   CERT_SSROOT=$CERT_PATH/${NOM_MILLEGRILLE}_ssroot_${CURDATE}.cert.pem
-  docker secret create pki.millegrilles.ssl.cert $CERT_MIDDLEWARE
-  docker secret create pki.millegrilles.ssl.key $CLE_MIDDLEWARE
-  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.millegrilles.ssl.key_cert -
-  cat $CERT_SSROOT $CERT_MILLEGRILLE | docker secret create pki.millegrilles.ssl.CAchain -
+
+  # Certs root
+  cat $CA_CERT $MG_CERT | docker secret create pki.millegrilles.ssl.CAchain.$CURDATE -
+
+  # Cles middleware
+  docker secret create pki.middleware.ssl.cert.$CURDATE $CERT_MIDDLEWARE
+  docker secret create pki.middleware.ssl.key.$CURDATE $CLE_MIDDLEWARE
+  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.middleware.ssl.key_cert.$CURDATE -
+}
+
+generer_pass_random() {
+  if [ ! -f $1 ]; then
+    openssl rand -base64 32 > $1
+    chmod 400 $1
+  fi
 }
 
 # Sequence
-#creer_ssrootcert \
-#  ${NOM_MILLEGRILLE}_ssroot \
-#  ../etc/openssl-rootca.cnf
+sequence_chargement() {
+  # On ne regenere pas la cle CA si elle existe deja.
+  if [ ! -f $CA_KEY ]; then
+    echo "Generer un certificat self-signed"
+    creer_ssrootcert \
+      ${NOM_MILLEGRILLE}_ssroot \
+      ../etc/openssl-rootca.cnf
+  fi
 
-#creer_certca_millegrille \
-#  ${NOM_MILLEGRILLE}_millegrille \
-#  ../etc/openssl-millegrille.cnf
+  # On ne regenere pas la cle MilleGrille (CA) si elle existe deja,
+  # sauf si le flag RENOUV_MILLEGRILLE est present
+  if [ ! -f $CERT_PATH/${NOM_MILLEGRILLE}_millegrille.cert.pem ] || [ ! -z $RENOUV_MILLEGRILLE ]; then
+    echo "Generer un certificat MilleGrille (CA)"
+    creer_certca_millegrille \
+      ${NOM_MILLEGRILLE}_millegrille \
+      ../etc/openssl-millegrille.cnf
+  fi
 
-# Creer le noeud middleware
-#creer_cert_noeud \
-# ${NOM_MILLEGRILLE}_middleware \
-#  ../etc/openssl-millegrille-middleware.cnf
+  # Creer le noeud middleware
+  echo "Generer un certificat de noeud Middleware"
+  creer_cert_noeud \
+   ${NOM_MILLEGRILLE}_middleware \
+    ../etc/openssl-millegrille-middleware.cnf
 
-importer_dans_docker
+  importer_dans_docker
+}
+
+# Executer
+sequence_chargement
