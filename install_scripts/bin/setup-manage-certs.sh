@@ -185,8 +185,6 @@ signer_cert_par_millegrille() {
 importer_dans_docker() {
   CERT_MIDDLEWARE=$CERT_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.cert.pem
   CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
-  CERT_MILLEGRILLE=$CERT_PATH/${NOM_MILLEGRILLE}_millegrille_${CURDATE}.cert.pem
-  CERT_SSROOT=$CERT_PATH/${NOM_MILLEGRILLE}_ssroot_${CURDATE}.cert.pem
 
   # Certs root
   cat $CA_CERT $MG_CERT | docker secret create pki.$NOM_MILLEGRILLE.millegrilles.ssl.CAchain.$CURDATE -
