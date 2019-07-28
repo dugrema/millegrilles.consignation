@@ -13,9 +13,9 @@ installer_certbot_ppa() {
   echo "[OK] Certbot installe"
 }
 
-installer_docker_snap() {
+installer_docker() {
   echo "Debut installation docker"
-  sudo snap install docker
+  sudo apt install -y docker.io
   echo "[OK] docker installe"
 }
 
@@ -30,5 +30,5 @@ installer_dockercompose() {
 # Sequence d'Installation
 
 installer_certbot_ppa
-installer_docker_snap
+installer_docker
 installer_dockercompose

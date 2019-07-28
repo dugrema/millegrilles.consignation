@@ -1,0 +1,52 @@
+networks:
+  mg_net:
+    external: true
+    name: mg_net
+secrets:
+  mg.mgdomaines.json:
+    external: true
+    name: mg.test.mgdomaines.json.201907281444
+  mg.transactions.json:
+    external: true
+    name: mg.test.transactions.json.201907281444
+  pki.millegrilles.ssl.CAchain:
+    external: true
+    name: pki.test.millegrilles.ssl.CAchain.201907281444
+  pki.millegrilles.ssl.cert:
+    external: true
+    name: pki.test.middleware.ssl.cert.201907281444
+  pki.millegrilles.ssl.key:
+    external: true
+    name: pki.test.middleware.ssl.key.201907281444
+  pki.millegrilles.ssl.key_cert:
+    external: true
+    name: pki.test.middleware.ssl.key_cert.201907281444
+  pki.millegrilles.web.fullchain:
+    external: true
+    name: pki.test.middleware.ssl.fullchain.201907281444
+  pki.millegrilles.web.key:
+    external: true
+    name: pki.test.middleware.ssl.key.201907281444
+services:
+  mg-debug:
+    command: sleep 10000
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+        delay: 30s
+    hostname: mg-debug.test.com
+    image: ubuntu
+    networks:
+      mg_net: null
+    secrets:
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.CAchain
+    - source: pki.millegrilles.ssl.key_cert
+    - source: pki.millegrilles.web.fullchain
+    - source: pki.millegrilles.web.key
+    - source: mg.transactions.json
+    - source: mg.mgdomaines.json
+version: '3.7'
+

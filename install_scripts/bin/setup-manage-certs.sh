@@ -192,6 +192,7 @@ importer_dans_docker() {
   cat $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.cert.$CURDATE -
   cat $CLE_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key.$CURDATE -
   cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key_cert.$CURDATE -
+  cat $CA_CERT $MG_CERT $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.fullchain.$CURDATE -
 }
 
 generer_pass_random() {

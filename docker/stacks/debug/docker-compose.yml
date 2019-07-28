@@ -5,6 +5,7 @@ services:
 
   mg-debug:
     image:  ubuntu
+    command: sleep 10000
     hostname: mg-debug.${URL_DOMAIN}
     deploy:
       replicas: 1
@@ -38,20 +39,20 @@ secrets:
 
   pki.millegrilles.ssl.key:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.cert:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.CAchain:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
 
   mg.transactions.json:
     external: true
-    name: mg.transactions.json.${CONFIGURATION_TRANSACTION_VERSION}
+    name: mg.${NOM_MILLEGRILLE}.transactions.json.${CONFIGURATION_TRANSACTION_VERSION}
   mg.mgdomaines.json:
     external: true
-    name: mg.mgdomaines.json.${CONFIGURATION_MGDOMAINES_VERSION}
+    name: mg.${NOM_MILLEGRILLE}.mgdomaines.json.${CONFIGURATION_MGDOMAINES_VERSION}

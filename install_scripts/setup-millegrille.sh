@@ -22,7 +22,7 @@ verifier_parametres() {
   fi
 }
 
-verifier_presence_docker() {
+configurer_docker() {
   sudo docker info > /dev/null 2> /dev/null
   PRESENCE_DOCKER=$?
   if [ $PRESENCE_DOCKER -ne 0 ]; then
@@ -39,6 +39,9 @@ verifier_presence_docker() {
       echo "Erreur initialisation docker swarm"
     fi
   fi
+
+  # Creer le network pour millegrilles
+  docker network create -d overlay mg_net
 }
 
 preparer_folder_millegrille() {
@@ -76,7 +79,7 @@ preparer_comptes_mongo() {
 
 # Sequence execution
 verifier_parametres
-verifier_presence_docker
+configurer_docker
 preparer_folder_millegrille
 installer_certificats_millegrille
 preparer_comptes_mongo
