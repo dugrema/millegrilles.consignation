@@ -66,7 +66,6 @@ ajouter_docker_secrets() {
   cat $PASSWORDS_PATH/mongoexpress.web.password | docker secret create mg.$NOM_MILLEGRILLE.mongoexpress_web_password.$CURDATE -
 }
 
-
 # Executer
 preparer_comptes_mongo
 ajouter_docker_secrets

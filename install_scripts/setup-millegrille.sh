@@ -88,9 +88,25 @@ preparer_comptes_mongo() {
   $MG_FOLDER_BIN/setup-mongo-accounts.sh
 }
 
+preparer_stack_docker() {
+  echo Preparer stack docker
+}
+
+inserer_comptes_mongo() {
+  docker container run --rm -it \
+         -e NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
+         -e DATEFICHIER=$DATEFICHIER \
+         -e MONGOHOST=`hostname` \
+         -v /opt/millegrilles:/opt/millegrilles \
+         mongo:4.0 \
+         /opt/millegrilles/bin/setup-mongo-js.sh
+}
+
 # Sequence execution
 verifier_parametres
 configurer_docker
 preparer_folder_millegrille
 installer_certificats_millegrille
 preparer_comptes_mongo
+preparer_stack_docker
+inserer_comptes_mongo
