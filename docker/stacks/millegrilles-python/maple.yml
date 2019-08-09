@@ -17,16 +17,16 @@ secrets:
     name: mg.transactions.json.1
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.millegrilles.ssl.CAchain.20190207
+    name: pki.millegrilles.ssl.CAchain.20190809
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.millegrilles.ssl.cert.20190207
+    name: pki.millegrilles.ssl.cert.20190809
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.millegrilles.ssl.key.20190207
+    name: pki.millegrilles.ssl.key.20190809
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: pki.millegrilles.ssl.key_cert.20190207
+    name: pki.millegrilles.ssl.key_cert.20190809
 services:
   ceduleur-python:
     command: demarrer_ceduleur.py
@@ -60,7 +60,7 @@ services:
       MG_MQ_USER: cedule
       MG_NOM_MILLEGRILLE: maple
     hostname: ceduleur-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.7.4
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
     networks:
       mg_net: null
     secrets:
@@ -103,7 +103,7 @@ services:
       MG_MQ_USER: mgdomaines
       MG_NOM_MILLEGRILLE: maple
     hostname: domaines-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.7.4
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
     networks:
       mg_net: null
     secrets:
@@ -144,7 +144,7 @@ services:
       MG_MQ_USER: transaction
       MG_NOM_MILLEGRILLE: maple
     hostname: transactions-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.7.4
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
     networks:
       mg_net: null
     secrets:
