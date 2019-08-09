@@ -1,0 +1,13 @@
+# Fichier de configuration pour docker_ipv6_staticset.sh
+
+INTERFACE=eth0
+NOM_RESEAU=ipv6_sample2
+PREFIXE_IPV6=2607:f2c0:eb70:1785
+
+# Faire la liste des noms de containers et leur adresse IPv6 statique ici
+declare -A CONTAINER_IPS
+CONTAINER_IPS=( \
+["httpd"]="$PREFIXE_IPV6:ff02::3" \
+["redmine"]="$PREFIXE_IPV6:ff02::4" \
+)
+
