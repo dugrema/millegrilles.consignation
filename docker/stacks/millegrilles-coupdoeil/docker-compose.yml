@@ -56,7 +56,7 @@ services:
         condition: any
         delay: 30s
     environment:
-     MG_NOMMILLEGRILLE: ${MG_NOM_MILLEGRILLE}
+     MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
      CERT: /run/secrets/pki.millegrilles.ssl.cert
      PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
     ports:
