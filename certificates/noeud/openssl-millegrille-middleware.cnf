@@ -52,9 +52,11 @@ subjectAltName       = @alternate_names
 DNS.1  = $NOM_NOEUD
 DNS.2  = mongo
 DNS.3  = mq
+DNS.4  = consignationfichiers
 
-DNS.4  = www.$DOMAIN_SUFFIX
-DNS.5  = mongo.$DOMAIN_SUFFIX
-DNS.6  = mongo-express.$DOMAIN_SUFFIX
-DNS.7  = mq.$DOMAIN_SUFFIX
-DNS.8  = coupdoeil.$DOMAIN_SUFFIX
+DNS.5  = www.$DOMAIN_SUFFIX
+DNS.6  = mongo.$DOMAIN_SUFFIX
+DNS.7  = mongo-express.$DOMAIN_SUFFIX
+DNS.8  = mq.$DOMAIN_SUFFIX
+DNS.9  = coupdoeil.$DOMAIN_SUFFIX
+DNS.10  = consignationfichiers.$DOMAIN_SUFFIX
