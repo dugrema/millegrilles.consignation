@@ -42,7 +42,7 @@ services:
       MG_NOM_MILLEGRILLE: dev2
       PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
     hostname: consignationfichiers.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/consignationfichiers.x86_64:1.8.4
+    image: registry.maple.mdugre.info:5000/consignationfichiers:1.8.4
     networks:
       mg_net: null
     ports:
@@ -78,7 +78,7 @@ services:
       MG_NOM_MILLEGRILLE: dev2
       PRIVKEY: /run/secrets/pki.millegrilles.web.key
     hostname: coupdoeil.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/coupdoeil_react.x86_64:1.8.6
+    image: registry.maple.mdugre.info:5000/coupdoeil_react:1.8.6
     networks:
       mg_net: null
     ports:
