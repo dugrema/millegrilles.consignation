@@ -5,13 +5,13 @@ networks:
 secrets:
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.millegrilles.ssl.CAchain.20190113
+    name: pki.millegrilles.ssl.CAchain.20190808
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.millegrilles.ssl.cert.20190113
+    name: pki.millegrilles.ssl.cert.20190808
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.millegrilles.ssl.key.20190113
+    name: pki.millegrilles.ssl.key.20190808
   pki.millegrilles.web.fullchain:
     external: true
     name: pki.millegrilles.web.fullchain.20190716
