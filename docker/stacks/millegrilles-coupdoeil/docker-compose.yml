@@ -36,6 +36,40 @@ services:
       - pki.millegrilles.web.fullchain
       - pki.millegrilles.web.key
 
+  # Serveur de consignation pour fichiers
+  consignationfichiers:
+    image: ${REGISTRY}/consignationfichiers${CONSIGNATIONFICHIERS_IMAGE_VERSION}
+    hostname: consignationfichiers.${URL_DOMAIN}
+    volumes:
+      - ${CONSIGNATIONFICHIERS_PATH}:/opt/millegrilles/consignation
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.consignationfichiers == true
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+     MG_NOMMILLEGRILLE: ${MG_NOM_MILLEGRILLE}
+     CERT: /run/secrets/pki.millegrilles.ssl.cert
+     PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
+    ports:
+      - "9443:443"
+    env_file:
+      - services.env
+    networks:
+      - mg_net
+    secrets:
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
+
 networks:
   mg_net:
     external: true

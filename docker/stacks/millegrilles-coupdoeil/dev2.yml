@@ -19,6 +19,41 @@ secrets:
     external: true
     name: pki.millegrilles.web.key.20190716
 services:
+  consignationfichiers:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.consignationfichiers == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      CERT: /run/secrets/pki.millegrilles.ssl.cert
+      MG_CONSIGNATION_PATH: /opt/millegrilles/consignation
+      MG_MQ_CAFILE: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_NOMMILLEGRILLE: dev2
+      PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
+    hostname: consignationfichiers.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/consignationfichiers.x86_64:1.8.1
+    networks:
+      mg_net: null
+    ports:
+    - published: 9443
+      target: 443
+    secrets:
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.CAchain
+    volumes:
+    - /opt/millegrilles/dev2/consignation:/opt/millegrilles/consignation:rw
   coupdoeilreact:
     deploy:
       placement:
@@ -35,6 +70,7 @@ services:
         delay: 30s
     environment:
       CERT: /run/secrets/pki.millegrilles.web.fullchain
+      MG_CONSIGNATION_PATH: /opt/millegrilles/consignation
       MG_MQ_CAFILE: /run/secrets/pki.millegrilles.ssl.CAchain
       MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
       MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
