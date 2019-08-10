@@ -3,6 +3,15 @@ networks:
     external: true
     name: mg_net
 secrets:
+  mg.ceduleur.json:
+    external: true
+    name: mg.ceduleur.json.1
+  mg.mgdomaines.json:
+    external: true
+    name: mg.mgdomaines.json.1
+  mg.transactions.json:
+    external: true
+    name: mg.transactions.json.1
   mongo.root.password:
     external: true
     name: mongo.root.password
@@ -11,16 +20,16 @@ secrets:
     name: mongoexpress.web.password
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: pki.millegrilles.ssl.CAchain.20190113
+    name: pki.millegrilles.ssl.CAchain.20190808
   pki.millegrilles.ssl.cert:
     external: true
-    name: pki.millegrilles.ssl.cert.20190113
+    name: pki.millegrilles.ssl.cert.20190808
   pki.millegrilles.ssl.key:
     external: true
-    name: pki.millegrilles.ssl.key.20190113
+    name: pki.millegrilles.ssl.key.20190808
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: pki.millegrilles.ssl.key_cert.20190113
+    name: pki.millegrilles.ssl.key_cert.20190808
   pki.millegrilles.wadmin.cert:
     external: true
     name: pki.millegrilles.web.cert.20190716
@@ -40,6 +49,88 @@ secrets:
     external: true
     name: pki.millegrilles.web.key.20190716
 services:
+  ceduleur-python:
+    command: demarrer_ceduleur.py
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.python == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.20'
+          memory: 50M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.ceduleur.json
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: "on"
+      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
+      MG_MONGO_USERNAME: cedule
+      MG_MQ_AUTH_CERT: "on"
+      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_HOST: mq
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_MQ_PORT: '5673'
+      MG_MQ_SSL: "on"
+      MG_NOM_MILLEGRILLE: dev2
+    hostname: ceduleur-python.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
+    networks:
+      mg_net: null
+    secrets:
+    - source: mg.ceduleur.json
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.CAchain
+    - source: pki.millegrilles.ssl.key_cert
+  domaines-python:
+    command: demarrer_domaine.py --info
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.python == true
+        - node.labels.millegrilles.domaines == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 100M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.mgdomaines.json
+      MG_DOMAINES_JSON: /opt/millegrilles/dist/domaines.json
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: "on"
+      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
+      MG_MONGO_USERNAME: mgdomaines
+      MG_MQ_AUTH_CERT: "on"
+      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_HOST: mq
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_MQ_PORT: '5673'
+      MG_MQ_SSL: "on"
+      MG_NOM_MILLEGRILLE: dev2
+    hostname: domaines-python.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
+    networks:
+      mg_net: null
+    secrets:
+    - source: mg.mgdomaines.json
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key_cert
+    - source: pki.millegrilles.ssl.CAchain
   mongo:
     command: --replSet rs0 --sslMode requireSSL --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
       --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
@@ -117,6 +208,9 @@ services:
       restart_policy:
         condition: any
         delay: 30s
+    environment:
+      URL_DOMAIN: dev2.maple.mdugre.info
+      WEB_CERT: pki.millegrilles.web.fullchain
     hostname: www.dev2.maple.mdugre.info
     image: registry.maple.mdugre.info:5000/mg_nginx:1.16_7
     networks:
@@ -128,10 +222,52 @@ services:
       target: 443
     secrets:
     - source: pki.millegrilles.web.fullchain
+    - source: pki.millegrilles.web.chain
+    - source: pki.millegrilles.web.cert
     - source: pki.millegrilles.web.key
     volumes:
     - mg-middleware-nginx-conf:/etc/nginx/conf.d:rw
     - mg-middleware-nginx-www:/usr/share/nginx/html:rw
+  transactions-python:
+    deploy:
+      placement:
+        constraints:
+        - node.labels.netzone.private == true
+        - node.labels.millegrilles.python == true
+        - node.labels.millegrilles.database == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.50'
+          memory: 200M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      MG_CONFIG_JSON: /run/secrets/mg.transactions.json
+      MG_MONGO_HOST: mongo
+      MG_MONGO_SSL: "on"
+      MG_MONGO_SSL_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MONGO_SSL_CERTFILE: /run/secrets/pki.millegrilles.ssl.key_cert
+      MG_MONGO_USERNAME: transaction
+      MG_MQ_AUTH_CERT: "on"
+      MG_MQ_CA_CERTS: /run/secrets/pki.millegrilles.ssl.CAchain
+      MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
+      MG_MQ_HOST: mq
+      MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
+      MG_MQ_PORT: '5673'
+      MG_MQ_SSL: "on"
+      MG_NOM_MILLEGRILLE: dev2
+    hostname: transactions-python.dev2.maple.mdugre.info
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
+    networks:
+      mg_net: null
+    secrets:
+    - source: mg.transactions.json
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key_cert
+    - source: pki.millegrilles.ssl.CAchain
   web-mongo-express:
     depends_on:
     - mongo
@@ -150,7 +286,7 @@ services:
         delay: 30s
     environment:
       ME_CONFIG_BASICAUTH_PASSWORD_FILE: /run/secrets/mongoexpress.web.password
-      ME_CONFIG_BASICAUTH_USERNAME: mathieu
+      ME_CONFIG_BASICAUTH_USERNAME: mongo
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_CACERT: /run/secrets/pki.millegrilles.ssl.CAchain
       ME_CONFIG_MONGODB_CERT: /run/secrets/pki.millegrilles.ssl.cert

@@ -9,7 +9,7 @@ FICHIER_CONF=$MG_ETC_PATH/ipv6_local.txt
 
 # Generer le nom et adresse locale des services
 NOM_CONTAINERS=( \
-  www \
+  nginxlocal \
   coupdoeilreact \
   mq \
   mongoexpress \
