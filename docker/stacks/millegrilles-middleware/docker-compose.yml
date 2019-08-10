@@ -273,6 +273,74 @@ services:
       - pki.millegrilles.ssl.key_cert
       - pki.millegrilles.ssl.CAchain
 
+  # Application Meteor pour Coup D'Oeil
+  coupdoeilreact:
+    image:  ${REGISTRY}/coupdoeil_react${MG_COUPDOEILREACT_IMAGE_VERSION}
+    hostname: coupdoeil.${URL_DOMAIN}
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.public == true
+          - node.labels.millegrilles.coupdoeil == true
+      resources:
+       limits:
+          cpus: "1.00"
+          memory: 200M
+      restart_policy:
+        condition: any
+        delay: 30s
+    ports:
+      - target: 443
+        published: 7443
+        protocol: tcp
+        mode: host
+    env_file:
+      - services-coupdoeil.env
+    environment:
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
+      MG_MQ_URL: ${MG_MQ_PREFIX}/${MG_NOM_MILLEGRILLE}
+    networks:
+      - mg_net
+    secrets:
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
+      - pki.millegrilles.web.fullchain
+      - pki.millegrilles.web.key
+
+  # Serveur de consignation pour fichiers
+  consignationfichiers:
+    image: ${REGISTRY}/consignationfichiers${CONSIGNATIONFICHIERS_IMAGE_VERSION}
+    hostname: consignationfichiers.${URL_DOMAIN}
+    volumes:
+      - ${CONSIGNATIONFICHIERS_PATH}:/opt/millegrilles/consignation
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.consignationfichiers == true
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 128M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+     MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
+     CERT: /run/secrets/pki.millegrilles.ssl.cert
+     PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
+    env_file:
+      - services-coupdoeil.env
+    networks:
+      - mg_net
+    secrets:
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
+
 volumes:
   mg-middleware-mongodata:
     name: mg-middleware-mongodata
@@ -312,13 +380,13 @@ secrets:
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.ssl.key:
     external: true
-    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.cert:
     external: true
-    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: ${PKI_MIDDLEWARE_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
   pki.millegrilles.ssl.CAchain:
     external: true
     name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
