@@ -154,9 +154,6 @@ services:
     image: registry.maple.mdugre.info:5000/mg_mongo:4.0_4
     networks:
       mg_net: null
-    ports:
-    - published: 27017
-      target: 27017
     secrets:
     - source: mongo.root.password
     - source: pki.millegrilles.ssl.key_cert
@@ -182,9 +179,17 @@ services:
     networks:
       mg_net: null
     ports:
-    - published: 15671
+    - mode: host
+      protocol: tcp
+      published: 8443
       target: 443
-    - published: 5673
+    - mode: host
+      protocol: tcp
+      published: 5671
+      target: 5671
+    - mode: host
+      protocol: tcp
+      published: 5673
       target: 5673
     secrets:
     - source: pki.millegrilles.ssl.cert

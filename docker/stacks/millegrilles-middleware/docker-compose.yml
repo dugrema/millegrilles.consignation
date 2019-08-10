@@ -27,8 +27,6 @@ services:
       restart_policy:
         condition: any
         delay: 30s
-    ports:
-      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
@@ -60,8 +58,18 @@ services:
         condition: any
         delay: 30s
     ports:
-      - "15671:443"
-      - "5673:5673"
+      - target: 443
+        published: 8443
+        protocol: tcp
+        mode: host
+      - target: 5671
+        published: 5671
+        protocol: tcp
+        mode: host
+      - target: 5673
+        published: 5673
+        protocol: tcp
+        mode: host
     networks:
       - mg_net
     secrets:
