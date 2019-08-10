@@ -104,8 +104,14 @@ services:
      WEB_CERT: ${WEB_CERT}
      URL_DOMAIN: ${URL_DOMAIN}
     ports:
-     - "31080:80"
-     - "31443:443"
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
     networks:
       - mg_net
     secrets:
@@ -133,7 +139,10 @@ services:
         condition: any
         delay: 30s
     ports:
-      - 8081:443
+      - target: 443
+        published: 9443
+        protocol: tcp
+        mode: host
     environment:
       ME_CONFIG_BASICAUTH_USERNAME: mongo
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}

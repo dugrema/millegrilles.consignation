@@ -221,9 +221,13 @@ services:
     networks:
       mg_net: null
     ports:
-    - published: 31080
+    - mode: host
+      protocol: tcp
+      published: 80
       target: 80
-    - published: 31443
+    - mode: host
+      protocol: tcp
+      published: 443
       target: 443
     secrets:
     - source: pki.millegrilles.web.fullchain
@@ -309,7 +313,9 @@ services:
     networks:
       mg_net: null
     ports:
-    - published: 8081
+    - mode: host
+      protocol: tcp
+      published: 9443
       target: 443
     secrets:
     - source: mongo.root.password
