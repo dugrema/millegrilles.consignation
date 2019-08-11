@@ -162,21 +162,6 @@ creer_cert_noeud() {
     exit 36
   fi
 
-  SUFFIX_NOMCLE=$SUFFIX_NOMCLE \
-  CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
-  KEYFILE=$MG_KEY \
-  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
-  signer_cert
-
-  if [ $? != 0 ]; then
-    exit $?
-  fi
-
-  chmod 400 $KEY
-  chmod 444 $CERT
-  ln -sf $KEY $PRIVATE_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.key.pem
-  ln -sf $CERT $CERT_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.cert.pem
-
 }
 
 signer_cert() {
@@ -218,6 +203,36 @@ signer_cert() {
 
   # La requete CSR n'est plus necessaire
   rm $REQ
+}
+
+creer_cert_middleware() {
+
+  SUFFIX_NOMCLE=middleware \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille-middleware.cnf \
+  creer_cert_noeud
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  SUFFIX_NOMCLE=middleware \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
+  KEYFILE=$MG_KEY \
+  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
+  signer_cert
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+
+  chmod 400 $KEY
+  chmod 444 $CERT
+  ln -sf $KEY $PRIVATE_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.key.pem
+  ln -sf $CERT $CERT_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.cert.pem
+
 }
 
 concatener_chaine_certificats_ca() {
@@ -262,11 +277,11 @@ importer_dans_docker() {
   CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
 
   # Certs root
-  cat $CA_CERT $MG_CERT | docker secret create pki.$NOM_MILLEGRILLE.millegrilles.ssl.CAchain.$CURDATE -
+  cat $CA_CHAIN_FILE | docker secret create pki.$NOM_MILLEGRILLE.millegrilles.ssl.CAchain.$CURDATE -
 
   # Cles middleware
   cat $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.cert.$CURDATE -
   cat $CLE_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key.$CURDATE -
   cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key_cert.$CURDATE -
-  cat $CA_CERT $MG_CERT $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.fullchain.$CURDATE -
+  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.fullchain.$CURDATE -
 }

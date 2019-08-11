@@ -41,11 +41,13 @@ emailAddress_default = $NOM_MILLEGRILLE.$EMAIL
 
 subjectKeyIdentifier = hash
 basicConstraints     = CA:FALSE
-keyUsage             = digitalSignature, keyEncipherment
+keyUsage             = digitalSignature, nonRepudiation, keyEncipherment
 subjectAltName       = @alternate_names
-nsComment            = "OpenSSL Generated Certificate"
 
 ####################################################################
 [ alternate_names ]
 
-DNS.1  = $NOM_NOEUD.$DOMAIN_SUFFIX
+# Supporter l'access via docker (swarm), local et public.
+DNS.1  = $NOM_NOEUD
+DNS.2  = $NOM_NOEUD.local
+DNS.3  = $NOM_NOEUD.$DOMAIN_SUFFIX

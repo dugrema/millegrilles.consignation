@@ -17,21 +17,16 @@ source setup-certs-fonctions.sh
 
 # Sequence
 sequence_chargement() {
-  verifier_acces_docker
-  if [ $? != 0 ]; then
-    exit $?
-  fi
+  # Creer le certificat noeud
+  echo -e "\n*****\nGenerer un certificat de noeud"
 
-  # Creer le noeud middleware
-  echo -e "\n*****\nGenerer un certificat de noeud Middleware"
-
-  creer_cert_middleware
+  SUFFIX_NOMCLE=middleware \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille-noeud.cnf \
+  creer_cert_noeud
 
   if [ $? != 0 ]; then
     exit $?
   fi
-
-  importer_dans_docker
 }
 
 # Executer
