@@ -306,6 +306,7 @@ services:
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.CAchain
+      - pki.millegrilles.ssl.fullchain
       - pki.millegrilles.web.fullchain
       - pki.millegrilles.web.key
 

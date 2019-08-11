@@ -160,6 +160,7 @@ services:
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.CAchain
+    - source: pki.millegrilles.ssl.fullchain
     - source: pki.millegrilles.web.fullchain
     - source: pki.millegrilles.web.key
   domaines-python:
