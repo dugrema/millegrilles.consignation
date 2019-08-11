@@ -8,7 +8,7 @@ EMAIL           = millegrilles@mdugre.info
 ####################################################################
 [ req ]
 default_bits       = 2048
-default_keyfile    = millegrille.pem
+# default_keyfile    = millegrille.pem
 distinguished_name = server_distinguished_name
 req_extensions     = server_req_extensions
 string_mask        = utf8only
@@ -41,15 +41,24 @@ emailAddress_default = $NOM_MILLEGRILLE.$EMAIL
 
 subjectKeyIdentifier = hash
 basicConstraints     = CA:FALSE
-keyUsage             = digitalSignature, keyEncipherment
+keyUsage             = digitalSignature, nonRepudiation, keyEncipherment, \
+                       dataEncipherment, serverAuth, clientAuth, timeStamping
 subjectAltName       = @alternate_names
-# nsComment            = "OpenSSL Generated Certificate"
 
 ####################################################################
 [ alternate_names ]
 
-# Faire nom generique pour serveurs utilises dans le swarm
-DNS.1  = $NOM_NOEUD
-DNS.2  = mongo
-DNS.3  = mq
-DNS.4  = consignation
+# Section swarm docker (sans suffixe)
+DNS.1  = mongo
+DNS.2  = mq
+DNS.3  = consignationfichiers
+
+# Section .local
+DNS.4  = $NOM_NOEUD.local
+DNS.5  = www.local
+DNS.6  = coupdoeil.local
+DNS.7  = mq.local
+DNS.8  = mongo-express.local
+
+# Section publique
+DNS.9  = mq.$DOMAIN_SUFFIX

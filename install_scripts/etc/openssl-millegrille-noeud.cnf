@@ -7,7 +7,7 @@ EMAIL           = millegrilles@mdugre.info
 
 ####################################################################
 [ req ]
-default_bits       = 4096
+default_bits       = 2048
 default_keyfile    = millegrille.pem
 distinguished_name = server_distinguished_name
 req_extensions     = server_req_extensions

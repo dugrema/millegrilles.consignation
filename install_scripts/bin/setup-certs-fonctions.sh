@@ -209,8 +209,9 @@ concatener_chaine_certificats_ca() {
   #  FULLCHAIN_FILE: Chemin et nom du fichier a generer
   #  NOM_MILLEGRILLE: Nom de la millegrille
 
-  if [ -z $FULLCHAIN_FILE ]; then
-    echo "[FAIL] concatener_chaine_certificats() Il faut fournir le parametre FULLCHAIN_FILE"
+  if [ -z $CA_CHAIN_FILE ]; then
+    echo "[FAIL] concatener_chaine_certificats() Il faut fournir le parametre CA_CHAIN_FILE"
+    exit 39
   fi
 
   cat \
@@ -221,8 +222,10 @@ concatener_chaine_certificats_ca() {
 }
 
 generer_pass_random() {
-  if [ ! -f $1 ]; then
-    openssl rand -base64 32 > $1
-    chmod 400 $1
+  FICHIER_CURDATE=$1.$CURDATE
+  if [ ! -f $FICHIER_CURDATE ]; then
+    openssl rand -base64 32 > $FICHIER_CURDATE
+    chmod 400 $FICHIER_CURDATE
+    ln -sf $FICHIER_CURDATE $1
   fi
 }
