@@ -281,7 +281,7 @@ services:
       replicas: 1
       placement:
         constraints:
-          - node.labels.netzone.public == true
+          - node.labels.netzone.private == true
           - node.labels.millegrilles.coupdoeil == true
       resources:
        limits:

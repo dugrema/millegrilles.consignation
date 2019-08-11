@@ -128,7 +128,7 @@ services:
     deploy:
       placement:
         constraints:
-        - node.labels.netzone.public == true
+        - node.labels.netzone.private == true
         - node.labels.millegrilles.coupdoeil == true
       replicas: 1
       resources:
