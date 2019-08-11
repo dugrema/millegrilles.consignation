@@ -4,7 +4,7 @@ NOM_MILLEGRILLE = $ENV::NOM_MILLEGRILLE
 base_dir        = /opt/millegrilles/$NOM_MILLEGRILLE/pki
 CERTS           = $base_dir/certs
 KEYS            = $base_dir/keys
-DB              = $base_dir/dbs/$ENV::HOSTNAME
+DB              = $base_dir/dbs/${NOM_MILLEGRILLE}_millegrille
 FQDN_MILLEGRILLE = $NOM_MILLEGRILLE.$ENV::DOMAIN_SUFFIX
 
 ####################################################################

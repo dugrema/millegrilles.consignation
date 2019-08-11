@@ -41,8 +41,8 @@ emailAddress_default = $NOM_MILLEGRILLE.$EMAIL
 
 subjectKeyIdentifier = hash
 basicConstraints     = CA:FALSE
-keyUsage             = digitalSignature, nonRepudiation, keyEncipherment, \
-                       dataEncipherment, serverAuth, clientAuth, timeStamping
+keyUsage             = digitalSignature, nonRepudiation, keyEncipherment
+# , dataEncipherment, serverAuth, clientAuth, timeStamping
 subjectAltName       = @alternate_names
 
 ####################################################################

@@ -127,12 +127,20 @@ creer_certca() {
 
 creer_cert_noeud() {
   # Utilise pour creer un certificat de noeud (middleware, etc.)
+  # Parametres :
+  #    SUFFIX_NOMCLE
+  #    CNF_FILE
 
-  NOMCLE=$1
-  CNF_FILE=$2
+  if [ -z $SUFFIX_NOMCLE ] || [ -z $CNF_FILE ]; then
+    echo -e "\n[FAIL] creer_cert_noeud(): Il faut fournir les parametres SUFFIX_NOMCLE, CNF_FILE"
+    exit 40
+  fi
+
+  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
 
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
 
   SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=Noeud/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
 
@@ -154,28 +162,37 @@ creer_cert_noeud() {
     exit 36
   fi
 
-  HOSTNAME=$HOSTNAME_SHORT \
-  DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
-  SUFFIXE_NOMCLE=$SUFFIXE_NOMCLE \
+  SUFFIX_NOMCLE=$SUFFIX_NOMCLE \
   CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
   KEYFILE=$MG_KEY \
-  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE
+  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
   signer_cert
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  chmod 400 $KEY
+  chmod 444 $CERT
+  ln -sf $KEY $PRIVATE_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.key.pem
+  ln -sf $CERT $CERT_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.cert.pem
 
 }
 
 signer_cert() {
   # Signe un certificat avec un CA
   # Parametres :
-  #   SUFFIXE_NOMCLE
+  #   SUFFIX_NOMCLE
   #   CNF_FILE
   #   KEYFILE
   #   PASSWD_FILE
 
+  echo -e "\nsigner_cert() params: \nSUFFIX_NOMCLE $SUFFIX_NOMCLE"
+
   NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
 
-  if [ -z $SUFFIXE_NOMCLE ] || [ -z $CNF_FILE ] || [ -z $KEYFILE ] || [ -z $PASSWD_FILE ]; then
-    echo "signer_cert(): Parametres NOMCLE CNF_FILE KEYFILE PASSWD_FILE"
+  if [ -z $SUFFIX_NOMCLE ] || [ -z $CNF_FILE ] || [ -z $KEYFILE ] || [ -z $PASSWD_FILE ]; then
+    echo "[FAIL] signer_cert(): Parametres SUFFIXE_NOMCLE CNF_FILE KEYFILE PASSWD_FILE"
     exit 37
   fi
 
@@ -228,4 +245,28 @@ generer_pass_random() {
     chmod 400 $FICHIER_CURDATE
     ln -sf $FICHIER_CURDATE $1
   fi
+}
+
+verifier_acces_docker() {
+  # Verifie si l'usager peut utiliser docker et si docker est un manager
+  docker node ls > /dev/null 2> /dev/null
+  if [ $? != 0 ]; then
+    echo -e "\n[FAIL] verifier_access_docker(): Pas un docker manager. Le script doit etre execute sur un manager (sudo?)"
+    exit 2
+  fi
+}
+
+importer_dans_docker() {
+  # Importe les certificats et cles dans le docker swarm du manager local
+  CERT_MIDDLEWARE=$CERT_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.cert.pem
+  CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
+
+  # Certs root
+  cat $CA_CERT $MG_CERT | docker secret create pki.$NOM_MILLEGRILLE.millegrilles.ssl.CAchain.$CURDATE -
+
+  # Cles middleware
+  cat $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.cert.$CURDATE -
+  cat $CLE_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key.$CURDATE -
+  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key_cert.$CURDATE -
+  cat $CA_CERT $MG_CERT $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.fullchain.$CURDATE -
 }
