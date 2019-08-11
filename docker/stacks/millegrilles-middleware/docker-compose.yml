@@ -362,10 +362,10 @@ secrets:
     name: ${MONGOEXPRESS_WEB_PASSWORD}
   pki.millegrilles.wadmin.cert:
     external: true
-    name: ${PKI_MILLEGRILLES_WADMIN_PREFIX}.cert.${PKI_MILLEGRILLES_WADMIN_VERSION}
+    name: ${NOM_MILLEGRILLE}.${PKI_MILLEGRILLES_WADMIN_PREFIX}.cert.${PKI_MILLEGRILLES_WADMIN_VERSION}
   pki.millegrilles.wadmin.key:
     external: true
-    name: ${PKI_MILLEGRILLES_WADMIN_PREFIX}.key.${PKI_MILLEGRILLES_WADMIN_VERSION}
+    name: ${NOM_MILLEGRILLE}.${PKI_MILLEGRILLES_WADMIN_PREFIX}.key.${PKI_MILLEGRILLES_WADMIN_VERSION}
   pki.millegrilles.web.cert:
     external: true
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.cert.${PKI_MILLEGRILLES_WEB_VERSION}
@@ -380,16 +380,19 @@ secrets:
     name: ${PKI_MILLEGRILLES_WEB_PREFIX}.key.${PKI_MILLEGRILLES_WEB_VERSION}
   pki.millegrilles.ssl.key:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_SSL_PREFIX}.key.${PKI_MIDDLEWARE_SSL_VERSION}
   pki.millegrilles.ssl.cert:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_SSL_PREFIX}.cert.${PKI_MIDDLEWARE_SSL_VERSION}
+  pki.millegrilles.ssl.fullchain:
+    external: true
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_SSL_PREFIX}.fullchain.${PKI_MIDDLEWARE_SSL_VERSION}
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.key_cert.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_SSL_PREFIX}.key_cert.${PKI_MIDDLEWARE_SSL_VERSION}
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: ${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MILLEGRILLES_SSL_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MIDDLEWARE_SSL_VERSION}
   mg.transactions.json:
     external: true
     name: mg.transactions.json.${CONFIGURATION_TRANSACTION_VERSION}

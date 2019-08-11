@@ -285,11 +285,11 @@ importer_dans_docker() {
   CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
 
   # Certs root
-  cat $CA_CHAIN_FILE | docker secret create pki.$NOM_MILLEGRILLE.millegrilles.ssl.CAchain.$CURDATE -
+  cat $CA_CHAIN_FILE | docker secret create $NOM_MILLEGRILLE.pki.millegrilles.ssl.CAchain.$CURDATE -
 
   # Cles middleware
-  cat $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.cert.$CURDATE -
-  cat $CLE_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key.$CURDATE -
-  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.key_cert.$CURDATE -
-  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | docker secret create pki.$NOM_MILLEGRILLE.middleware.ssl.fullchain.$CURDATE -
+  cat $CERT_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.cert.$CURDATE -
+  cat $CLE_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key.$CURDATE -
+  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key_cert.$CURDATE -
+  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.fullchain.$CURDATE -
 }
