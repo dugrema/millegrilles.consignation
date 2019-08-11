@@ -273,7 +273,7 @@ services:
     - source: pki.millegrilles.wadmin.key
     volumes:
     - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
-    - mg-middleware-rabbitmq-conf:/opt/rabbitmq/conf:rw
+    - /opt/millegrilles/maple/pki/mq-accounts:/opt/rabbitmq/conf:rw
   nginx:
     deploy:
       placement:
