@@ -221,6 +221,8 @@ creer_cert_middleware() {
     exit $?
   fi
 
+  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+
   SUFFIX_NOMCLE=middleware \
   CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
   KEYFILE=$MG_KEY \
@@ -236,8 +238,8 @@ creer_cert_middleware() {
 
   chmod 400 $KEY
   chmod 444 $CERT
-  ln -sf $KEY $PRIVATE_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.key.pem
-  ln -sf $CERT $CERT_PATH/${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}.cert.pem
+  ln -sf $KEY $PRIVATE_PATH/${NOMCLE}.key.pem
+  ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
 
 }
 
