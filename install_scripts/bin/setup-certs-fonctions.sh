@@ -171,6 +171,8 @@ signer_cert() {
   #   CNF_FILE
   #   KEYFILE
   #   PASSWD_FILE
+  #   REQ (opt)
+  #   CERT (opt)
 
   echo -e "\nsigner_cert() params: \nSUFFIX_NOMCLE $SUFFIX_NOMCLE"
 
@@ -181,8 +183,12 @@ signer_cert() {
     exit 37
   fi
 
-  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
-  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+  if [ -z $REQ ]; then
+    REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  fi
+  if [ -z $CERT ]; then
+    CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+  fi
 
   echo -e "signer_cert(): Signer requete $REQ\n CNF $CNF_FILE\n KEY $KEYFILE"
 
