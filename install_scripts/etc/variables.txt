@@ -1,5 +1,7 @@
 FOLDER_INSTALL_SRC=/home/mathieu/git/MilleGrilles.consignation
 HOSTNAME=`hostname --fqdn`
+HOSTNAME_SHORT=`hostname -s`
+CURDATE_NOW=`date +%Y%m%d%H%M`
 
 MG_FOLDER_ROOT=/opt/millegrilles
 MG_FOLDER_BIN=$MG_FOLDER_ROOT/bin
@@ -17,12 +19,16 @@ CERT_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/certs
 DBS_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/dbs
 PASSWORDS_PATH=$MG_FOLDER_ROOT/$NOM_MILLEGRILLE/pki/passwords
 CA_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_ssroot.key.pem
+CAINTER_KEY_PATH=$PRIVATE_PATH/${NOM_MILLEGRILLE}_intermediaire.key.pem
 MG_KEY=$PRIVATE_PATH/${NOM_MILLEGRILLE}_millegrille.key.pem
 CA_CERT=$CERT_PATH/${NOM_MILLEGRILLE}_ssroot.cert.pem
+CAINTER_CERT=$CERT_PATH/${NOM_MILLEGRILLE}_intermediaire.cert.pem
 MG_CERT=$CERT_PATH/${NOM_MILLEGRILLE}_millegrille.cert.pem
 ETC_FOLDER=$MG_FOLDER_ROOT/etc
 SSROOT_PASSWD_FILE=$PASSWORDS_PATH/cert_ssroot_password.txt
+INTER_PASSWD_FILE=$PASSWORDS_PATH/cert_inter_password.txt
 MILLEGRILLE_PASSWD_FILE=$PASSWORDS_PATH/cert_millegrille_password.txt
+CA_CHAIN_FILE=$CERT_PATH/${NOM_MILLEGRILLE}_CA_chain.cert.pem
 
 TEMPLATE_JSON_FILE=$MG_FOLDER_ETC/config.json.template
 MONGO_ACCOUNT_SCRIPTS_TEMPLATE=$MG_FOLDER_ETC/mongo_createusers.js.template
