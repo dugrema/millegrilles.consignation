@@ -137,12 +137,15 @@ creer_cert_noeud() {
   fi
 
   NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+  if [ -z $TYPE_NOEUD ]; then
+    TYPE_NOEUD=Noeud
+  fi
 
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
   CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
 
-  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=Noeud/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
+  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=$TYPE_NOEUD/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
 
   if [ -f $KEY ]; then
     echo "Cle $KEY existe deja - on abandonne"
@@ -215,6 +218,7 @@ creer_cert_middleware() {
 
   SUFFIX_NOMCLE=middleware \
   CNF_FILE=$ETC_FOLDER/openssl-millegrille-middleware.cnf \
+  TYPE_NOEUD=Middleware \
   creer_cert_noeud
 
   if [ $? != 0 ]; then
