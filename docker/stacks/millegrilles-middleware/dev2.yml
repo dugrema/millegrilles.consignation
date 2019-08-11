@@ -35,10 +35,10 @@ secrets:
     name: dev2.pki.middleware.ssl.key_cert.201908111341
   pki.millegrilles.wadmin.cert:
     external: true
-    name: dev2.pki.millegrilles.web.cert.201908111341
+    name: dev2.pki.middleware.ssl.cert.201908111341
   pki.millegrilles.wadmin.key:
     external: true
-    name: dev2.pki.millegrilles.web.key.201908111341
+    name: dev2.pki.middleware.ssl.key.201908111341
   pki.millegrilles.web.cert:
     external: true
     name: pki.millegrilles.web.cert.20190716
