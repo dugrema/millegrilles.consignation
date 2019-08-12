@@ -82,8 +82,8 @@ services:
       MG_MQ_PORT: '5673'
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: maple
-    hostname: ceduleur-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
+    hostname: ceduleur-python.local
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
     networks:
       mg_net: null
     secrets:
@@ -114,7 +114,7 @@ services:
       MG_MQ_KEYFILE: /run/secrets/pki.millegrilles.ssl.key
       MG_NOM_MILLEGRILLE: maple
       PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
-    hostname: consignationfichiers.maple.millegrilles.mdugre.info
+    hostname: consignationfichiers.local
     image: registry.maple.mdugre.info:5000/consignationfichiers:1.9.0
     networks:
       mg_net: null
@@ -147,7 +147,7 @@ services:
       MG_MQ_URL: amqps://mq:5673/maple
       MG_NOM_MILLEGRILLE: maple
       PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
-    hostname: coupdoeil.maple.millegrilles.mdugre.info
+    hostname: coupdoeil.local
     image: registry.maple.mdugre.info:5000/coupdoeil_react:1.9.1
     networks:
       mg_net: null
@@ -195,8 +195,8 @@ services:
       MG_MQ_PORT: '5673'
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: maple
-    hostname: domaines-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
+    hostname: domaines-python.local
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
     networks:
       mg_net: null
     secrets:
@@ -248,7 +248,7 @@ services:
       restart_policy:
         condition: any
         delay: 30s
-    hostname: mq.maple.millegrilles.mdugre.info
+    hostname: mq.local
     image: registry.maple.mdugre.info:5000/mg_rabbitmq:3.7-management_7
     networks:
       mg_net: null
@@ -278,7 +278,7 @@ services:
     deploy:
       placement:
         constraints:
-        - node.labels.netzone.public == true
+        - node.labels.netzone.private == true
       replicas: 1
       resources:
         limits:
@@ -290,7 +290,7 @@ services:
     environment:
       URL_DOMAIN: maple.millegrilles.mdugre.info
       WEB_CERT: pki.millegrilles.web.fullchain
-    hostname: www.maple.millegrilles.mdugre.info
+    hostname: www.local
     image: registry.maple.mdugre.info:5000/mg_nginx:1.16_7
     networks:
       mg_net: null
@@ -312,6 +312,7 @@ services:
     - /opt/millegrilles/maple/nginx/conf.d:/etc/nginx/conf.d:rw
     - /opt/millegrilles/maple/nginx/webroot:/usr/share/nginx/html:rw
   transactions-python:
+    command: demarrer_transaction.py
     deploy:
       placement:
         constraints:
@@ -341,8 +342,8 @@ services:
       MG_MQ_PORT: '5673'
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: maple
-    hostname: transactions-python.maple.millegrilles.mdugre.info
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python:1.8.8
+    hostname: transactions-python.local
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
     networks:
       mg_net: null
     secrets:
@@ -383,6 +384,7 @@ services:
       MONGODB_ADMINPASSWORD_FILE: /run/secrets/mongo.root.password
       VCAP_APP_HOST: '::'
       VCAP_APP_PORT: 443
+    hostname: mongoexpress.local
     image: registry.maple.mdugre.info:5000/mg_mongo_express:0.49_4
     networks:
       mg_net: null
