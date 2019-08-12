@@ -97,8 +97,8 @@ preparer_folder_millegrille() {
 
 installer_certificats_millegrille() {
   echo "[INFO] Installation des certificats de la MilleGrille dans les secrets docker"
-  # NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
-  # DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+
+  # Changement de repertoire vers les scripts ... trouver meilleure approche
   cd bin
   $MG_FOLDER_BIN/setup-certs-ca.sh
   $MG_FOLDER_BIN/setup-certs-middleware.sh
@@ -113,6 +113,14 @@ preparer_comptes_mongo() {
 
 preparer_stack_docker() {
   echo Preparer stack docker
+}
+
+preparer_repertoires_comptes() {
+  sudo mkdir -p $MG_FOLDER_MONGO_SHARED $MG_FOLDER_MQ_ACCOUNTS
+  CURRUSER=`whoami`
+  sudo chown -R $CURRUSER:root $MG_FOLDER_MOUNTS
+  chmod -R 750 $MG_FOLDER_MOUNTS
+  echo '[OK] Repertoires sous $MG_FOLDER_MOUNTS prets'
 }
 
 inserer_comptes_mongo() {
@@ -133,7 +141,8 @@ executer() {
 
   # configurer_docker
   # preparer_folder_millegrille
-  installer_certificats_millegrille
+  # installer_certificats_millegrille
+  preparer_repertoires_comptes
   # preparer_comptes_mongo
   # preparer_stack_docker
   # inserer_comptes_mongo

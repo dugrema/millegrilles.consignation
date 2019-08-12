@@ -287,7 +287,7 @@ generer_pass_random() {
 
 verifier_acces_docker() {
   # Verifie si l'usager peut utiliser docker et si docker est un manager
-  docker node ls > /dev/null 2> /dev/null
+  sudo docker node ls > /dev/null 2> /dev/null
   if [ $? != 0 ]; then
     echo -e "\n[FAIL] verifier_access_docker(): Pas un docker manager. Le script doit etre execute sur un manager (sudo?)"
     exit 2
@@ -300,11 +300,11 @@ importer_dans_docker() {
   CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
 
   # Certs root
-  cat $CA_CHAIN_FILE | docker secret create $NOM_MILLEGRILLE.pki.millegrilles.ssl.CAchain.$CURDATE -
+  cat $CA_CHAIN_FILE | sudo docker secret create $NOM_MILLEGRILLE.pki.millegrilles.ssl.CAchain.$CURDATE -
 
   # Cles middleware
-  cat $CERT_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.cert.$CURDATE -
-  cat $CLE_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key.$CURDATE -
-  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key_cert.$CURDATE -
-  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.fullchain.$CURDATE -
+  cat $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.cert.$CURDATE -
+  cat $CLE_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key.$CURDATE -
+  cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key_cert.$CURDATE -
+  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.fullchain.$CURDATE -
 }
