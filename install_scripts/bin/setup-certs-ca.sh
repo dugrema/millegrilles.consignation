@@ -15,7 +15,7 @@ fi
 
 # Importer les variables et fonctions
 source /opt/millegrilles/etc/variables.txt
-source setup-certs-fonctions.sh
+source $MG_FOLDER_BIN/setup-certs-fonctions.sh
 
 # Sequence
 sequence_chargement() {

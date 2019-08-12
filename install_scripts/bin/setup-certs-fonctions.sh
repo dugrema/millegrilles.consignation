@@ -307,4 +307,7 @@ importer_dans_docker() {
   cat $CLE_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key.$CURDATE -
   cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key_cert.$CURDATE -
   cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.fullchain.$CURDATE -
+
+  # Conserver CURDATE pour la creation du fichier docker compose
+  echo $CURDATE > $CERT_PATH/${NOM_MILLEGRILLE}_middleware_latest.txt
 }

@@ -100,7 +100,6 @@ installer_certificats_millegrille() {
   echo "[INFO] Installation des certificats de la MilleGrille dans les secrets docker"
 
   # Changement de repertoire vers les scripts ... trouver meilleure approche
-  cd bin
   $MG_FOLDER_BIN/setup-certs-ca.sh
   $MG_FOLDER_BIN/setup-certs-middleware.sh
   echo "[OK] installer_certificats_millegrille() Complete avec succes"
@@ -117,6 +116,9 @@ preparer_stack_docker() {
   CURRUSER=`whoami`
   sudo mkdir -p $MG_FOLDER_DOCKER_CONF
   sudo chown $CURRUSER:root $MG_FOLDER_DOCKER_CONF
+
+  CERTS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_middleware_latest.txt` \
+  PASSWORDS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_passwords_latest.txt` \
   envsubst < $MG_FOLDER_ETC/docker/template.env > $MG_FOLDER_DOCKER_CONF/$NOM_MILLEGRILLE.env
 }
 

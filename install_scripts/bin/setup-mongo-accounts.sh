@@ -65,6 +65,9 @@ ajouter_docker_secrets() {
   cat $PASSWORDS_PATH/mg.backup.json | sudo docker secret create mg.$NOM_MILLEGRILLE.backup.json.$CURDATE -
   cat $PASSWORDS_PATH/mongo.root.password | sudo docker secret create mg.$NOM_MILLEGRILLE.mongo_root_password.$CURDATE -
   cat $PASSWORDS_PATH/mongoexpress.web.password | sudo docker secret create mg.$NOM_MILLEGRILLE.mongoexpress_web_password.$CURDATE -
+
+  # Conserveur CURDATE pour creer le fichier compose docker
+  echo $CURDATE > $CERT_PATH/${NOM_MILLEGRILLE}_passwords_latest.txt
 }
 
 # Executer
