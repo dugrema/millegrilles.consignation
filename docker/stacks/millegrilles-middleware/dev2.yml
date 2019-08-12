@@ -224,7 +224,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
       MONGO_INITDB_ROOT_USERNAME: root
-    hostname: mongo.local
+    hostname: mongo.dev2.maple.mdugre.info
     image: registry.maple.mdugre.info:5000/mg_mongo:4.0_4
     networks:
       mg_net: null
@@ -312,6 +312,7 @@ services:
     - mg-middleware-nginx-conf:/etc/nginx/conf.d:rw
     - mg-middleware-nginx-www:/usr/share/nginx/html:rw
   transactions-python:
+    command: demarrer_transaction.py
     deploy:
       placement:
         constraints:
