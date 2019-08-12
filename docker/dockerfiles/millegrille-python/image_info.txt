@@ -3,7 +3,7 @@
 REPO=registry.maple.mdugre.info:5000
 NAME=millegrilles_consignation_python
 BRANCH=1.9
-BUILD=0
+BUILD=1
 
 ARCH_SUPPORTEES=( x86_64 armv7l aarch64 )
 
