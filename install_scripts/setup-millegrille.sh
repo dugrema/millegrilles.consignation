@@ -23,8 +23,9 @@ verifier_parametres() {
     echo -e "Noter que DOMAIN_SUFFIX peut etre 'local' pour avoir un mode local uniquement."
     exit 1
   else
+    export URL_DOMAIN=$NOM_MILLEGRILLE.$DOMAIN_SUFFIX
     echo -e "\n[OK] Parametres corrects: NOM_MILLEGRILLE=$NOM_MILLEGRILLE, DOMAIN_SUFFIX=$DOMAIN_SUFFIX"
-    echo "L'URL de la MilleGrille sera: https://$NOM_MILLEGRILLE.$DOMAIN_SUFFIX"
+    echo "L'URL de la MilleGrille sera: https://$URL_DOMAIN"
   fi
 }
 
@@ -113,6 +114,10 @@ preparer_comptes_mongo() {
 
 preparer_stack_docker() {
   echo Preparer stack docker
+  CURRUSER=`whoami`
+  sudo mkdir -p $MG_FOLDER_DOCKER_CONF
+  sudo chown $CURRUSER:root $MG_FOLDER_DOCKER_CONF
+  envsubst < $MG_FOLDER_ETC/docker/template.env > $MG_FOLDER_DOCKER_CONF/$NOM_MILLEGRILLE.env
 }
 
 preparer_repertoires_comptes() {
