@@ -142,8 +142,9 @@ executer() {
   # configurer_docker
   # preparer_folder_millegrille
   # installer_certificats_millegrille
-  preparer_repertoires_comptes
-  # preparer_comptes_mongo
+  # preparer_repertoires_comptes
+  preparer_comptes_mongo
+  # preparer_comptes_mq
   # preparer_stack_docker
   # inserer_comptes_mongo
 }

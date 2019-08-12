@@ -59,11 +59,12 @@ preparer_configuration() {
 
 ajouter_docker_secrets() {
   # Ajoute les fichiers json a docker secrets
-  cat $PASSWORDS_PATH/mg.transactions.json | docker secret create mg.$NOM_MILLEGRILLE.transactions.json.$CURDATE -
-  cat $PASSWORDS_PATH/mg.mgdomaines.json | docker secret create mg.$NOM_MILLEGRILLE.mgdomaines.json.$CURDATE -
-  cat $PASSWORDS_PATH/mg.backup.json | docker secret create mg.$NOM_MILLEGRILLE.backup.json.$CURDATE -
-  cat $PASSWORDS_PATH/mongo.root.password | docker secret create mg.$NOM_MILLEGRILLE.mongo_root_password.$CURDATE -
-  cat $PASSWORDS_PATH/mongoexpress.web.password | docker secret create mg.$NOM_MILLEGRILLE.mongoexpress_web_password.$CURDATE -
+  echo "[INFO] Ajouter mots de passes pour Mongo dans docker secrets"
+  cat $PASSWORDS_PATH/mg.transactions.json | sudo docker secret create mg.$NOM_MILLEGRILLE.transactions.json.$CURDATE -
+  cat $PASSWORDS_PATH/mg.mgdomaines.json | sudo docker secret create mg.$NOM_MILLEGRILLE.mgdomaines.json.$CURDATE -
+  cat $PASSWORDS_PATH/mg.backup.json | sudo docker secret create mg.$NOM_MILLEGRILLE.backup.json.$CURDATE -
+  cat $PASSWORDS_PATH/mongo.root.password | sudo docker secret create mg.$NOM_MILLEGRILLE.mongo_root_password.$CURDATE -
+  cat $PASSWORDS_PATH/mongoexpress.web.password | sudo docker secret create mg.$NOM_MILLEGRILLE.mongoexpress_web_password.$CURDATE -
 }
 
 # Executer
