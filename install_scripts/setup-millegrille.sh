@@ -123,6 +123,33 @@ preparer_repertoires_comptes() {
   echo '[OK] Repertoires sous $MG_FOLDER_MOUNTS prets'
 }
 
+preparer_comptes_mq() {
+  echo "[INFO] Utilisation cert middleware pour creer compte RabbitMQ : $MIDDLEWARE_CERT"
+  certificat_parser_mq $MIDDLEWARE_CERT
+  echo "[INFO] Noeud type $TYPE_NOEUD: $SUBJECT_MQ"
+
+  echo "middleware_init;$SUBJECT_MQ;$NOM_MILLEGRILLE;$TYPE_NOEUD" >> $MQ_NEW_USERS_FILE
+}
+
+certificat_parser_mq() {
+  FICHIER_CERT=$1
+  SUBJECT=`openssl x509 -noout -subject -in $FICHIER_CERT`
+  SUBJECT=(`echo $SUBJECT | sed s/subject=//g | sed s/' '//g | sed s/,/' '/g `)
+
+  echo 1 $SUBJECT
+
+  declare -A cert_fields
+  for field in "${SUBJECT[@]}"; do
+    field=(`echo $field | sed s/=/' '/g`)
+    cert_fields[${field[0]}]=${field[1]}
+  done
+
+  # Retourne les valeurs pour nom usager et type (middleware ou noeud)
+  # Le type est dans le champ OU
+  TYPE_NOEUD=`echo ${cert_fields['OU']} | awk '{print tolower($0)}'`
+  SUBJECT_MQ="CN=${cert_fields['CN']},OU=${cert_fields['OU']},O=${cert_fields['O']},L=${cert_fields['L']},ST=${cert_fields['ST']},C=${cert_fields['C']}"
+}
+
 inserer_comptes_mongo() {
   docker container run --rm -it \
          -e NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
@@ -143,8 +170,8 @@ executer() {
   # preparer_folder_millegrille
   # installer_certificats_millegrille
   # preparer_repertoires_comptes
-  preparer_comptes_mongo
-  # preparer_comptes_mq
+  # preparer_comptes_mongo
+  preparer_comptes_mq
   # preparer_stack_docker
   # inserer_comptes_mongo
 }
