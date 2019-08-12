@@ -83,7 +83,7 @@ services:
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: dev2
     hostname: ceduleur-python.local
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
     networks:
       mg_net: null
     secrets:
@@ -196,7 +196,7 @@ services:
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: dev2
     hostname: domaines-python.local
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
     networks:
       mg_net: null
     secrets:
@@ -342,7 +342,7 @@ services:
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: dev2
     hostname: transactions-python.local
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.0
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
     networks:
       mg_net: null
     secrets:
