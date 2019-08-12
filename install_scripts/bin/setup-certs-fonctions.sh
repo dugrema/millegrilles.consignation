@@ -145,7 +145,7 @@ creer_cert_noeud() {
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
   CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
 
-  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=$TYPE_NOEUD/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
+  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=$NOM_MILLEGRILLE/OU=$TYPE_NOEUD/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
 
   if [ -f $KEY ]; then
     echo "Cle $KEY existe deja - on abandonne"

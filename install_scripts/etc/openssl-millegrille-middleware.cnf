@@ -55,10 +55,10 @@ DNS.3  = consignationfichiers
 
 # Section .local
 DNS.4  = $NOM_NOEUD.local
-DNS.5  = www.local
-DNS.6  = coupdoeil.local
-DNS.7  = mq.local
-DNS.8  = mongo-express.local
+DNS.5  = www-${NOM_MILLEGRILLE}.local
+DNS.6  = coupdoeil-${NOM_MILLEGRILLE}.local
+DNS.7  = mq-${NOM_MILLEGRILLE}.local
+DNS.8  = mongo-express-${NOM_MILLEGRILLE}.local
 
 # Section publique
 DNS.9  = mq.$DOMAIN_SUFFIX
