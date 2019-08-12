@@ -148,7 +148,7 @@ services:
       MG_NOM_MILLEGRILLE: dev2
       PRIVKEY: /run/secrets/pki.millegrilles.ssl.key
     hostname: coupdoeil.local
-    image: registry.maple.mdugre.info:5000/coupdoeil_react:1.9.1
+    image: registry.maple.mdugre.info:5000/coupdoeil_react:1.9.2
     networks:
       mg_net: null
     ports:
