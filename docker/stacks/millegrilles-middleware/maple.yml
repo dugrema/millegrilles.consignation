@@ -20,25 +20,25 @@ secrets:
     name: mongoexpress.web.password
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: maple.pki.millegrilles.ssl.CAchain.201908111930
+    name: maple.pki.millegrilles.ssl.CAchain.201908121331
   pki.millegrilles.ssl.cert:
     external: true
-    name: maple.pki.middleware.ssl.cert.201908111930
+    name: maple.pki.middleware.ssl.cert.201908121331
   pki.millegrilles.ssl.fullchain:
     external: true
-    name: maple.pki.middleware.ssl.fullchain.201908111930
+    name: maple.pki.middleware.ssl.fullchain.201908121331
   pki.millegrilles.ssl.key:
     external: true
-    name: maple.pki.middleware.ssl.key.201908111930
+    name: maple.pki.middleware.ssl.key.201908121331
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: maple.pki.middleware.ssl.key_cert.201908111930
+    name: maple.pki.middleware.ssl.key_cert.201908121331
   pki.millegrilles.wadmin.cert:
     external: true
-    name: maple.pki.middleware.ssl.cert.201908111930
+    name: maple.pki.middleware.ssl.cert.201908121331
   pki.millegrilles.wadmin.key:
     external: true
-    name: maple.pki.middleware.ssl.key.201908111930
+    name: maple.pki.middleware.ssl.key.201908121331
   pki.millegrilles.web.cert:
     external: true
     name: pki.millegrilles.web.cert.20190717_1
@@ -278,7 +278,7 @@ services:
     deploy:
       placement:
         constraints:
-        - node.labels.netzone.private == true
+        - node.labels.netzone.public == true
       replicas: 1
       resources:
         limits:
@@ -290,7 +290,7 @@ services:
     environment:
       URL_DOMAIN: maple.millegrilles.mdugre.info
       WEB_CERT: pki.millegrilles.web.fullchain
-    hostname: www.local
+    hostname: www.maple.millegrilles.mdugre.info
     image: registry.maple.mdugre.info:5000/mg_nginx:1.16_7
     networks:
       mg_net: null
@@ -308,9 +308,12 @@ services:
     - source: pki.millegrilles.web.chain
     - source: pki.millegrilles.web.cert
     - source: pki.millegrilles.web.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.CAchain
     volumes:
-    - /opt/millegrilles/maple/nginx/conf.d:/etc/nginx/conf.d:rw
-    - /opt/millegrilles/maple/nginx/webroot:/usr/share/nginx/html:rw
+    - mg-public-nginx-conf:/etc/nginx/conf.d:rw
+    - mg-public-nginx-www:/usr/share/nginx/html:rw
   transactions-python:
     command: demarrer_transaction.py
     deploy:
@@ -413,4 +416,8 @@ volumes:
     name: mg-middleware-rabbitmq
   mg-middleware-rabbitmq-conf:
     name: mg-middleware-rabbitmq-conf
+  mg-public-nginx-conf:
+    name: mg-public-nginx-conf
+  mg-public-nginx-www:
+    name: mg-public-nginx-www
 

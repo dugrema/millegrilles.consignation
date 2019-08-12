@@ -404,6 +404,10 @@ volumes:
     name: mg-middleware-nginx-conf
   mg-middleware-nginx-www:
     name: mg-middleware-nginx-www
+  mg-public-nginx-conf:
+    name: mg-public-nginx-conf
+  mg-public-nginx-www:
+    name: mg-public-nginx-www
 
 secrets:
   mongo.root.password:
