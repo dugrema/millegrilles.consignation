@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e  # Arreter l'execution pour un exit
+
 # Parametres obligatoires
 if [ -z $NOM_MILLEGRILLE ] || [ -z $DOMAIN_SUFFIX ]; then
   echo "Les parametres NOM_MILLEGRILLE et DOMAIN_SUFFIX doivent etre definis globalement"
@@ -17,6 +19,10 @@ source setup-certs-fonctions.sh
 
 # Sequence
 sequence_chargement() {
+
+  # Generer les repertoires PKI pour la MilleGrille
+  creer_repertoires
+
   # On ne regenere pas la cle CA si elle existe deja.
   if [ ! -f $CA_KEY ]; then
     echo -e "\n*****\nGenerer un certificat racine self-signed\n"
@@ -69,7 +75,9 @@ sequence_chargement() {
     creer_certca
 
     if [ $? != 0 ]; then
-      exit $?
+      ERREUR=$?
+      echo "[FAIL] Erreur creation certificat de millegrille. Code $ERREUR"
+      exit $ERREUR
     fi
 
     concatener_chaine_certificats_ca

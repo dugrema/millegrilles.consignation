@@ -4,6 +4,14 @@
 
 source /opt/millegrilles/etc/variables.txt
 
+creer_repertoires() {
+  sudo mkdir -p $PRIVATE_PATH $CERT_PATH $PASSWORDS_PATH $DBS_PATH
+  CURRUSER=`whoami`
+  sudo chown -R $CURRUSER:root $PKI_PATH
+  chmod 750 $PRIVATE_PATH $DBS_PATH $PASSWORDS_PATH
+  chmod 755 $CERT_PATH
+}
+
 creer_ssrootcert() {
   # Utilise pour creer un certificat self-signed racine pour une millegrille.
   # Parametres:
@@ -78,6 +86,7 @@ creer_certca() {
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   KEY_LINK=$PRIVATE_PATH/${NOMCLE}.key.pem
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  CERT=`echo $REQ | sed s/\.csr/\.cert/g`
 
   SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=MilleGrille/CN=$CN/emailAddress=$EMAIL"
 
@@ -107,6 +116,8 @@ creer_certca() {
   CNF_FILE=$CNF_AUTH \
   KEYFILE=$KEY_AUTH \
   PASSWD_FILE=$PASSWD_FILE_AUTH \
+  REQ=$REQ \
+  CERT=$CERT \
   signer_cert
 
   # Creer lien generique pour la cle root
@@ -193,7 +204,7 @@ signer_cert() {
     CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
   fi
 
-  echo -e "signer_cert(): Signer requete $REQ\n CNF $CNF_FILE\n KEY $KEYFILE"
+  echo -e "signer_cert(): Signer requete $REQ\n CNF $CNF_FILE\n KEY $KEYFILE, output $CERT"
 
   openssl ca -config $CNF_FILE \
           -policy signing_policy \

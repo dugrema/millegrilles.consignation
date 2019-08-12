@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e  # Force la sortie sur tout exit
+
 source etc/variables.txt
 
 echo "Installation MilleGrille"
@@ -17,12 +19,18 @@ echo "3. Mettre tous les secrets dans docker"
 
 verifier_parametres() {
   if [ -z $NOM_MILLEGRILLE ] || [ -z $DOMAIN_SUFFIX ]; then
-    echo -e "\n[FAIL] Parametres globaux requis: NOM_MILLEGRILLE DOMAIN_SUFFIX"
+    echo -e "\n[FAIL] Parametres globaux requis: NOM_MILLEGRILLE DOMAIN_SUFFIX\n"
+    echo -e "Noter que DOMAIN_SUFFIX peut etre 'local' pour avoir un mode local uniquement."
     exit 1
+  else
+    echo -e "\n[OK] Parametres corrects: NOM_MILLEGRILLE=$NOM_MILLEGRILLE, DOMAIN_SUFFIX=$DOMAIN_SUFFIX"
+    echo "L'URL de la MilleGrille sera: https://$NOM_MILLEGRILLE.$DOMAIN_SUFFIX"
   fi
 }
 
 configurer_docker() {
+  # Genere une swarm docker sur localhost (127.0.0.1)
+
   sudo docker info > /dev/null 2> /dev/null
   PRESENCE_DOCKER=$?
   if [ $PRESENCE_DOCKER -ne 0 ]; then
@@ -33,30 +41,40 @@ configurer_docker() {
 
   sudo docker node ls > /dev/null 2> /dev/null
   if [ $? -ne 0 ]; then
-    echo "Tenter d'initialiser docker swarm"
+    echo "\n[FAIL] Tenter d'initialiser docker swarm"
     sudo docker swarm init --advertise-addr 127.0.0.1
     if [ $? -ne 0 ]; then
-      echo "Erreur initialisation docker swarm"
+      echo "\n[FAIL] Erreur initialisation docker swarm"
+      exit 10
     fi
   fi
 
   # Creer le network pour millegrilles
-  docker network create -d overlay mg_net
+  sudo docker network create -d overlay mg_net
+  if [ $? != 0 ]; then
+    sudo docker network ls | grep mg_net
+    if [ $? != 0 ]; then
+      echo "\n[FAIL] Erreur d'ajout de l'interface reseau. Vous n'avez pas acces a docker"
+      exit 11
+    fi
+  fi
 
   # Ajouter les labels utilises pour les services
   NODE=`hostname`
-  docker node update --label-add netzone.private=true $NODE
-  docker node update --label-add netzone.public=true $NODE
-  docker node update --label-add millegrilles.database=true $NODE
-  docker node update --label-add millegrilles.mq=true $NODE
-  docker node update --label-add millegrilles.consoles=true $NODE
-  docker node update --label-add millegrilles.python=true $NODE
-  docker node update --label-add millegrilles.domaines=true $NODE
-  docker node update --label-add millegrilles.coupdoeil=true $NODE
+  sudo docker node update --label-add netzone.private=true $NODE
+  # docker node update --label-add netzone.public=true $NODE
+  sudo docker node update --label-add millegrilles.database=true $NODE
+  sudo docker node update --label-add millegrilles.mq=true $NODE
+  sudo docker node update --label-add millegrilles.consoles=true $NODE
+  sudo docker node update --label-add millegrilles.python=true $NODE
+  sudo docker node update --label-add millegrilles.domaines=true $NODE
+  sudo docker node update --label-add millegrilles.coupdoeil=true $NODE
+
+  echo "[OK] configurer_docker() Complete avec succes"
 }
 
 preparer_folder_millegrille() {
-  echo "Preparer $MG_FOLDER_ROOT"
+  echo "[INFO] Preparer $MG_FOLDER_ROOT"
 
   sudo mkdir -p $MG_FOLDER_BIN $MG_FOLDER_ETC $MG_FOLDER_CACERTS
   sudo mkdir -p $MG_FOLDER_CERTS $MG_FOLDER_KEYS \
@@ -73,17 +91,22 @@ preparer_folder_millegrille() {
 
   # Copier certificats de reference
   sudo cp $FOLDER_INSTALL_SRC/certificates/millegrilles.*.pem $MG_FOLDER_CACERTS
+
+  echo "[OK] preparer_folder_millegrille() Complete avec succes"
 }
 
 installer_certificats_millegrille() {
-  echo "Installation des certificats de la MilleGrille dans les secrets docker"
-  NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
-  DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
-  $MG_FOLDER_BIN/setup-manage-certs.sh
+  echo "[INFO] Installation des certificats de la MilleGrille dans les secrets docker"
+  # NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
+  # DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  cd bin
+  $MG_FOLDER_BIN/setup-certs-ca.sh
+  $MG_FOLDER_BIN/setup-certs-middleware.sh
+  echo "[OK] installer_certificats_millegrille() Complete avec succes"
 }
 
 preparer_comptes_mongo() {
-  echo "Preparation des comptes pour MongoDB"
+  echo "[INFO] Preparation des comptes pour MongoDB"
   NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
   $MG_FOLDER_BIN/setup-mongo-accounts.sh
 }
@@ -102,11 +125,18 @@ inserer_comptes_mongo() {
          /opt/millegrilles/bin/setup-mongo-js.sh
 }
 
-# Sequence execution
-verifier_parametres
-configurer_docker
-preparer_folder_millegrille
-installer_certificats_millegrille
-preparer_comptes_mongo
-preparer_stack_docker
-inserer_comptes_mongo
+executer() {
+  # Sequence execution
+  verifier_parametres
+
+  export $NOM_MILLEGRILLE $DOMAIN_SUFFIX
+
+  # configurer_docker
+  # preparer_folder_millegrille
+  installer_certificats_millegrille
+  # preparer_comptes_mongo
+  # preparer_stack_docker
+  # inserer_comptes_mongo
+}
+
+executer
