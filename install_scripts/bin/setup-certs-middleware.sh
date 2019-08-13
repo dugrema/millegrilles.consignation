@@ -32,6 +32,9 @@ sequence_chargement() {
   fi
 
   importer_dans_docker
+
+  # Importer les certificats ss pour remplacer les publics
+  importer_public_ss
 }
 
 # Executer

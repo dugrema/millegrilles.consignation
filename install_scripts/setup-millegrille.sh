@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e  # Force la sortie sur tout exit
+# set -e  # Force la sortie sur tout exit
 
 source etc/variables.txt
 
@@ -120,6 +120,7 @@ preparer_stack_docker() {
 
   CERTS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_middleware_latest.txt` \
   PASSWORDS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_passwords_latest.txt` \
+  WEB_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_web_latest.txt` \
   envsubst < $MG_FOLDER_ETC/docker/template.env > $MG_FOLDER_DOCKER_CONF/$NOM_MILLEGRILLE.env
 
   cd $MG_FOLDER_DOCKER_CONF
@@ -183,12 +184,12 @@ executer() {
 
   export $NOM_MILLEGRILLE $DOMAIN_SUFFIX
 
-  # configurer_docker
-  # preparer_folder_millegrille
-  # installer_certificats_millegrille
-  # preparer_repertoires_mounts
-  # preparer_comptes_mongo
-  # preparer_comptes_mq
+  configurer_docker
+  preparer_folder_millegrille
+  installer_certificats_millegrille
+  preparer_repertoires_mounts
+  preparer_comptes_mongo
+  preparer_comptes_mq
   preparer_stack_docker
   # inserer_comptes_mongo
 }

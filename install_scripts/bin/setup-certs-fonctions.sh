@@ -311,3 +311,24 @@ importer_dans_docker() {
   # Conserver CURDATE pour la creation du fichier docker compose
   echo $CURDATE > $CERT_PATH/${NOM_MILLEGRILLE}_middleware_latest.txt
 }
+
+importer_public_ss() {
+  # Au debut, les certificats web (letsencrypt) ne sont pas disponibles.
+  # On copie les certificats self-signed internes.
+
+  # Importe les certificats et cles dans le docker swarm du manager local
+  CERT_MIDDLEWARE=$CERT_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.cert.pem
+  CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
+
+  # Certs root
+  cat $CA_CHAIN_FILE | sudo docker secret create $NOM_MILLEGRILLE.pki.millegrilles.ssl.CAchain.$CURDATE -
+
+  # Cles middleware
+  cat $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.cert.$CURDATE -
+  cat $CLE_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.key.$CURDATE -
+  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.chain.$CURDATE -
+  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.fullchain.$CURDATE -
+
+  # Conserver CURDATE pour la creation du fichier docker compose
+  echo $CURDATE > $CERT_PATH/${NOM_MILLEGRILLE}_web_latest.txt
+}
