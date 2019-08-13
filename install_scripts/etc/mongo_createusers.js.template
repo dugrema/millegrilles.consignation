@@ -1,7 +1,7 @@
 // Creation d'usagers administrateur pour Mongo dans MilleGrilles
-use admin;
 
-// Procedure de backup, global pour MongoDB.
+// Procedure de backup
+/*
 db.createUser(
    {
      user: "backup",
@@ -12,9 +12,7 @@ db.createUser(
        ]
    }
 )
-
-// Transferer vers la base de donnees de la MilleGrille
-use mg-NOM_MILLEGRILLE;
+*/
 
 // Creation d'usagers pour les scripts python
 // Persistance de transactions

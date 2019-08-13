@@ -51,7 +51,7 @@ configurer_docker() {
   fi
 
   # Creer le network pour millegrilles
-  sudo docker network create -d overlay mg_net
+  sudo docker network create -d overlay --attachable mg_net
   if [ $? != 0 ]; then
     sudo docker network ls | grep mg_net
     if [ $? != 0 ]; then
@@ -169,13 +169,18 @@ certificat_parser_mq() {
 }
 
 inserer_comptes_mongo() {
-  docker container run --rm -it \
+  # Fabrique un mapping vers le reseau overlay mg_net (permet de trouver le
+  # serveur mongo), de /opt/millgrilles/bin et /opt/millegrilles/NOM_MILLEGRILLE.
+  # Execute le script setup-mongo-js.sh qui va executer le script avec
+  # mots de passes dans /opt/millegrilles/NOM_MILLEGRILLE/mounts/mongo-shared.
+
+  sudo docker container run --rm -it \
+         -e MONGOHOST=mongo --network mg_net \
          -e NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
-         -e DATEFICHIER=$DATEFICHIER \
-         -e MONGOHOST=`hostname` \
-         -v /opt/millegrilles:/opt/millegrilles \
+         -v $MG_FOLDER_BIN:$MG_FOLDER_BIN \
+         -v $MG_FOLDER_MILLEGRILLE:$MG_FOLDER_MILLEGRILLE \
          mongo:4.0 \
-         /opt/millegrilles/bin/setup-mongo-js.sh
+         $MG_FOLDER_BIN/setup-mongo-js.sh
 }
 
 executer() {
@@ -184,14 +189,14 @@ executer() {
 
   export $NOM_MILLEGRILLE $DOMAIN_SUFFIX
 
-  configurer_docker
-  preparer_folder_millegrille
-  installer_certificats_millegrille
-  preparer_repertoires_mounts
-  preparer_comptes_mongo
-  preparer_comptes_mq
-  preparer_stack_docker
-  # inserer_comptes_mongo
+  # configurer_docker
+  # preparer_folder_millegrille
+  # installer_certificats_millegrille
+  # preparer_repertoires_mounts
+  # preparer_comptes_mongo
+  # preparer_comptes_mq
+  # preparer_stack_docker
+  inserer_comptes_mongo
 }
 
 executer
