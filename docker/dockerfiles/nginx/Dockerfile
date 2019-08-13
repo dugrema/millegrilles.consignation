@@ -1,8 +1,8 @@
 FROM nginx:1.16
 MAINTAINER Mathieu Dugre <mail@mdugre.info>
 
-ENV APP_SOURCE_DIR=/opt/nginx/src
-ENV APP_BUNDLE_DIR=/opt/nginx/dist
+ENV APP_SOURCE_DIR=/opt/nginx/src \
+    APP_BUNDLE_DIR=/opt/nginx/dist
 
 WORKDIR $APP_BUNDLE_DIR
 

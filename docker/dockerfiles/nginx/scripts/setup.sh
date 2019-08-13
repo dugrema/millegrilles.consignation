@@ -7,7 +7,10 @@ echo "APP_BUNDLE_DIR = $APP_BUNDLE_DIR"
 mkdir -p $APP_BUNDLE_DIR
 mkdir -p $APP_SOURCE_DIR
 
+# Remplacer le fichier de configuration default.conf, copier tous les
+# fichiers de configuration locaux. Aussi faire un backup des fichiers dans dist.
 rm /etc/nginx/conf.d/default.conf
+cp $APP_SOURCE_DIR/sites-available/* /etc/nginx/conf.d
 mv $APP_SOURCE_DIR/sites-available $APP_BUNDLE_DIR
 
 echo "Copier run.sh, dummy_certs vers $APP_BUNDLE_DIR"
