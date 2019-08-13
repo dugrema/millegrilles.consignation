@@ -116,14 +116,24 @@ preparer_stack_docker() {
   CURRUSER=`whoami`
   sudo mkdir -p $MG_FOLDER_DOCKER_CONF
   sudo chown $CURRUSER:root $MG_FOLDER_DOCKER_CONF
+  cp $MG_FOLDER_ETC/docker/* $MG_FOLDER_ETC/docker/.env $MG_FOLDER_DOCKER_CONF
 
   CERTS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_middleware_latest.txt` \
   PASSWORDS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_passwords_latest.txt` \
   envsubst < $MG_FOLDER_ETC/docker/template.env > $MG_FOLDER_DOCKER_CONF/$NOM_MILLEGRILLE.env
+
+  cd $MG_FOLDER_DOCKER_CONF
+  echo "Repertoire courant $PWD"
+  source $NOM_MILLEGRILLE.env
+  export $(cut -d= -f1 $NOM_MILLEGRILLE.env)
+  docker-compose config > $NOM_MILLEGRILLE.yml
+
+  echo "[INFO] Fichier de configuration de la stack genere, demarrage du deploiement"
+  sudo docker stack deploy -c $NOM_MILLEGRILLE.yml millegrille-$NOM_MILLEGRILLE
 }
 
-preparer_repertoires_comptes() {
-  sudo mkdir -p $MG_FOLDER_MONGO_SHARED $MG_FOLDER_MQ_ACCOUNTS
+preparer_repertoires_mounts() {
+  sudo mkdir -p $MG_FOLDER_MONGO_SHARED $MG_FOLDER_MQ_ACCOUNTS $MG_FOLDER_MONGO_DATA
   CURRUSER=`whoami`
   sudo chown -R $CURRUSER:root $MG_FOLDER_MOUNTS
   chmod -R 750 $MG_FOLDER_MOUNTS
@@ -176,7 +186,7 @@ executer() {
   # configurer_docker
   # preparer_folder_millegrille
   # installer_certificats_millegrille
-  # preparer_repertoires_comptes
+  # preparer_repertoires_mounts
   # preparer_comptes_mongo
   # preparer_comptes_mq
   preparer_stack_docker

@@ -30,6 +30,7 @@ installer_docker() {
 }
 
 installer_dockercompose() {
+  # Noter que le docker-compose installe via apt est trop vieux.
   docker-compose version > /dev/null 2> /dev/null
   if [ $? -ne 0 ]; then
     apt install curl
