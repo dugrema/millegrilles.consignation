@@ -5,52 +5,52 @@ networks:
 secrets:
   mg.ceduleur.json:
     external: true
-    name: dev2.mg.ceduleur.json.1
+    name: dev2.mg.ceduleur.json.201908131532
   mg.mgdomaines.json:
     external: true
-    name: dev2.mg.mgdomaines.json.1
+    name: dev2.mg.mgdomaines.json.201908131532
   mg.transactions.json:
     external: true
-    name: dev2.mg.transactions.json.1
+    name: dev2.mg.transactions.json.201908131532
   mongo.root.password:
     external: true
-    name: mongo.root.password
+    name: dev2.mg.mongo_root_password.201908131532
   mongoexpress.web.password:
     external: true
-    name: mongoexpress.web.password
+    name: dev2.mg.mongoexpress_web_password.201908131532
   pki.millegrilles.ssl.CAchain:
     external: true
-    name: dev2.pki.millegrilles.ssl.CAchain.201908111535
+    name: dev2.pki.millegrilles.ssl.CAchain.201908131532
   pki.millegrilles.ssl.cert:
     external: true
-    name: dev2.pki.middleware.ssl.cert.201908111535
+    name: dev2.pki.middleware.ssl.cert.201908131532
   pki.millegrilles.ssl.fullchain:
     external: true
-    name: dev2.pki.middleware.ssl.fullchain.201908111535
+    name: dev2.pki.middleware.ssl.fullchain.201908131532
   pki.millegrilles.ssl.key:
     external: true
-    name: dev2.pki.middleware.ssl.key.201908111535
+    name: dev2.pki.middleware.ssl.key.201908131532
   pki.millegrilles.ssl.key_cert:
     external: true
-    name: dev2.pki.middleware.ssl.key_cert.201908111535
+    name: dev2.pki.middleware.ssl.key_cert.201908131532
   pki.millegrilles.wadmin.cert:
     external: true
-    name: dev2.pki.middleware.ssl.cert.201908111535
+    name: dev2.pki.middleware.ssl.cert.201908131532
   pki.millegrilles.wadmin.key:
     external: true
-    name: dev2.pki.middleware.ssl.key.201908111535
+    name: dev2.pki.middleware.ssl.key.201908131532
   pki.millegrilles.web.cert:
     external: true
-    name: dev2.pki.middleware.web.cert.20190716
+    name: dev2.pki.middleware.web.cert.201908131532
   pki.millegrilles.web.chain:
     external: true
-    name: dev2.pki.middleware.web.chain.20190716
+    name: dev2.pki.middleware.web.chain.201908131532
   pki.millegrilles.web.fullchain:
     external: true
-    name: dev2.pki.middleware.web.fullchain.20190716
+    name: dev2.pki.middleware.web.fullchain.201908131532
   pki.millegrilles.web.key:
     external: true
-    name: dev2.pki.middleware.web.key.20190716
+    name: dev2.pki.middleware.web.key.201908131532
 services:
   ceduleur-python:
     command: demarrer_ceduleur.py
@@ -63,7 +63,7 @@ services:
       resources:
         limits:
           cpus: '0.20'
-          memory: 50M
+          memory: 40M
       restart_policy:
         condition: any
         delay: 30s
@@ -101,8 +101,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '1.00'
-          memory: 128M
+          cpus: '0.50'
+          memory: 50M
       restart_policy:
         condition: any
         delay: 30s
@@ -216,15 +216,15 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '1.5'
-          memory: 1.5G
+          cpus: '2.0'
+          memory: 1.0G
       restart_policy:
         condition: any
         delay: 30s
     environment:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/mongo.root.password
       MONGO_INITDB_ROOT_USERNAME: root
-    hostname: mongo.dev2.maple.mdugre.info
+    hostname: mongo.local
     image: registry.maple.mdugre.info:5000/mg_mongo:4.0_4
     networks:
       mg_net: null
@@ -233,7 +233,7 @@ services:
     - source: pki.millegrilles.ssl.key_cert
     - source: pki.millegrilles.ssl.CAchain
     volumes:
-    - mg-middleware-mongodata:/data/db:rw
+    - /opt/millegrilles/dev2/mounts/mongodata:/data/db:rw
   mq:
     deploy:
       placement:
@@ -243,8 +243,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '2.00'
-          memory: 750M
+          cpus: '1.00'
+          memory: 600M
       restart_policy:
         condition: any
         delay: 30s
@@ -274,22 +274,23 @@ services:
     volumes:
     - mg-middleware-rabbitmq:/var/lib/rabbitmq:rw
     - /home/mathieu/git/MilleGrilles.consignation/docker/dockerfiles/rabbitmq/test/conf:/opt/rabbitmq/conf:rw
-  nginx:
+  nginxlocal:
     deploy:
       placement:
         constraints:
+        - node.labels.millegrilles.nginx == true
         - node.labels.netzone.private == true
       replicas: 1
       resources:
         limits:
-          cpus: '1.00'
-          memory: 192M
+          cpus: '0.50'
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s
     environment:
-      URL_DOMAIN: dev2.maple.mdugre.info
-      WEB_CERT: pki.millegrilles.web.fullchain
+      WEB_CERT: pki.millegrilles.ssl.cert
+      WEB_KEY: pki.millegrilles.ssl.key
     hostname: www.local
     image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_12
     networks:
@@ -323,8 +324,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '1.00'
-          memory: 192M
+          cpus: '0.50'
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s
@@ -366,8 +367,8 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '1.50'
-          memory: 200M
+          cpus: '0.50'
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s
