@@ -84,7 +84,7 @@ services:
   # Web local avec nginx
   nginxlocal:
     image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
-    hostname: www.local
+    hostname: www-${URL_DOMAIN}.local
     volumes:
       # - ${NGINX_CONF_PATH}:/etc/nginx/conf.d/sites-available
       - ${NGINX_WWW_PATH}:/usr/share/nginx/html
@@ -105,6 +105,7 @@ services:
      WEB_CERT: pki.millegrilles.ssl.fullchain
      WEB_KEY: pki.millegrilles.ssl.key
      NGINX_CONFIG_FILE: local.conf
+     URL_DOMAIN: ${URL_DOMAIN}
     ports:
       - target: 80
         published: 80

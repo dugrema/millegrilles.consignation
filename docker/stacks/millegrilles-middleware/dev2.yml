@@ -290,10 +290,11 @@ services:
         delay: 30s
     environment:
       NGINX_CONFIG_FILE: local.conf
+      URL_DOMAIN: dev2.local
       WEB_CERT: pki.millegrilles.ssl.fullchain
       WEB_KEY: pki.millegrilles.ssl.key
-    hostname: www.local
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_21
+    hostname: www-dev2.local.local
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_23
     networks:
       mg_net: null
     ports:
@@ -334,7 +335,7 @@ services:
       URL_DOMAIN: dev2.local
       WEB_CERT: pki.millegrilles.web.fullchain
     hostname: www.dev2.local
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_21
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_23
     networks:
       mg_net: null
     ports:
