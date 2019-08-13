@@ -347,6 +347,49 @@ services:
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.CAchain
 
+  # Web local avec nginx
+  nginx:
+    image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
+    hostname: www.local
+    volumes:
+      - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
+      - ${NGINX_WWW_PATH}:/usr/share/nginx/html
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.netzone.private == true
+          - node.labels.millegrilles.nginx == true
+      resources:
+        limits:
+          cpus: "1.00"
+          memory: 192M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+     WEB_CERT: pki.millegrilles.ssl.cert
+     URL_DOMAIN: www.local
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    networks:
+      - mg_net
+    secrets:
+      - pki.millegrilles.web.fullchain
+      - pki.millegrilles.web.chain
+      - pki.millegrilles.web.cert
+      - pki.millegrilles.web.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.CAchain
+
   # ****************
   # Services publics
   # ****************
