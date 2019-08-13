@@ -3,7 +3,7 @@
 SECRET=/run/secrets
 NGINX=/usr/sbin/nginx
 CONF=/etc/nginx/conf.d
-REPLACE_VARS='${URL_DOMAIN},${WEB_CERT}'
+REPLACE_VARS='${URL_DOMAIN},${WEB_CERT},${COUPDOEIL_IP}'
 
 if [[ ! -d $SECRET ]]; then
   echo "Folder secret n'existe pas, on installe les certificats de test"
@@ -35,6 +35,9 @@ CONFIG_FILE=$APP_BUNDLE_DIR/sites-available/$NGINX_CONFIG_FILE
 CONFIG_EFFECTIVE=$APP_BUNDLE_DIR/nginx-site.conf
 
 if [ ! -f $CONFIG_EFFECTIVE ]; then
+  export COUPDOEIL_IP=`getent hosts coupdoeilreact | awk '{print $1}'`
+  echo "Adresse IP interne de coupdoeilreact: $COUPDOEILIP"
+
   echo "Utilisation fichier configuration dans bundle: $NGINX_CONFIG_FILE"
   envsubst $REPLACE_VARS < $APP_BUNDLE_DIR/sites-available/$NGINX_CONFIG_FILE > $CONFIG_EFFECTIVE
 else
@@ -44,6 +47,7 @@ fi
 
 echo Creation lien vers $NGINX_CONFIG_FILE sous /etc/nginx/conf.d
 ln -s $CONFIG_EFFECTIVE /etc/nginx/conf.d/$NGINX_CONFIG_FILE
+
 
 echo "Demarrage de nginx avec configuration $NGINX_CONFIG_FILE"
 nginx -g "daemon off;"

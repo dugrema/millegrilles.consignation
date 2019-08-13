@@ -86,7 +86,7 @@ services:
     image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
     hostname: www-${URL_DOMAIN}.local
     volumes:
-      # - ${NGINX_CONF_PATH}:/etc/nginx/conf.d/sites-available
+      - ${NGINX_CONF_PATH}:/opt/nginx/dist/sites-available
       - ${NGINX_WWW_PATH}:/usr/share/nginx/html
     deploy:
       replicas: 1

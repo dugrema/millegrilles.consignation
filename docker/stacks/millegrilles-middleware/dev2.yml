@@ -139,7 +139,7 @@ services:
         condition: any
         delay: 30s
     environment:
-      CERT: /run/secrets/pki.millegrilles.ssl.cert
+      CERT: /run/secrets/pki.millegrilles.ssl.fullchain
       MG_CONSIGNATION_PATH: /opt/millegrilles/consignation
       MG_MQ_CAFILE: /run/secrets/pki.millegrilles.ssl.CAchain
       MG_MQ_CERTFILE: /run/secrets/pki.millegrilles.ssl.cert
@@ -294,7 +294,7 @@ services:
       WEB_CERT: pki.millegrilles.ssl.fullchain
       WEB_KEY: pki.millegrilles.ssl.key
     hostname: www-dev2.local.local
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_23
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_26
     networks:
       mg_net: null
     ports:
@@ -316,6 +316,7 @@ services:
     - source: pki.millegrilles.ssl.CAchain
     - source: pki.millegrilles.ssl.fullchain
     volumes:
+    - /opt/millegrilles/dev2/mounts/nginx-local-conf/sites-available:/opt/nginx/dist/sites-available:rw
     - mg-middleware-nginx-www:/usr/share/nginx/html:rw
   nginxpublic:
     deploy:
@@ -335,7 +336,7 @@ services:
       URL_DOMAIN: dev2.local
       WEB_CERT: pki.millegrilles.web.fullchain
     hostname: www.dev2.local
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_23
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_26
     networks:
       mg_net: null
     ports:
