@@ -14,10 +14,10 @@ function ajouter_usager_middleware {
   F_VHOST=$2
 
   echo "Ajouter $F_USER sur nouveau vhost $F_VHOST"
+  rabbitmqctl add_vhost $F_VHOST < /dev/null
   ajouter_usager $F_USER
 
   # Input via /dev/null pour eviter d'arreter la boucle
-  rabbitmqctl add_vhost $F_VHOST < /dev/null
   rabbitmqctl set_permissions -p $F_VHOST $F_USER ".*" ".*" ".*" < /dev/null
   rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.middleware" ".*" ".*" < /dev/null
   rabbitmqctl set_topic_permissions -p $F_VHOST $F_USER "millegrilles.inter" ".*" ".*" < /dev/null
