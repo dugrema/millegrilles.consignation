@@ -63,15 +63,21 @@ configurer_docker() {
   # Ajouter les labels utilises pour les services
   NODE=`hostname`
   sudo docker node update --label-add netzone.private=true $NODE
+
   # docker node update --label-add netzone.public=true $NODE
+  # Inserer les labels pour laisser les serveurs Mongo et MQ demarrer
+  # Va permettre de configurer les comptes de services avant les autres modules
   sudo docker node update --label-add millegrilles.database=true $NODE
   sudo docker node update --label-add millegrilles.mq=true $NODE
+
+  echo "[OK] configurer_docker() Complete avec succes"
+}
+
+ajouter_labels_internes_docker() {
   sudo docker node update --label-add millegrilles.consoles=true $NODE
   sudo docker node update --label-add millegrilles.python=true $NODE
   sudo docker node update --label-add millegrilles.domaines=true $NODE
   sudo docker node update --label-add millegrilles.coupdoeil=true $NODE
-
-  echo "[OK] configurer_docker() Complete avec succes"
 }
 
 preparer_folder_millegrille() {
@@ -189,14 +195,20 @@ executer() {
 
   export $NOM_MILLEGRILLE $DOMAIN_SUFFIX
 
-  # configurer_docker
-  # preparer_folder_millegrille
-  # installer_certificats_millegrille
-  # preparer_repertoires_mounts
-  # preparer_comptes_mongo
-  # preparer_comptes_mq
-  # preparer_stack_docker
+  configurer_docker
+  preparer_folder_millegrille
+  installer_certificats_millegrille
+  preparer_repertoires_mounts
+  preparer_comptes_mongo
+  preparer_comptes_mq
+  preparer_stack_docker
+
+  echo "[INFO] Attendre que les services MongoDB et RabbitMQ soient actifs pour configurer les comptes de services"
+  sleep 60  # Fixme: Trouver une facon de voir que MongoDB est deploye
   inserer_comptes_mongo
+
+  echo "[INFO] Activer les autres services dans Docker"
+  ajouter_labels_internes_docker
 }
 
 executer
