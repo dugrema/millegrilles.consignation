@@ -86,7 +86,7 @@ services:
     image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
     hostname: www.local
     volumes:
-      - ${NGINX_CONF_PATH}:/etc/nginx/conf.d
+      # - ${NGINX_CONF_PATH}:/etc/nginx/conf.d/sites-available
       - ${NGINX_WWW_PATH}:/usr/share/nginx/html
     deploy:
       replicas: 1
@@ -102,8 +102,9 @@ services:
         condition: any
         delay: 30s
     environment:
-     WEB_CERT: pki.millegrilles.ssl.cert
+     WEB_CERT: pki.millegrilles.ssl.fullchain
      WEB_KEY: pki.millegrilles.ssl.key
+     NGINX_CONFIG_FILE: local.conf
     ports:
       - target: 80
         published: 80
@@ -123,6 +124,7 @@ services:
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.CAchain
+      - pki.millegrilles.ssl.fullchain
 
   # Utilitaires pour gerer / debugger les services
   web-mongo-express:
