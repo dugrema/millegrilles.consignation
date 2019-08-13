@@ -78,6 +78,7 @@ ajouter_labels_internes_docker() {
   sudo docker node update --label-add millegrilles.python=true $NODE
   sudo docker node update --label-add millegrilles.domaines=true $NODE
   sudo docker node update --label-add millegrilles.coupdoeil=true $NODE
+  sudo docker node update --label-add millegrilles.consignationfichiers=true $NODE
 }
 
 preparer_folder_millegrille() {
@@ -140,10 +141,17 @@ preparer_stack_docker() {
 }
 
 preparer_repertoires_mounts() {
-  sudo mkdir -p $MG_FOLDER_MONGO_SHARED $MG_FOLDER_MQ_ACCOUNTS $MG_FOLDER_MONGO_DATA
+  sudo mkdir -p \
+    $MG_FOLDER_MONGO_SHARED $MG_FOLDER_MONGO_DATA \
+    $MG_FOLDER_MQ_ACCOUNTS \
+    $MG_FOLDER_CONSIGNATION
+
   CURRUSER=`whoami`
   sudo chown -R $CURRUSER:root $MG_FOLDER_MOUNTS
+
+  sudo chown -R $CURRUSER:root $MG_FOLDER_MOUNTS
   chmod -R 750 $MG_FOLDER_MOUNTS
+
   echo '[OK] Repertoires sous $MG_FOLDER_MOUNTS prets'
 }
 
