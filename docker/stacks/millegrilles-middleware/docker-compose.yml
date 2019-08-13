@@ -11,7 +11,7 @@ services:
       --sslMode requireSSL
       --sslPEMKeyFile /run/secrets/pki.millegrilles.ssl.key_cert
       --sslCAFile /run/secrets/pki.millegrilles.ssl.CAchain
-    hostname: mongo.${URL_DOMAIN}
+    hostname: mongo.local
     volumes:
       - ${MONGODB_DATA_MAPPING}:/data/db
     deploy:
@@ -22,8 +22,8 @@ services:
           - node.labels.millegrilles.database == true
       resources:
         limits:
-          cpus: "1.5"
-          memory: 1.5G
+          cpus: "2.0"
+          memory: 1.0G
       restart_policy:
         condition: any
         delay: 30s
@@ -52,8 +52,8 @@ services:
           - node.labels.millegrilles.mq == true
       resources:
         limits:
-          cpus: "2.00"
-          memory: 750M
+          cpus: "1.00"
+          memory: 600M
       restart_policy:
         condition: any
         delay: 30s
@@ -96,8 +96,8 @@ services:
           - node.labels.netzone.private == true
       resources:
         limits:
-          cpus: "1.00"
-          memory: 192M
+          cpus: "0.50"
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s
@@ -191,8 +191,8 @@ services:
           - node.labels.millegrilles.database == true
       resources:
        limits:
-          cpus: "1.50"
-          memory: 200M
+          cpus: "0.50"
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s
@@ -225,7 +225,7 @@ services:
       resources:
        limits:
           cpus: "0.20"
-          memory: 50M
+          memory: 40M
       restart_policy:
         condition: any
         delay: 30s
@@ -330,8 +330,8 @@ services:
           - node.labels.millegrilles.consignationfichiers == true
       resources:
         limits:
-          cpus: "1.00"
-          memory: 128M
+          cpus: "0.50"
+          memory: 50M
       restart_policy:
         condition: any
         delay: 30s
@@ -367,8 +367,8 @@ services:
           - node.labels.millegrilles.nginx == true
       resources:
         limits:
-          cpus: "1.00"
-          memory: 192M
+          cpus: "0.50"
+          memory: 100M
       restart_policy:
         condition: any
         delay: 30s
