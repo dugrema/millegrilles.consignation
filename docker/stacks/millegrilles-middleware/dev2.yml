@@ -5,13 +5,13 @@ networks:
 secrets:
   mg.ceduleur.json:
     external: true
-    name: mg.ceduleur.json.1
+    name: dev2.mg.ceduleur.json.1
   mg.mgdomaines.json:
     external: true
-    name: mg.mgdomaines.json.1
+    name: dev2.mg.mgdomaines.json.1
   mg.transactions.json:
     external: true
-    name: mg.transactions.json.1
+    name: dev2.mg.transactions.json.1
   mongo.root.password:
     external: true
     name: mongo.root.password
@@ -41,16 +41,16 @@ secrets:
     name: dev2.pki.middleware.ssl.key.201908111535
   pki.millegrilles.web.cert:
     external: true
-    name: pki.millegrilles.web.cert.20190716
+    name: dev2.pki.middleware.web.cert.20190716
   pki.millegrilles.web.chain:
     external: true
-    name: pki.millegrilles.web.chain.20190716
+    name: dev2.pki.middleware.web.chain.20190716
   pki.millegrilles.web.fullchain:
     external: true
-    name: pki.millegrilles.web.fullchain.20190716
+    name: dev2.pki.middleware.web.fullchain.20190716
   pki.millegrilles.web.key:
     external: true
-    name: pki.millegrilles.web.key.20190716
+    name: dev2.pki.middleware.web.key.20190716
 services:
   ceduleur-python:
     command: demarrer_ceduleur.py
@@ -278,7 +278,48 @@ services:
     deploy:
       placement:
         constraints:
+        - node.labels.netzone.private == true
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 192M
+      restart_policy:
+        condition: any
+        delay: 30s
+    environment:
+      URL_DOMAIN: dev2.maple.mdugre.info
+      WEB_CERT: pki.millegrilles.web.fullchain
+    hostname: www.local
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_12
+    networks:
+      mg_net: null
+    ports:
+    - mode: host
+      protocol: tcp
+      published: 80
+      target: 80
+    - mode: host
+      protocol: tcp
+      published: 443
+      target: 443
+    secrets:
+    - source: pki.millegrilles.web.fullchain
+    - source: pki.millegrilles.web.chain
+    - source: pki.millegrilles.web.cert
+    - source: pki.millegrilles.web.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.CAchain
+    volumes:
+    - mg-middleware-nginx-conf:/etc/nginx/conf.d:rw
+    - mg-middleware-nginx-www:/usr/share/nginx/html:rw
+  nginxpublic:
+    deploy:
+      placement:
+        constraints:
         - node.labels.netzone.public == true
+        - node.labels.millegrilles.nginx == true
       replicas: 1
       resources:
         limits:
@@ -291,7 +332,7 @@ services:
       URL_DOMAIN: dev2.maple.mdugre.info
       WEB_CERT: pki.millegrilles.web.fullchain
     hostname: www.dev2.maple.mdugre.info
-    image: registry.maple.mdugre.info:5000/mg_nginx:1.16_7
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_12
     networks:
       mg_net: null
     ports:

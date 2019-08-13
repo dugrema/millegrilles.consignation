@@ -82,7 +82,7 @@ services:
       # - pki.millegrilles.web.key
 
   # Web local avec nginx
-  nginx:
+  nginxlocal:
     image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
     hostname: www.local
     volumes:
@@ -92,6 +92,7 @@ services:
       replicas: 1
       placement:
         constraints:
+          - node.labels.millegrilles.nginx == true
           - node.labels.netzone.private == true
       resources:
         limits:
@@ -101,8 +102,8 @@ services:
         condition: any
         delay: 30s
     environment:
-     WEB_CERT: ${WEB_CERT}
-     URL_DOMAIN: ${URL_DOMAIN}
+     WEB_CERT: pki.millegrilles.ssl.cert
+     WEB_KEY: pki.millegrilles.ssl.key
     ports:
       - target: 80
         published: 80
@@ -352,7 +353,7 @@ services:
   # ****************
 
   # Web public avec nginx
-  nginx:
+  nginxpublic:
     image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
     hostname: www.${URL_DOMAIN}
     volumes:
@@ -363,6 +364,7 @@ services:
       placement:
         constraints:
           - node.labels.netzone.public == true
+          - node.labels.millegrilles.nginx == true
       resources:
         limits:
           cpus: "1.00"
@@ -424,16 +426,16 @@ secrets:
     name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WADMIN_PREFIX}.key.${PKI_MIDDLEWARE_WADMIN_VERSION}
   pki.millegrilles.web.cert:
     external: true
-    name: ${PKI_MIDDLEWARE_WEB_PREFIX}.cert.${PKI_MIDDLEWARE_WEB_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WEB_PREFIX}.cert.${PKI_MIDDLEWARE_WEB_VERSION}
   pki.millegrilles.web.chain:
     external: true
-    name: ${PKI_MIDDLEWARE_WEB_PREFIX}.chain.${PKI_MIDDLEWARE_WEB_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WEB_PREFIX}.chain.${PKI_MIDDLEWARE_WEB_VERSION}
   pki.millegrilles.web.fullchain:
     external: true
-    name: ${PKI_MIDDLEWARE_WEB_PREFIX}.fullchain.${PKI_MIDDLEWARE_WEB_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WEB_PREFIX}.fullchain.${PKI_MIDDLEWARE_WEB_VERSION}
   pki.millegrilles.web.key:
     external: true
-    name: ${PKI_MIDDLEWARE_WEB_PREFIX}.key.${PKI_MIDDLEWARE_WEB_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WEB_PREFIX}.key.${PKI_MIDDLEWARE_WEB_VERSION}
   pki.millegrilles.ssl.key:
     external: true
     name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_SSL_PREFIX}.key.${PKI_MIDDLEWARE_SSL_VERSION}
@@ -451,13 +453,13 @@ secrets:
     name: ${MG_NOM_MILLEGRILLE}.${PKI_MILLEGRILLES_SSL_PREFIX}.CAchain.${PKI_MIDDLEWARE_SSL_VERSION}
   mg.transactions.json:
     external: true
-    name: mg.transactions.json.${CONFIGURATION_TRANSACTION_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.mg.transactions.json.${CONFIGURATION_TRANSACTION_VERSION}
   mg.ceduleur.json:
     external: true
-    name: mg.ceduleur.json.${CONFIGURATION_CEDULEUR_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.mg.ceduleur.json.${CONFIGURATION_CEDULEUR_VERSION}
   mg.mgdomaines.json:
     external: true
-    name: mg.mgdomaines.json.${CONFIGURATION_MGDOMAINES_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.mg.mgdomaines.json.${CONFIGURATION_MGDOMAINES_VERSION}
 
 networks:
   mg_net:

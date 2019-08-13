@@ -270,9 +270,9 @@ concatener_chaine_certificats_ca() {
   fi
 
   cat \
-    $CERT_PATH/*_ssroot_*.cert.pem \
-    $CERT_PATH/*_intermediaire_*.cert.pem \
-    $CERT_PATH/*_millegrille_*.cert.pem \
+    $CERT_PATH/${NOM_MILLEGRILLE}_millegrille.cert.pem \
+    $CERT_PATH/${NOM_MILLEGRILLE}_intermediaire.cert.pem \
+    $CERT_PATH/${NOM_MILLEGRILLE}_ssroot.cert.pem \
     > $CA_CHAIN_FILE
 }
 
@@ -306,7 +306,7 @@ importer_dans_docker() {
   cat $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.cert.$CURDATE -
   cat $CLE_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key.$CURDATE -
   cat $CLE_MIDDLEWARE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.key_cert.$CURDATE -
-  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.fullchain.$CURDATE -
+  cat $CERT_MIDDLEWARE $CA_CHAIN_FILE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.ssl.fullchain.$CURDATE -
 
   # Conserver CURDATE pour la creation du fichier docker compose
   echo $CURDATE > $CERT_PATH/${NOM_MILLEGRILLE}_middleware_latest.txt
