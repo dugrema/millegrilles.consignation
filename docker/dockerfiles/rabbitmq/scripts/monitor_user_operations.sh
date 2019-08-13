@@ -8,14 +8,15 @@ PROCESS_FILE=$FILE_PATH/processing_users.txt
 # Si un fichier de creation d'usagers est present au demarrage,
 # il faut donner le temps au server de demarrer.
 # Sinon on recoit code d'erreur 69.
-sleep 30
+sleep 60
 
 while :
 do
   if [ -e $USER_FILE ]; then
     echo "Traitement des fichiers d'usagers"
 
-    PING=`rabbitmqctl ping`
+    rabbitmqctl ping
+    PING=$?
     if [ $PING -eq 0 ]; then
       # Copier contenu du fichier et supprimer fichier user.
       cat $USER_FILE > $PROCESS_FILE
@@ -28,5 +29,5 @@ do
       echo "Erreur ping rabbitmqctl, code=$PING"
     fi
   fi
-  sleep 10
+  sleep 15
 done

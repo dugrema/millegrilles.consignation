@@ -83,7 +83,7 @@ services:
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: dev2
     hostname: ceduleur-python.local
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.4
     networks:
       mg_net: null
     secrets:
@@ -196,7 +196,7 @@ services:
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: dev2
     hostname: domaines-python.local
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.4
     networks:
       mg_net: null
     secrets:
@@ -249,7 +249,7 @@ services:
         condition: any
         delay: 30s
     hostname: mq.local
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq:3.7-management_7
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq:3.7-management_8
     networks:
       mg_net: null
     ports:
@@ -278,7 +278,7 @@ services:
     deploy:
       placement:
         constraints:
-        - node.labels.netzone.private == true
+        - node.labels.netzone.public == true
       replicas: 1
       resources:
         limits:
@@ -290,7 +290,7 @@ services:
     environment:
       URL_DOMAIN: dev2.maple.mdugre.info
       WEB_CERT: pki.millegrilles.web.fullchain
-    hostname: www.local
+    hostname: www.dev2.maple.mdugre.info
     image: registry.maple.mdugre.info:5000/mg_nginx:1.16_7
     networks:
       mg_net: null
@@ -308,9 +308,12 @@ services:
     - source: pki.millegrilles.web.chain
     - source: pki.millegrilles.web.cert
     - source: pki.millegrilles.web.key
+    - source: pki.millegrilles.ssl.cert
+    - source: pki.millegrilles.ssl.key
+    - source: pki.millegrilles.ssl.CAchain
     volumes:
-    - mg-middleware-nginx-conf:/etc/nginx/conf.d:rw
-    - mg-middleware-nginx-www:/usr/share/nginx/html:rw
+    - mg-public-nginx-conf:/etc/nginx/conf.d:rw
+    - mg-public-nginx-www:/usr/share/nginx/html:rw
   transactions-python:
     command: demarrer_transaction.py
     deploy:
@@ -343,7 +346,7 @@ services:
       MG_MQ_SSL: "on"
       MG_NOM_MILLEGRILLE: dev2
     hostname: transactions-python.local
-    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.1
+    image: registry.maple.mdugre.info:5000/millegrilles_consignation_python_main:1.9.4
     networks:
       mg_net: null
     secrets:
@@ -413,4 +416,8 @@ volumes:
     name: mg-middleware-rabbitmq
   mg-middleware-rabbitmq-conf:
     name: mg-middleware-rabbitmq-conf
+  mg-public-nginx-conf:
+    name: mg-public-nginx-conf
+  mg-public-nginx-www:
+    name: mg-public-nginx-www
 
