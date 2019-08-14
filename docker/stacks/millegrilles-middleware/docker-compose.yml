@@ -43,7 +43,7 @@ services:
     hostname: mq.local
     volumes:
       - mg-middleware-rabbitmq-data:/var/lib/rabbitmq
-      # - mg-middleware-rabbitmq-conf:/opt/rabbitmq/conf
+      - ${MQ_CONF_MAPPING}:/opt/rabbitmq/conf
     deploy:
       replicas: 1
       placement:

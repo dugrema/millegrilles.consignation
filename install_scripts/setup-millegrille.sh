@@ -100,6 +100,9 @@ preparer_folder_millegrille() {
   # Copier certificats de reference
   sudo cp $FOLDER_INSTALL_SRC/certificates/millegrilles.*.pem $MG_FOLDER_CACERTS
 
+  echo -e "NOM_MILLEGRILLE=$NOM_MILLEGRILLE\nDOMAIN_SUFFIX=$DOMAIN_SUFFIX" | \
+    sudo tee $MG_FOLDER_ETC/${NOM_MILLEGRILLE}.conf
+
   echo "[OK] preparer_folder_millegrille() Complete avec succes"
 }
 

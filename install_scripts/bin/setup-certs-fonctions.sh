@@ -326,8 +326,8 @@ importer_public_ss() {
   # Cles middleware
   cat $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.cert.$CURDATE -
   cat $CLE_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.key.$CURDATE -
-  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.chain.$CURDATE -
-  cat $CA_CHAIN_FILE $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.fullchain.$CURDATE -
+  cat $CERT_MIDDLEWARE $CA_CHAIN_FILE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.chain.$CURDATE -
+  cat $CERT_MIDDLEWARE $CA_CHAIN_FILE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.fullchain.$CURDATE -
 
   # Conserver CURDATE pour la creation du fichier docker compose
   echo $CURDATE > $CERT_PATH/${NOM_MILLEGRILLE}_web_latest.txt
