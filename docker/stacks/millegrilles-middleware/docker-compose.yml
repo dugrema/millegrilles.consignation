@@ -42,8 +42,8 @@ services:
     image: ${REGISTRY}/mg_rabbitmq${MQ_IMAGE_VERSION}
     hostname: mq.local
     volumes:
-      - ${MQ_DATA_MAPPING}:/var/lib/rabbitmq
-      - ${MQ_CONF_MAPPING}:/opt/rabbitmq/conf
+      - mg-middleware-rabbitmq-data:/var/lib/rabbitmq
+      # - mg-middleware-rabbitmq-conf:/opt/rabbitmq/conf
     deploy:
       replicas: 1
       placement:
@@ -88,7 +88,7 @@ services:
     image: ${REGISTRY}/mg_nginx${NGINX_IMAGE_VERSION}
     hostname: www-${URL_DOMAIN}.local
     volumes:
-      - ${NGINX_CONF_PATH}:/opt/nginx/dist/sites-available
+      # - ${NGINX_CONF_PATH}:/opt/nginx/dist/sites-available
       - ${NGINX_WWW_PATH}:/usr/share/nginx/html
     deploy:
       replicas: 1
@@ -400,20 +400,8 @@ services:
       - pki.millegrilles.ssl.CAchain
 
 volumes:
-  mg-middleware-mongodata:
-    name: mg-middleware-mongodata
-  mg-middleware-rabbitmq:
-    name: mg-middleware-rabbitmq
-  mg-middleware-rabbitmq-conf:
-    name: mg-middleware-rabbitmq-conf
-  mg-middleware-nginx-conf:
-    name: mg-middleware-nginx-conf
-  mg-middleware-nginx-www:
-    name: mg-middleware-nginx-www
-  mg-public-nginx-conf:
-    name: mg-public-nginx-conf
-  mg-public-nginx-www:
-    name: mg-public-nginx-www
+  mg-middleware-rabbitmq-data:
+    name: ${MQ_DATA_MAPPING}
 
 secrets:
   mongo.root.password:
@@ -469,4 +457,4 @@ secrets:
 networks:
   mg_net:
     external: true
-    name: mg_net
+    name: mg_${NOM_MILLEGRILLE}_net

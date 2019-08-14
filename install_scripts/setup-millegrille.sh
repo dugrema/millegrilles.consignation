@@ -50,12 +50,12 @@ configurer_docker() {
     fi
   fi
 
-  # Creer le network pour millegrilles
-  sudo docker network create -d overlay --attachable mg_net
+  # Creer le network pour millegrilles (variable NET_NAME)
+  sudo docker network create -d overlay --attachable $NET_NAME
   if [ $? != 0 ]; then
-    sudo docker network ls | grep mg_net
+    sudo docker network ls | grep $NET_NAME
     if [ $? != 0 ]; then
-      echo "\n[FAIL] Erreur d'ajout de l'interface reseau. Vous n'avez pas acces a docker"
+      echo "\n[FAIL] Erreur d'ajout de l'interface reseau $NET_NAME. Vous n'avez pas acces a docker"
       exit 11
     fi
   fi
@@ -86,10 +86,10 @@ preparer_folder_millegrille() {
 
   sudo mkdir -p $MG_FOLDER_BIN $MG_FOLDER_ETC $MG_FOLDER_CACERTS
   sudo mkdir -p $MG_FOLDER_CERTS $MG_FOLDER_KEYS \
-                $PASSWORDS_PATH $MG_FOLDER_LETSENCRYPT
-  sudo chmod 750 $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT $PASSWORDS_PATH
-
-  sudo mkdir -p $MG_FOLDER_WEBROOT $MG_FOLDER_WEBCONF
+                $PASSWORDS_PATH $MG_FOLDER_LETSENCRYPT \
+                $MG_FOLDER_NGINX_WWW_LOCAL $MG_FOLDER_NGINX_WWW_PUBLIC
+  sudo chmod 750 $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT $PASSWORDS_PATH \
+                 $MG_FOLDER_NGINX_WWW_LOCAL $MG_FOLDER_NGINX_WWW_PUBLIC
 
   # Copier scripts (bin)
   sudo cp -r $FOLDER_INSTALL_SRC/install_scripts/bin/* $MG_FOLDER_BIN
@@ -189,7 +189,7 @@ inserer_comptes_mongo() {
   # mots de passes dans /opt/millegrilles/NOM_MILLEGRILLE/mounts/mongo-shared.
 
   sudo docker container run --rm -it \
-         -e MONGOHOST=mongo --network mg_net \
+         -e MONGOHOST=mongo --network $NET_NAME \
          -e NOM_MILLEGRILLE=$NOM_MILLEGRILLE \
          -v $MG_FOLDER_BIN:$MG_FOLDER_BIN \
          -v $MG_FOLDER_MILLEGRILLE:$MG_FOLDER_MILLEGRILLE \
