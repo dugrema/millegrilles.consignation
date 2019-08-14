@@ -3,7 +3,7 @@
 SECRET=/run/secrets
 NGINX=/usr/sbin/nginx
 CONF=/etc/nginx/conf.d
-REPLACE_VARS='${URL_DOMAIN},${WEB_CERT},${COUPDOEIL_IP}'
+REPLACE_VARS='${URL_DOMAIN},${WEB_CERT},${COUPDOEIL_IP},${NOM_MILLEGRILLE}'
 
 if [[ ! -d $SECRET ]]; then
   echo "Folder secret n'existe pas, on installe les certificats de test"

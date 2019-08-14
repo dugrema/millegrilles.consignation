@@ -41,16 +41,13 @@ secrets:
     name: dev2.pki.middleware.ssl.key.201908131619
   pki.millegrilles.web.cert:
     external: true
-    name: dev2.pki.middleware.web.cert.201908131619
-  pki.millegrilles.web.chain:
-    external: true
-    name: dev2.pki.middleware.web.chain.201908131619
+    name: dev2.pki.middleware.ssl.cert.201908131619
   pki.millegrilles.web.fullchain:
     external: true
-    name: dev2.pki.middleware.web.fullchain.201908131619
+    name: dev2.pki.middleware.ssl.fullchain.201908131619
   pki.millegrilles.web.key:
     external: true
-    name: dev2.pki.middleware.web.key.201908131619
+    name: dev2.pki.middleware.ssl.key.201908131619
 services:
   ceduleur-python:
     command: demarrer_ceduleur.py
@@ -279,6 +276,7 @@ services:
       placement:
         constraints:
         - node.labels.millegrilles.nginx == true
+        - node.labels.netzone.public != true
         - node.labels.netzone.private == true
       replicas: 1
       resources:
@@ -290,11 +288,12 @@ services:
         delay: 30s
     environment:
       NGINX_CONFIG_FILE: local.conf
+      NOM_MILLEGRILLE: dev2
       URL_DOMAIN: dev2.local
       WEB_CERT: pki.millegrilles.ssl.fullchain
       WEB_KEY: pki.millegrilles.ssl.key
     hostname: www-dev2.local.local
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_26
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_27
     networks:
       mg_net: null
     ports:
@@ -307,13 +306,8 @@ services:
       published: 443
       target: 443
     secrets:
-    - source: pki.millegrilles.web.fullchain
-    - source: pki.millegrilles.web.chain
-    - source: pki.millegrilles.web.cert
-    - source: pki.millegrilles.web.key
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.key
-    - source: pki.millegrilles.ssl.CAchain
     - source: pki.millegrilles.ssl.fullchain
     volumes:
     - /opt/millegrilles/dev2/mounts/nginx-local-conf/sites-available:/opt/nginx/dist/sites-available:rw
@@ -333,10 +327,13 @@ services:
         condition: any
         delay: 30s
     environment:
+      NGINX_CONFIG_FILE: public.conf
+      NOM_MILLEGRILLE: dev2
       URL_DOMAIN: dev2.local
       WEB_CERT: pki.millegrilles.web.fullchain
+      WEB_KEY: pki.millegrilles.web.key
     hostname: www.dev2.local
-    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_26
+    image: registry.maple.mdugre.info:5000/mg_nginx.x86_64:1.16_27
     networks:
       mg_net: null
     ports:
@@ -350,14 +347,12 @@ services:
       target: 443
     secrets:
     - source: pki.millegrilles.web.fullchain
-    - source: pki.millegrilles.web.chain
     - source: pki.millegrilles.web.cert
     - source: pki.millegrilles.web.key
     - source: pki.millegrilles.ssl.cert
     - source: pki.millegrilles.ssl.key
     - source: pki.millegrilles.ssl.CAchain
     volumes:
-    - mg-public-nginx-conf:/etc/nginx/conf.d:rw
     - mg-public-nginx-www:/usr/share/nginx/html:rw
   transactions-python:
     command: demarrer_transaction.py
