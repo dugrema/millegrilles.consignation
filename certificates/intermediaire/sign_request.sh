@@ -2,9 +2,9 @@
 
 CNF_FILE=openssl-intermediaire-signature.cnf
 
-if [ -z $NOM_OU ]; then
-  echo "Il faut fournir les parametres suivants: nom_noeud"
-fi
+# if [ -z $NOM_OU ]; then
+#   echo "Il faut fournir les parametres suivants: nom_noeud"
+# fi
 
 signer_certificat() {
   openssl ca -config $CNF_FILE \
@@ -20,8 +20,9 @@ signer_certificat() {
 }
 
 # Creer et signer un nouveau certificat
-export REQ=~/certificates/csr/cert.csr
-export CERT=`echo $REQ | sed s/\.csr/\.cert/ -`
+export REQ=~/certificates/csr/signing_request.csr.pem
+export CERT=`echo $REQ | sed s/csr\\./cert\\./ -`
+export HOSTNAME=`hostname`.maple.mdugre.info
 echo "# Copier information requete CSR" > $REQ
 nano $REQ
 

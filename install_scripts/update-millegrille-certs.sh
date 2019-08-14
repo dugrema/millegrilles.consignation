@@ -16,29 +16,55 @@ if [ -z $1 ]; then
 fi
 
 # Charger le DOMAIN_SUFFIX, utilise pour les certificats
+export NOM_MILLEGRILLE=$1
 source /opt/millegrilles/etc/$NOM_MILLEGRILLE.conf
-export NOM_MILLEGRILLE DOMAIN_SUFFIX
+export DOMAIN_SUFFIX
 source /opt/millegrilles/etc/variables.txt
-source /opt/millegrilles/bin/setup-certs-fonctions.sh
-CURDATE=$CURDATE_NOW
+# source /opt/millegrilles/bin/setup-certs-fonctions.sh
 
-renouveler_cert_middleware() {
+export CURDATE=$CURDATE_NOW \
+       CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf
 
-  export SUFFIX_NOMCLE=middleware TYPE_NOEUD=Middleware
-  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+generer_pass_random() {
+ FICHIER_CURDATE=$1.$CURDATE
+ if [ ! -f $FICHIER_CURDATE ]; then
+   openssl rand -base64 32 > $FICHIER_CURDATE
+   chmod 400 $FICHIER_CURDATE
+ fi
+ export PASSWD_FILE_THIS=$FICHIER_CURDATE
+}
 
-  CNF_FILE=$ETC_FOLDER/openssl-millegrille-middleware.cnf \
-  creer_cert_noeud
-  chmod 400 $KEY
+renouveler_cert_millegrille() {
 
-  if [ $? != 0 ]; then
-    exit $?
+  NOMCLE=${NOM_MILLEGRILLE}_millegrille
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  KEY_LINK=$PRIVATE_PATH/${NOMCLE}.key.pem
+  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  CERT=`echo $REQ | sed s/\.csr/\.cert/g`
+
+  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=MilleGrilles/OU=MilleGrille/CN=$NOM_MILLEGRILLE"
+
+  if [ -f $KEY ]; then
+    echo "Cle $KEY existe deja - on abandonne"
+    exit 34
   fi
 
-  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
-  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
-  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
-  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+  # Generer un mot de passe (s'il n'existe pas deja - pas overwrite)
+  generer_pass_random $MILLEGRILLE_PASSWD_FILE
+
+  HOSTNAME=$HOSTNAME_SHORT DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  openssl req \
+          -config $CNF_FILE \
+          -newkey rsa:4096 -sha512 \
+          -out $REQ -outform PEM \
+          -keyout $KEY -keyform PEM \
+          -subj $SUBJECT \
+          -passout file:$PASSWD_FILE_THIS
+
+  if [ $? -ne 0 ]; then
+    echo "Erreur openssl creer_certca_millegrille()"
+    exit 35
+  fi
 
   echo "Voici la requete de certifcat. Copier le contenu pour signer avec l'autorite appropriee."
   echo ""
@@ -50,29 +76,38 @@ renouveler_cert_middleware() {
   nano $CERT
 
   # Verifier si le certificat est lisible et valide
-  openssl x509 -noout -subject -in $CERT
-  echo "[INFO] Le certificat semble correct, on l'installe"
+  SUBJECT=`openssl x509 -noout -subject -in $CERT`
+  if [ $? != 0 ]; then
+    echo "[FAIL] Le certificat n'est pas lisible."
+    exit 2
+  fi
+  echo "[INFO] Le certificat semble correct: $SUBJECT"
 
-  chmod 444 $CERT
+  # Creer lien generique pour la cle root
+  chmod 644 $CERT
+  chmod 400 $KEY
+
+  CA_DBPATH=$DBS_PATH/${NOMCLE}
+
+  if [ ! -d $CA_DBPATH ]; then
+    mkdir -p $CA_DBPATH/certs
+    touch $CA_DBPATH/index.txt
+    touch $CA_DBPATH/index.txt.attr
+    echo "01" > $CA_DBPATH/serial.txt
+  fi
 
   echo "[INFO] Tous les fichiers ont ete crees, on modifie des liens de certificats."
-
-  ln -sf $KEY $PRIVATE_PATH/${NOMCLE}.key.pem
+  ln -sf $KEY $KEY_LINK
   ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
-
+  ln -sf $PASSWD_FILE_THIS $PASSWORDS_PATH/cert_millegrille_password.txt
+  rm $CERT_PATH/*.csr.pem
   echo -e "\n[OK] Le nouveau certificat est installe sous $CERT_PATH/${NOMCLE}.cert.pem\n"
 
 }
 
 sequence() {
-  echo -e "[INFO] Generer une nouvelle cle et certificat pour le noeud middleware"
-  renouveler_cert_middleware
-
-  echo -e "[INFO] Importer le nouveau certificat et cle dans docker (ssl)"
-  importer_dans_docker
-
-  echo -e "[INFO] Importer le nouveau certificat et cle dans docker (web)"
-  importer_public_ss
+  echo -e "[INFO] Generer une nouvelle cle et certificat pour la millegrille"
+  renouveler_cert_millegrille
 }
 
 sequence
