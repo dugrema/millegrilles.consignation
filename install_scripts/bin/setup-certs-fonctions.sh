@@ -320,9 +320,6 @@ importer_public_ss() {
   CERT_MIDDLEWARE=$CERT_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.cert.pem
   CLE_MIDDLEWARE=$PRIVATE_PATH/${NOM_MILLEGRILLE}_middleware_${CURDATE}.key.pem
 
-  # Certs root
-  cat $CA_CHAIN_FILE | sudo docker secret create $NOM_MILLEGRILLE.pki.millegrilles.ssl.CAchain.$CURDATE -
-
   # Cles middleware
   cat $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.cert.$CURDATE -
   cat $CLE_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.key.$CURDATE -
