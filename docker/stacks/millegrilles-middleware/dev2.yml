@@ -35,7 +35,7 @@ secrets:
     name: dev2.pki.middleware.ssl.key_cert.201908131619
   pki.millegrilles.wadmin.cert:
     external: true
-    name: dev2.pki.middleware.ssl.cert.201908131619
+    name: dev2.pki.middleware.ssl.fullchain.201908131619
   pki.millegrilles.wadmin.key:
     external: true
     name: dev2.pki.middleware.ssl.key.201908131619
@@ -249,7 +249,7 @@ services:
         condition: any
         delay: 30s
     hostname: mq.local
-    image: registry.maple.mdugre.info:5000/mg_rabbitmq:3.7-management_9
+    image: registry.maple.mdugre.info:5000/mg_rabbitmq.x86_64:3.7-management_10
     networks:
       mg_net: null
     ports:

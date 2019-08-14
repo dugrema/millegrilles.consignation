@@ -423,7 +423,7 @@ secrets:
     name: ${MONGOEXPRESS_WEB_PASSWORD}
   pki.millegrilles.wadmin.cert:
     external: true
-    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WADMIN_PREFIX}.cert.${PKI_MIDDLEWARE_WADMIN_VERSION}
+    name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WADMIN_PREFIX}.fullchain.${PKI_MIDDLEWARE_WADMIN_VERSION}
   pki.millegrilles.wadmin.key:
     external: true
     name: ${MG_NOM_MILLEGRILLE}.${PKI_MIDDLEWARE_WADMIN_PREFIX}.key.${PKI_MIDDLEWARE_WADMIN_VERSION}
