@@ -1,0 +1,14 @@
+HOME            = .
+RANDFILE        = $ENV::HOME/.rnd
+KEYS            = ~/certificates/millegrilles/privkeys
+DB_PATH         = $ENV::HOSTNAME
+
+####################################################################
+[ signing_policy ]
+countryName = optional
+stateOrProvinceName = optional
+localityName = optional
+organizationName = optional
+organizationalUnitName = optional
+commonName = supplied
+emailAddress = optional

@@ -74,9 +74,10 @@ configurer_docker() {
 }
 
 ajouter_labels_internes_docker() {
-  sudo docker node update --label-add millegrilles.consoles=true $NODE
+  sudo docker node update --label-add millegrilles.nginx=true $NODE
   sudo docker node update --label-add millegrilles.python=true $NODE
   sudo docker node update --label-add millegrilles.domaines=true $NODE
+  sudo docker node update --label-add millegrilles.consoles=true $NODE
   sudo docker node update --label-add millegrilles.coupdoeil=true $NODE
   sudo docker node update --label-add millegrilles.consignationfichiers=true $NODE
 }
