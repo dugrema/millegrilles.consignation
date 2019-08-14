@@ -104,7 +104,7 @@ renouveler_cert_millegrille() {
 
   # Verifier si on peut proceder a la signature immediatement (cle et password
   # intermediaire present localement) ou s'il faut demander une signature tierce.
-  if [ -f $INTER_PASSWD_FILE ] && [ -f $CAINTER_CERT ]; then
+  if [ -f $INTER_PASSWD_FILE ] && [ -f $CAINTER_KEY_PATH ]; then
     signer_automatiquement
   else
     demander_signature_externe
@@ -116,9 +116,34 @@ renouveler_cert_millegrille() {
     echo "[FAIL] Le certificat n'est pas lisible."
     exit 2
   fi
+  openssl verify -CAfile ${CA_CERT} -untrusted ${CAINTER_CERT} $CERT
+  if [ $? != 0 ]; then
+    echo "[FAIL] La chaine de certificat locale est incorrecte. Corriger avant de poursuivre."
+    exit 3
+  fi
+
   echo "[INFO] Le certificat semble correct: $SUBJECT"
 
   update_links
+  concatener_chaine_certificats_ca
+}
+
+concatener_chaine_certificats_ca() {
+  # Concatene la chaine de certificats dans un seul fichier.
+  # Parametres :
+  #  CA_CHAIN_FILE: Chemin et nom du fichier a generer
+  #  NOM_MILLEGRILLE: Nom de la millegrille
+
+  if [ -z $CA_CHAIN_FILE ]; then
+    echo "[FAIL] concatener_chaine_certificats() Il faut fournir le parametre CA_CHAIN_FILE"
+    exit 39
+  fi
+
+  cat \
+    $CERT_PATH/${NOM_MILLEGRILLE}_millegrille.cert.pem \
+    $CERT_PATH/${NOM_MILLEGRILLE}_intermediaire.cert.pem \
+    $CERT_PATH/${NOM_MILLEGRILLE}_ssroot.cert.pem \
+    > $CA_CHAIN_FILE
 }
 
 update_links() {
@@ -127,13 +152,6 @@ update_links() {
   chmod 400 $KEY
 
   CA_DBPATH=$DBS_PATH/${NOMCLE}
-
-  if [ ! -d $CA_DBPATH ]; then
-    mkdir -p $CA_DBPATH/certs
-    touch $CA_DBPATH/index.txt
-    touch $CA_DBPATH/index.txt.attr
-    echo "01" > $CA_DBPATH/serial.txt
-  fi
 
   echo "[INFO] Tous les fichiers ont ete crees, on modifie des liens de certificats."
   ln -sf $KEY $KEY_LINK
