@@ -16,6 +16,7 @@ MG_FOLDER_ETC=$MG_FOLDER_ROOT/etc
 export NOM_MILLEGRILLE=$1
 source $MG_FOLDER_ETC/${NOM_MILLEGRILLE}.conf
 export DOMAIN_SUFFIX
+echo "Domain suffix: $DOMAIN_SUFFIX"
 source $MG_FOLDER_ETC/variables.txt
 
 mettre_a_jour_template() {
@@ -25,7 +26,8 @@ mettre_a_jour_template() {
   export PASSWORDS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_passwords_latest.txt`
   export WEB_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_web_latest.txt`
   export MG_FOLDER_NGINX_WWW_LOCAL MG_FOLDER_NGINX_WWW_PUBLIC
-  export MG_NOM_MILLEGRILLE=$NOM_MILLEGRILLE
+  export NOM_MILLEGRILLE=$NOM_MILLEGRILLE MG_NOM_MILLEGRILLE=$NOM_MILLEGRILLE
+  export DOMAIN_SUFFIX=$DOMAIN_SUFFIX
 
   cd $MG_FOLDER_DOCKER_CONF
   echo "Repertoire courant $PWD"
