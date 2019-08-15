@@ -17,7 +17,7 @@ ln -s /run/secrets/$WEB_CERT $APP_BUNDLE_DIR/cert.pem
 ln -s /run/secrets/$WEB_KEY $APP_BUNDLE_DIR/key.pem
 
 echo "Liste secrets"
-ls /run/secret
+ls -l /run/secrets
 
 echo "Certificat utilise"
 cat $APP_BUNDLE_DIR/cert.pem
