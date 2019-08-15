@@ -33,8 +33,15 @@ sequence_chargement() {
 
   importer_dans_docker
 
-  # Importer les certificats ss pour remplacer les publics
-  importer_public_ss
+  # Verifier si on import les certificats internes ou si les certs
+  # let's encrypt sont disponibles
+  if [ ! -d $MG_FOLDER_LETSENCRYPT/live ]; then
+    echo "[INFO] Certificats Let's Encrypt non disponibles. On utiliser les certs self-signed interne pour le web."
+    # Importer les certificats ss pour remplacer les publics
+    importer_public_ss
+  else
+    importer_public_letsencrypt
+  fi
 }
 
 # Executer
