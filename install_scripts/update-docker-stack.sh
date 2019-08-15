@@ -24,11 +24,12 @@ mettre_a_jour_template() {
   CERTS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_middleware_latest.txt` \
   PASSWORDS_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_passwords_latest.txt` \
   WEB_DATE=`cat $CERT_PATH/${NOM_MILLEGRILLE}_web_latest.txt` \
-  envsubst < $MG_FOLDER_ETC/docker/template.env > $MG_FOLDER_DOCKER_CONF/$NOM_MILLEGRILLE.env
+  source $NOM_MILLEGRILLE.env
+  source $MG_FOLDER_ETC/variables.txt
 
   cd $MG_FOLDER_DOCKER_CONF
   echo "Repertoire courant $PWD"
-  source $NOM_MILLEGRILLE.env
+  envsubst < $MG_FOLDER_ETC/docker/template.env > $MG_FOLDER_DOCKER_CONF/$NOM_MILLEGRILLE.env
   export $(cut -d= -f1 $NOM_MILLEGRILLE.env)
 
   export FICHIER_CONFIG=$MG_FOLDER_DOCKER_CONF/$NOM_MILLEGRILLE.$CURDATE_NOW.yml
