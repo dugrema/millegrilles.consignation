@@ -16,6 +16,12 @@ echo "Creation liens pour WEB_CERT=$WEB_CERT et WEB_KEY=$WEB_KEY."
 ln -s /run/secrets/$WEB_CERT $APP_BUNDLE_DIR/cert.pem
 ln -s /run/secrets/$WEB_KEY $APP_BUNDLE_DIR/key.pem
 
+echo "Liste secrets"
+ls /run/secret
+
+echo "Certificat utilise"
+cat $APP_BUNDLE_DIR/cert.pem
+
 # Effectuer substitution des variables d'Environnement
 # if [ -z $NGINX_NOOVERRIDE_CONF ]; then
 #   if [ -z $NGINX_CONFIG_FILE ]; then
