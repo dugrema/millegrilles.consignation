@@ -90,7 +90,6 @@ preparer_folder_millegrille() {
                 $PASSWORDS_PATH $MG_FOLDER_LETSENCRYPT \
                 $MG_FOLDER_NGINX_WWW_LOCAL $MG_FOLDER_NGINX_WWW_PUBLIC
   sudo chmod 750 $MG_FOLDER_KEYS $MG_FOLDER_LETSENCRYPT $PASSWORDS_PATH
-  sudo chmod 755 $MG_FOLDER_NGINX_WWW_LOCAL $MG_FOLDER_NGINX_WWW_PUBLIC
 
   # Copier scripts (bin)
   sudo cp -r $FOLDER_INSTALL_SRC/install_scripts/bin/* $MG_FOLDER_BIN
@@ -148,13 +147,13 @@ preparer_repertoires_mounts() {
   sudo mkdir -p \
     $MG_FOLDER_MONGO_SHARED $MG_FOLDER_MONGO_DATA \
     $MG_FOLDER_MQ_ACCOUNTS \
-    $MG_FOLDER_CONSIGNATION
+    $MG_FOLDER_CONSIGNATION \
+    $MG_FOLDER_NGINX_WWW_LOCAL $MG_FOLDER_NGINX_WWW_PUBLIC
 
   CURRUSER=`whoami`
   sudo chown -R $CURRUSER:root $MG_FOLDER_MOUNTS
-
-  sudo chown -R $CURRUSER:root $MG_FOLDER_MOUNTS
   chmod -R 750 $MG_FOLDER_MOUNTS
+  sudo chmod 755 $MG_FOLDER_NGINX_WWW_LOCAL $MG_FOLDER_NGINX_WWW_PUBLIC
 
   echo '[OK] Repertoires sous $MG_FOLDER_MOUNTS prets'
 }
