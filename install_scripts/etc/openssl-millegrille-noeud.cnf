@@ -1,8 +1,7 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
-NOM_NOEUD       = $ENV::NOM_NOEUD
-DOMAIN_SUFFIX   = $ENV::DOMAIN_SUFFIX
 NOM_MILLEGRILLE = $ENV::NOM_MILLEGRILLE
+NOM_NOEUD       = $ENV::NOM_NOEUD
 EMAIL           = millegrilles@mdugre.info
 
 ####################################################################
@@ -30,12 +29,6 @@ organizationName_default    = $NOM_MILLEGRILLE
 organizationalUnitName         = Organizational Unit (eg, division)
 organizationalUnitName_default = Noeud
 
-commonName           = Common Name (e.g. server FQDN or YOUR name)
-commonName_default   = $NOM_NOEUD.$DOMAIN_SUFFIX
-
-emailAddress         = Email Address
-emailAddress_default = $NOM_MILLEGRILLE.$EMAIL
-
 ####################################################################
 [ server_req_extensions ]
 
@@ -50,4 +43,4 @@ subjectAltName       = @alternate_names
 # Supporter l'access via docker (swarm), local et public.
 DNS.1  = $NOM_NOEUD
 DNS.2  = $NOM_NOEUD.local
-DNS.3  = $NOM_NOEUD.$DOMAIN_SUFFIX
+# DNS.3  = $NOM_NOEUD.$DOMAIN_SUFFIX
