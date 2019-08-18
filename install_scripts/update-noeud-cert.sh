@@ -18,7 +18,7 @@ creer_cert_noeud() {
   #    SUFFIX_NOMCLE
   #    CNF_FILE
 
-  NOMCLE=${NOM_MILLEGRILLE}_$HOSTNAME
+  export NOMCLE=${NOM_MILLEGRILLE}_$HOSTNAME
   if [ -z $TYPE_NOEUD ]; then
     TYPE_NOEUD=Noeud
   fi
@@ -52,26 +52,48 @@ creer_cert_noeud() {
     exit 36
   fi
 
+  chmod 400 $KEY
+
 }
 
 attendre_certificat() {
   # REQ=/va/dfsfd/fjdsij/fjjj.cert.pem
   SERVEUR=mg-${NOM_MILLEGRILLE}.local
-  URL=https://${SERVEUR}${CERT_PATH}/$HOSTNAME_SHORT.local.cert.pem
+  NOM_CHAIN_CA=${NOM_MILLEGRILLE}_CA_chain.cert.pem
+  URL_CA=http://${SERVEUR}/pki/certs/${NOM_CHAIN_CA}
+  URL=https://${SERVEUR}/pki/certs/$HOSTNAME_SHORT.local.cert.pem
   CERT_PATH=/pki/certs
-  
+
   echo -e "Requete a transmettre au serveur MilleGrille:\n$REQ\n\n"
-  
+
   cat $REQ
-  
+
   echo ""
+  cd $MG_FOLDER_CERTS
+  if [ ! -f $MG_FOLDER_CERTS/${NOM_CHAIN_CA} ]; then
+    echo "Le certificat CA n'existe pas localement, on va le chercher sur le serveur http de la millegrille"
+    wget $URL_CA
+    if [ $? != 0 ]; then
+      echo "Erreur de telechargement du certificat CA, on ne peut pas poursuivre automatiquement"
+      exit 41
+    fi
+  fi
   echo "Le noeud va tenter de lire le certificat a partir de: $URL"
   echo 'Appuyez sur ENTREE lorsque le certificat sera pret'
-  
+
   read -p "Telecharger le fichier? (Y/n) " $REP
-  if [ $REP == '' ] || [$REP == 'y']; then
-    wget --ca-certificate=$MG_FOLDER_CERTS/${NOM_MILLEGRILLE}_CA_chain.cert.pem \
+  if [ -z $REP ] || [ $REP == 'y' ]; then
+    wget --ca-certificate=$MG_FOLDER_CERTS/${NOM_CHAIN_CA} \
          $URL
+
+    if [ $? == 0 ]; then
+      echo "Certificat telecharge avec succes. On met a jour les liens."
+      ln -sf $CERT $MG_FOLDER_CERTS/${NOMCLE}.cert.pem
+      ln -sf $KEY $MG_FOLDER_KEYS/${NOMCLE}.key.pem
+
+      # Effacer les requetes CSR
+      rm $MG_FOLDER_CERTS/*.csr.pem
+    fi
   fi
 }
 
