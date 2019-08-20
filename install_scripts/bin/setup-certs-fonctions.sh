@@ -141,6 +141,7 @@ creer_cert_noeud() {
   # Parametres :
   #    SUFFIX_NOMCLE
   #    CNF_FILE
+  #    SUBJECT
 
   if [ -z $SUFFIX_NOMCLE ] || [ -z $CNF_FILE ]; then
     echo -e "\n[FAIL] creer_cert_noeud(): Il faut fournir les parametres SUFFIX_NOMCLE, CNF_FILE"
@@ -156,7 +157,9 @@ creer_cert_noeud() {
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
   CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
 
-  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=$NOM_MILLEGRILLE/OU=$TYPE_NOEUD/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
+  if [ -z $SUBJECT ]; then
+    SUBJECT="/C=CA/ST=Ontario/L=Russell/O=$NOM_MILLEGRILLE/OU=$TYPE_NOEUD/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
+  fi
 
   if [ -f $KEY ]; then
     echo "Cle $KEY existe deja - on abandonne"
@@ -229,7 +232,7 @@ creer_cert_middleware() {
 
   SUFFIX_NOMCLE=middleware \
   CNF_FILE=$ETC_FOLDER/openssl-millegrille-middleware.cnf \
-  TYPE_NOEUD=Middleware \
+  TYPE_NOEUD=middleware \
   creer_cert_noeud
 
   if [ $? != 0 ]; then
@@ -239,6 +242,40 @@ creer_cert_middleware() {
   NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
 
   SUFFIX_NOMCLE=middleware \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
+  KEYFILE=$MG_KEY \
+  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
+  signer_cert
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+
+  chmod 400 $KEY
+  chmod 444 $CERT
+  ln -sf $KEY $PRIVATE_PATH/${NOMCLE}.key.pem
+  ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
+
+}
+
+creer_cert_maitredescles() {
+
+  SUBJECT="/O=$NOM_MILLEGRILLE/CN=MaitreDesCles" \
+  SUFFIX_NOMCLE=maitredescles \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille-maitredescles.cnf \
+  TYPE_NOEUD=MaitreDesCles \
+  creer_cert_noeud
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+
+  SUFFIX_NOMCLE=maitredescles \
   CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
   KEYFILE=$MG_KEY \
   PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
