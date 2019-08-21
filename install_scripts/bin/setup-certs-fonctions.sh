@@ -207,6 +207,11 @@ signer_cert() {
     CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
   fi
 
+  if [ -z $DAYS ]; then
+    # Par defaut le certificat est bon pour 1 an.
+    DAYS=366
+  fi
+
   echo -e "signer_cert(): Signer requete $REQ\n CNF $CNF_FILE\n KEY $KEYFILE, output $CERT"
 
   openssl ca -config $CNF_FILE \
@@ -217,6 +222,7 @@ signer_cert() {
           -passin file:$PASSWD_FILE \
           -batch \
           -notext \
+          -days $DAYS \
           -infiles $REQ
 
   if [ $? -ne 0 ]; then
@@ -270,7 +276,7 @@ creer_cert_maitredescles() {
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
-  SUBJECT="/O=$NOM_MILLEGRILLE/CN=MaitreDesCles"
+  SUBJECT="/O=$NOM_MILLEGRILLE/OU=MaitreDesCles/CN=Primaire"
 
   PASSWORD_MAITREDESCLES=$PASSWORDS_PATH/${NOMCLE}_${CURDATE}.password.txt
   generer_pass_random $PASSWORD_MAITREDESCLES
@@ -292,6 +298,48 @@ creer_cert_maitredescles() {
   CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
   KEYFILE=$MG_KEY \
   PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
+  signer_cert
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  chmod 400 $KEY
+  chmod 444 $CERT
+  ln -sf $KEY $PRIVATE_PATH/${NOMCLE}.key.pem
+  ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
+
+}
+
+creer_cert_backup() {
+
+  SUFFIX_NOMCLE=backup
+  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille-maitredescles-backup.cnf
+  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+  SUBJECT="/O=$NOM_MILLEGRILLE/OU=MaitreDesCles/CN=Backup"
+
+  HOSTNAME=$HOSTNAME_SHORT DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  openssl req \
+          -config $CNF_FILE \
+          -newkey rsa:2048 -sha512 \
+          -out $REQ -outform PEM \
+          -keyout $KEY -keyform PEM \
+          -subj $SUBJECT \
+          -nodes
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  SUFFIX_NOMCLE=$SUFFIX_NOMCLE \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
+  KEYFILE=$MG_KEY \
+  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
+  DAYS=720 \
   signer_cert
 
   if [ $? != 0 ]; then

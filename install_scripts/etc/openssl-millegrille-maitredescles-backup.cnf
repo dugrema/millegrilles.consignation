@@ -1,6 +1,5 @@
 HOME            = .
 RANDFILE        = $ENV::HOME/.rnd
-NOM_NOEUD       = $ENV::HOSTNAME
 NOM_MILLEGRILLE = $ENV::NOM_MILLEGRILLE
 EMAIL           = millegrilles@mdugre.info
 
@@ -20,7 +19,7 @@ organizationalUnitName         = Organizational Unit (eg, division)
 organizationalUnitName_default = MaitreDesCles
 
 commonName           = Common Name (e.g. server FQDN or YOUR name)
-commonName_default   = Primaire
+commonName_default   = Backup
 
 ####################################################################
 [ server_req_extensions ]

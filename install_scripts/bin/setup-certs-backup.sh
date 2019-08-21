@@ -23,9 +23,9 @@ sequence_chargement() {
   fi
 
   # Creer le noeud middleware
-  echo -e "\n*****\nGenerer un certificat de MaitreDesCles"
+  echo -e "\n*****\nGenerer un certificat de MaitreDesCles Backup"
 
-  creer_cert_maitredescles
+  creer_cert_backup
 
   if [ $? != 0 ]; then
     exit $?
