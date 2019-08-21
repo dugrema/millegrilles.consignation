@@ -282,7 +282,6 @@ creer_cert_maitredescles() {
           -out $REQ -outform PEM \
           -keyout $KEY -keyform PEM \
           -subj $SUBJECT \
-          -nodes \
           -passout file:$PASSWORD_MAITREDESCLES
 
   if [ $? != 0 ]; then
