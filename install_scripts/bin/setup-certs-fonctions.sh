@@ -263,19 +263,33 @@ creer_cert_middleware() {
 
 creer_cert_maitredescles() {
 
-  SUBJECT="/O=$NOM_MILLEGRILLE/CN=MaitreDesCles" \
-  SUFFIX_NOMCLE=maitredescles \
-  CNF_FILE=$ETC_FOLDER/openssl-millegrille-maitredescles.cnf \
-  TYPE_NOEUD=MaitreDesCles \
-  creer_cert_noeud
+  SUFFIX_NOMCLE=maitredescles
+  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille-maitredescles.cnf
+  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+  SUBJECT="/O=$NOM_MILLEGRILLE/CN=MaitreDesCles"
+
+  PASSWORD_MAITREDESCLES=$PASSWORDS_PATH/${NOMCLE}_${CURDATE}.password.txt
+  generer_pass_random $PASSWORD_MAITREDESCLES
+
+  HOSTNAME=$HOSTNAME_SHORT DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  openssl req \
+          -config $CNF_FILE \
+          -newkey rsa:2048 -sha512 \
+          -out $REQ -outform PEM \
+          -keyout $KEY -keyform PEM \
+          -subj $SUBJECT \
+          -nodes \
+          -passout file:$PASSWORD_MAITREDESCLES
 
   if [ $? != 0 ]; then
     exit $?
   fi
 
-  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
-
-  SUFFIX_NOMCLE=maitredescles \
+  SUFFIX_NOMCLE=$SUFFIX_NOMCLE \
   CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
   KEYFILE=$MG_KEY \
   PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
@@ -284,9 +298,6 @@ creer_cert_maitredescles() {
   if [ $? != 0 ]; then
     exit $?
   fi
-
-  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
-  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
 
   chmod 400 $KEY
   chmod 444 $CERT
