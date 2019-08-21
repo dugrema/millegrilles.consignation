@@ -32,8 +32,11 @@ preparer_comptes_mongo() {
   PASSWORD_BACKUP=`openssl rand -base64 15`
   preparer_configuration $PASSWORDS_PATH/mg.backup.json $PASSWORD_BACKUP PWD_BACKUP
 
-  PASSWORD_BACKUP=`openssl rand -base64 15`
-  preparer_configuration $PASSWORDS_PATH/mg.ceduleur.json $PASSWORD_BACKUP PWD_BACKUP
+  # PASSWORD_CEDULEUR=`openssl rand -base64 15`
+  # preparer_configuration $PASSWORDS_PATH/mg.ceduleur.json $PASSWORD_CEDULEUR PWD_CEDULEUR
+
+  PASSWORD_MAITREDESCLES=`openssl rand -base64 15`
+  preparer_configuration $PASSWORDS_PATH/mg.maitredescles.json $PASSWORD_MAITREDESCLES PWD_MAITREDESCLES
 
 }
 

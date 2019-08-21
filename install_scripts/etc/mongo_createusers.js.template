@@ -38,3 +38,15 @@ db.createUser(
        ]
    }
 )
+
+// MaitreDesCles
+db.createUser(
+   {
+     user: "maitredescles",
+     pwd: "PWD_MAITREDESCLES",
+     roles:
+       [
+         { role: "readWrite", db: "mg-NOM_MILLEGRILLE" }
+       ]
+   }
+)
