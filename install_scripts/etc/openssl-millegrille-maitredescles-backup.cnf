@@ -1,0 +1,29 @@
+HOME            = .
+RANDFILE        = $ENV::HOME/.rnd
+NOM_MILLEGRILLE = $ENV::NOM_MILLEGRILLE
+EMAIL           = millegrilles@mdugre.info
+
+####################################################################
+[ req ]
+default_bits       = 2048
+distinguished_name = server_distinguished_name
+req_extensions     = server_req_extensions
+string_mask        = utf8only
+
+####################################################################
+[ server_distinguished_name ]
+organizationName            = Organization Name (eg, company)
+organizationName_default    = $NOM_MILLEGRILLE
+
+organizationalUnitName         = Organizational Unit (eg, division)
+organizationalUnitName_default = MaitreDesCles
+
+commonName           = Common Name (e.g. server FQDN or YOUR name)
+commonName_default   = Backup
+
+####################################################################
+[ server_req_extensions ]
+
+subjectKeyIdentifier = hash
+basicConstraints     = CA:FALSE
+keyUsage             = digitalSignature, keyEncipherment

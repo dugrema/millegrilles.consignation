@@ -141,6 +141,7 @@ creer_cert_noeud() {
   # Parametres :
   #    SUFFIX_NOMCLE
   #    CNF_FILE
+  #    SUBJECT
 
   if [ -z $SUFFIX_NOMCLE ] || [ -z $CNF_FILE ]; then
     echo -e "\n[FAIL] creer_cert_noeud(): Il faut fournir les parametres SUFFIX_NOMCLE, CNF_FILE"
@@ -156,7 +157,9 @@ creer_cert_noeud() {
   REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
   CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
 
-  SUBJECT="/C=CA/ST=Ontario/L=Russell/O=$NOM_MILLEGRILLE/OU=$TYPE_NOEUD/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
+  if [ -z $SUBJECT ]; then
+    SUBJECT="/C=CA/ST=Ontario/L=Russell/O=$NOM_MILLEGRILLE/OU=$TYPE_NOEUD/CN=$HOSTNAME/emailAddress=$NOM_MILLEGRILLE@millegrilles.com"
+  fi
 
   if [ -f $KEY ]; then
     echo "Cle $KEY existe deja - on abandonne"
@@ -204,6 +207,11 @@ signer_cert() {
     CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
   fi
 
+  if [ -z $DAYS ]; then
+    # Par defaut le certificat est bon pour 1 an.
+    DAYS=366
+  fi
+
   echo -e "signer_cert(): Signer requete $REQ\n CNF $CNF_FILE\n KEY $KEYFILE, output $CERT"
 
   openssl ca -config $CNF_FILE \
@@ -214,6 +222,7 @@ signer_cert() {
           -passin file:$PASSWD_FILE \
           -batch \
           -notext \
+          -days $DAYS \
           -infiles $REQ
 
   if [ $? -ne 0 ]; then
@@ -229,7 +238,7 @@ creer_cert_middleware() {
 
   SUFFIX_NOMCLE=middleware \
   CNF_FILE=$ETC_FOLDER/openssl-millegrille-middleware.cnf \
-  TYPE_NOEUD=Middleware \
+  TYPE_NOEUD=middleware \
   creer_cert_noeud
 
   if [ $? != 0 ]; then
@@ -250,6 +259,92 @@ creer_cert_middleware() {
 
   KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
   CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+
+  chmod 400 $KEY
+  chmod 444 $CERT
+  ln -sf $KEY $PRIVATE_PATH/${NOMCLE}.key.pem
+  ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
+
+}
+
+creer_cert_maitredescles() {
+
+  SUFFIX_NOMCLE=maitredescles
+  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille-maitredescles.cnf
+  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+  SUBJECT="/O=$NOM_MILLEGRILLE/OU=MaitreDesCles/CN=Primaire"
+
+  PASSWORD_MAITREDESCLES=$PASSWORDS_PATH/${NOMCLE}_${CURDATE}.password.txt
+  generer_pass_random $PASSWORD_MAITREDESCLES
+
+  HOSTNAME=$HOSTNAME_SHORT DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  openssl req \
+          -config $CNF_FILE \
+          -newkey rsa:2048 -sha512 \
+          -out $REQ -outform PEM \
+          -keyout $KEY -keyform PEM \
+          -subj $SUBJECT \
+          -passout file:$PASSWORD_MAITREDESCLES
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  SUFFIX_NOMCLE=$SUFFIX_NOMCLE \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
+  KEYFILE=$MG_KEY \
+  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
+  signer_cert
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  chmod 400 $KEY
+  chmod 444 $CERT
+  ln -sf $KEY $PRIVATE_PATH/${NOMCLE}.key.pem
+  ln -sf $CERT $CERT_PATH/${NOMCLE}.cert.pem
+
+}
+
+creer_cert_backup() {
+
+  SUFFIX_NOMCLE=backup
+  NOMCLE=${NOM_MILLEGRILLE}_${SUFFIX_NOMCLE}
+
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille-maitredescles-backup.cnf
+  REQ=$CERT_PATH/${NOMCLE}_${CURDATE}.csr.pem
+  KEY=$PRIVATE_PATH/${NOMCLE}_${CURDATE}.key.pem
+  CERT=$CERT_PATH/${NOMCLE}_${CURDATE}.cert.pem
+  SUBJECT="/O=$NOM_MILLEGRILLE/OU=MaitreDesCles/CN=Backup"
+
+  HOSTNAME=$HOSTNAME_SHORT DOMAIN_SUFFIX=$DOMAIN_SUFFIX \
+  openssl req \
+          -config $CNF_FILE \
+          -newkey rsa:2048 -sha512 \
+          -out $REQ -outform PEM \
+          -keyout $KEY -keyform PEM \
+          -subj $SUBJECT \
+          -nodes
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
+
+  SUFFIX_NOMCLE=$SUFFIX_NOMCLE \
+  CNF_FILE=$ETC_FOLDER/openssl-millegrille.cnf \
+  KEYFILE=$MG_KEY \
+  PASSWD_FILE=$MILLEGRILLE_PASSWD_FILE \
+  DAYS=720 \
+  signer_cert
+
+  if [ $? != 0 ]; then
+    exit $?
+  fi
 
   chmod 400 $KEY
   chmod 444 $CERT

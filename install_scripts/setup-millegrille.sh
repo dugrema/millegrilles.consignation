@@ -80,6 +80,7 @@ ajouter_labels_internes_docker() {
   sudo docker node update --label-add millegrilles.consoles=true $NODE
   sudo docker node update --label-add millegrilles.coupdoeil=true $NODE
   sudo docker node update --label-add millegrilles.consignationfichiers=true $NODE
+  sudo docker node update --label-add millegrilles.maitredescles=true $NODE
 }
 
 preparer_folder_millegrille() {
