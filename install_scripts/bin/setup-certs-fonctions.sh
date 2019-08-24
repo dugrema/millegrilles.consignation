@@ -335,10 +335,12 @@ importer_public_letsencrypt() {
   # On copie les certificats self-signed internes.
 
   # Importe les certificats et cles dans le docker swarm du manager local
-  CERT_MIDDLEWARE=$MG_FOLDER_LETSENCRYPT/live/cert.pem
-  CLE_MIDDLEWARE=$MG_FOLDER_LETSENCRYPT/live/privkey.pem
-  CHAIN_MIDDLEWARE=$MG_FOLDER_LETSENCRYPT/live/chain.pem
-  FULLCHAIN_MIDDLEWARE=$MG_FOLDER_LETSENCRYPT/live/fullchain.pem
+  SUFFIX_PUBLIC=pivoine.millegrilles.mdugre.info
+  REP_LETSENCRYPT=$MG_FOLDER_LETSENCRYPT/live/www.$SUFFIX_PUBLIC
+  CERT_MIDDLEWARE=$REP_LETSENCRYPT/cert.pem
+  CLE_MIDDLEWARE=$REP_LETSENCRYPT/privkey.pem
+  CHAIN_MIDDLEWARE=$REP_LETSENCRYPT/chain.pem
+  FULLCHAIN_MIDDLEWARE=$REP_LETSENCRYPT/fullchain.pem
 
   # Cles middleware
   cat $CERT_MIDDLEWARE | sudo docker secret create $NOM_MILLEGRILLE.pki.middleware.web.cert.$CURDATE -
