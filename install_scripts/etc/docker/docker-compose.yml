@@ -184,6 +184,9 @@ services:
     # entrypoint: /bin/sleep 1000
     hostname: transactions-python.local
     command: demarrer_transaction.py
+    depends_on:
+      - mongo
+      - mq
     deploy:
       replicas: 1
       placement:
@@ -218,6 +221,9 @@ services:
     image: ${REGISTRY}/millegrilles_consignation_python_main${MG_PYTHON_IMAGE_VERSION}
     hostname: ceduleur-python.local
     command: demarrer_ceduleur.py
+    depends_on:
+      - mongo
+      - mq
     deploy:
       replicas: 1
       placement:
@@ -251,6 +257,10 @@ services:
     image: ${REGISTRY}/millegrilles_consignation_python_main${MG_PYTHON_IMAGE_VERSION}
     command: demarrer_domaine.py --info
     hostname: domaines-python.local
+    depends_on:
+      - mongo
+      - mq
+      - transactions-python
     deploy:
       replicas: 1
       placement:
@@ -288,6 +298,9 @@ services:
     hostname: maitredescles-python.local
     volumes:
       - /opt/millegrilles/${MG_NOM_MILLEGRILLE}/pki:/opt/millegrilles/${MG_NOM_MILLEGRILLE}/pki
+    depends_on:
+      - mongo
+      - mq
     deploy:
       replicas: 1
       placement:
@@ -320,6 +333,10 @@ services:
   coupdoeilreact:
     image:  ${REGISTRY}/coupdoeil_react${MG_COUPDOEILREACT_IMAGE_VERSION}
     hostname: coupdoeil.local
+    depends_on:
+      - mongo
+      - mq
+      - domaines-python
     deploy:
       replicas: 1
       placement:
@@ -359,6 +376,8 @@ services:
     hostname: consignationfichiers.local
     volumes:
       - ${CONSIGNATIONFICHIERS_PATH}:/opt/millegrilles/consignation
+    depends_on:
+      - mq
     deploy:
       replicas: 1
       placement:
