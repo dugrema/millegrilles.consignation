@@ -329,7 +329,78 @@ services:
       - pki.millegrilles.ssl.key_cert
       - pki.millegrilles.ssl.CAchain
 
-  # Application Meteor pour Coup D'Oeil
+  # Publicateur public
+  publicateur-python:
+    image: ${REGISTRY}/millegrilles_consignation_python_main${MG_PYTHON_IMAGE_VERSION}
+    hostname: publicateur-python.${URL_DOMAIN}
+    command: demarrer_publicateur.py
+    depends_on:
+      - mongo
+      - mq
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.labels.netzone.public == true
+          - node.labels.millegrilles.nginx == true
+      resources:
+       limits:
+          cpus: "0.20"
+          memory: 40M
+      restart_policy:
+        condition: any
+        delay: 30s
+    env_file:
+      - services-python.env
+    environment:
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
+      MG_CONFIG_JSON: /run/secrets/mg.publicateur.json
+    networks:
+      - mg_net
+    secrets:
+      - mg.publicateur.json
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
+      - pki.millegrilles.ssl.key_cert
+
+  # Publicateur local
+  publicateur-local-python:
+    image: ${REGISTRY}/millegrilles_consignation_python_main${MG_PYTHON_IMAGE_VERSION}
+    hostname: publicateur-python.local
+    command: demarrer_publicateur.py
+    depends_on:
+      - mongo
+      - mq
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.labels.millegrilles.nginx == true
+          - node.labels.netzone.public != true
+          - node.labels.netzone.private == true
+      resources:
+       limits:
+          cpus: "0.20"
+          memory: 40M
+      restart_policy:
+        condition: any
+        delay: 30s
+    env_file:
+      - services-python.env
+    environment:
+      MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
+      MG_CONFIG_JSON: /run/secrets/mg.publicateur.json
+    networks:
+      - mg_net
+    secrets:
+      - mg.publicateur.json
+      - pki.millegrilles.ssl.key
+      - pki.millegrilles.ssl.cert
+      - pki.millegrilles.ssl.CAchain
+      - pki.millegrilles.ssl.key_cert
+
+  # Application React pour Coup D'Oeil
   coupdoeilreact:
     image:  ${REGISTRY}/coupdoeil_react${MG_COUPDOEILREACT_IMAGE_VERSION}
     hostname: coupdoeil.local
