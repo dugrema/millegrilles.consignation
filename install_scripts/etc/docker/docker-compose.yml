@@ -358,7 +358,6 @@ services:
     networks:
       - mg_net
     secrets:
-      - mg.publicateur.json
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.CAchain
@@ -394,7 +393,6 @@ services:
     networks:
       - mg_net
     secrets:
-      - mg.publicateur.json
       - pki.millegrilles.ssl.key
       - pki.millegrilles.ssl.cert
       - pki.millegrilles.ssl.CAchain
