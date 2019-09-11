@@ -354,7 +354,6 @@ services:
       - services-python.env
     environment:
       MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
-      MG_CONFIG_JSON: /run/secrets/mg.publicateur.json
     networks:
       - mg_net
     secrets:
@@ -389,7 +388,6 @@ services:
       - services-python.env
     environment:
       MG_NOM_MILLEGRILLE: ${MG_NOM_MILLEGRILLE}
-      MG_CONFIG_JSON: /run/secrets/mg.publicateur.json
     networks:
       - mg_net
     secrets:
