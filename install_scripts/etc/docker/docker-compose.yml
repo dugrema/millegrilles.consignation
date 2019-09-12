@@ -333,7 +333,9 @@ services:
   publicateur-python:
     image: ${REGISTRY}/millegrilles_consignation_python_main${MG_PYTHON_IMAGE_VERSION}
     hostname: publicateur-python.${URL_DOMAIN}
-    command: demarrer_publicateur.py
+    command: demarrer_publicateur.py --info --webroot ${NGINX_PUBLIC_WWW_PATH}
+    volumes:
+      - ${NGINX_PUBLIC_WWW_PATH}:${NGINX_PUBLIC_WWW_PATH}
     depends_on:
       - mongo
       - mq
@@ -366,7 +368,9 @@ services:
   publicateur-local-python:
     image: ${REGISTRY}/millegrilles_consignation_python_main${MG_PYTHON_IMAGE_VERSION}
     hostname: publicateur-python.local
-    command: demarrer_publicateur.py
+    command: demarrer_publicateur.py --info --webroot ${NGINX_WWW_PATH}
+    volumes:
+      - ${NGINX_WWW_PATH}:${NGINX_WWW_PATH}
     depends_on:
       - mongo
       - mq
