@@ -11,7 +11,7 @@ COPY . $APP_SOURCE_DIR
 EXPOSE 80
 EXPOSE 443
 
-VOLUME /etc/letsencrypt /var/lib/letsencrypt
+VOLUME /etc/letsencrypt /opt/certbot/webroot
 WORKDIR /opt/certbot
 
 RUN $APP_SOURCE_DIR/scripts/setup.sh && \
