@@ -3,7 +3,7 @@
 SECRET=/run/secrets
 NGINX=/usr/sbin/nginx
 CONF=/etc/nginx/conf.d
-REPLACE_VARS='${URL_DOMAIN},${WEB_CERT},${COUPDOEIL_IP},${NOM_MILLEGRILLE}'
+REPLACE_VARS='${NOM_MILLEGRILLE},${WEB_CERT},${WEB_KEY},${WEB_URL},${WEB_COUPDOEIL},${LOCAL_CERT},${LOCAL_KEY},${LOCAL_URL},${LOCAL_COUPDOEIL},'
 
 if [[ ! -d $SECRET ]]; then
   echo "Folder secret n'existe pas, on installe les certificats de test"
@@ -12,15 +12,12 @@ if [[ ! -d $SECRET ]]; then
 fi
 
 # Creer les liens vers les cers/cles
-echo "Creation liens pour WEB_CERT=$WEB_CERT et WEB_KEY=$WEB_KEY."
-ln -s /run/secrets/$WEB_CERT $APP_BUNDLE_DIR/cert.pem
-ln -s /run/secrets/$WEB_KEY $APP_BUNDLE_DIR/key.pem
+# echo "Creation liens pour WEB_CERT=$WEB_CERT et WEB_KEY=$WEB_KEY."
+# ln -s /run/secrets/$WEB_CERT $APP_BUNDLE_DIR/cert.pem
+# ln -s /run/secrets/$WEB_KEY $APP_BUNDLE_DIR/key.pem
 
-echo "Liste secrets"
-ls -l /run/secrets
-
-echo "Certificat utilise"
-cat $APP_BUNDLE_DIR/cert.pem
+# echo "Certificat utilise"
+# cat $APP_BUNDLE_DIR/cert.pem
 
 # Effectuer substitution des variables d'Environnement
 # if [ -z $NGINX_NOOVERRIDE_CONF ]; then
@@ -53,7 +50,6 @@ fi
 
 echo Creation lien vers $NGINX_CONFIG_FILE sous /etc/nginx/conf.d
 ln -s $CONFIG_EFFECTIVE /etc/nginx/conf.d/$NGINX_CONFIG_FILE
-
 
 echo "Demarrage de nginx avec configuration $NGINX_CONFIG_FILE"
 nginx -g "daemon off;"
