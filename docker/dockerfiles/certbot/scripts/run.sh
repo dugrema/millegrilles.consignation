@@ -19,7 +19,7 @@ else
   CERT_COMMAND="certonly --agree-tos -m $EMAIL_ADDRESS --work-dir /opt/certbot $SITES"
 fi
 
-COMMAND="certbot $CERT_COMMAND -n --webroot -w /opt/certbot/webroot --staple-ocsp --post-hook /opt/certbot/run_certbot_uploader.sh"
+COMMAND="certbot $CERT_COMMAND -n --webroot -w /opt/certbot/webroot --staple-ocsp --deploy-hook /opt/certbot/run_certbot_uploader.sh"
 
 # Executer la commande
 $COMMAND
