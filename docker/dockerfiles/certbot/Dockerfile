@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM registry.maple.mdugre.info:5000/mg_certbot:0.39_0
 MAINTAINER Mathieu Dugre <mail@mdugre.info>
 
 ENV APP_SOURCE_DIR=/opt/certbot/src \
