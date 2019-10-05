@@ -20,4 +20,9 @@ echo "Suppression du folder $APP_SOURCE_DIR"
 apt update
 apt install certbot -y
 
+# Fix pymongo, erreur cannot import abc (issue #305)
+pip3 uninstall -y bson
+pip3 uninstall -y pymongo
+pip3 install pymongo
+
 echo "Setup termine"
