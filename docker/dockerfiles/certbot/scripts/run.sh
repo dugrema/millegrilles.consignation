@@ -7,7 +7,7 @@ LETSENCRYPT_ETC=/etc/letsencrypt
 # $EMAIL_ADDRESS=...
 
 # Verifier si le repertoire /etc/letsencrypt contient deja une configuration
-if [ -d $LETSENCRYPT_ETC/accounts ]; then
+if [ -d $LETSENCRYPT_ETC/live ]; then
   echo "Verification de renouvellement de certificat"
   CERT_COMMAND='renew'
 else
