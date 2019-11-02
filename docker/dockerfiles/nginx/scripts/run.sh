@@ -1,34 +1,8 @@
 #!/bin/bash
 
-SECRET=/run/secrets
 NGINX=/usr/sbin/nginx
 CONF=/etc/nginx/conf.d
-REPLACE_VARS='${NOM_MILLEGRILLE},${WEB_CERT},${WEB_KEY},${WEB_URL},${WEB_COUPDOEIL},${LOCAL_CERT},${LOCAL_KEY},${LOCAL_URL},${LOCAL_COUPDOEIL},'
-
-if [[ ! -d $SECRET ]]; then
-  echo "Folder secret n'existe pas, on installe les certificats de test"
-  mkdir -p $SECRET
-  cp $APP_BUNDLE_DIR/dummy_certs/* $SECRET
-fi
-
-# Creer les liens vers les cers/cles
-# echo "Creation liens pour WEB_CERT=$WEB_CERT et WEB_KEY=$WEB_KEY."
-# ln -s /run/secrets/$WEB_CERT $APP_BUNDLE_DIR/cert.pem
-# ln -s /run/secrets/$WEB_KEY $APP_BUNDLE_DIR/key.pem
-
-# echo "Certificat utilise"
-# cat $APP_BUNDLE_DIR/cert.pem
-
-# Effectuer substitution des variables d'Environnement
-# if [ -z $NGINX_NOOVERRIDE_CONF ]; then
-#   if [ -z $NGINX_CONFIG_FILE ]; then
-#     echo "Utilisation fichier configuration bundle default.conf"
-#     envsubst $REPLACE_VARS < $APP_BUNDLE_DIR/sites-available/default.conf > $CONF/default.conf
-#   else
-#     echo "Utilisation fichier configuration dans bundle: $NGINX_CONFIG_FILE"
-#     envsubst $REPLACE_VARS < $APP_BUNDLE_DIR/sites-available/$NGINX_CONFIG_FILE > $CONF/default.conf
-#   fi
-# fi
+REPLACE_VARS='${WEB_CERT},${WEB_KEY},${WEB_URL},${WEB_COUPDOEIL},${LOCAL_CERT},${LOCAL_KEY},${LOCAL_COUPDOEIL},'
 
 if [ -z $NGINX_CONFIG_FILE ]; then
   NGINX_CONFIG_FILE=default.conf
