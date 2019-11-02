@@ -1,16 +1,13 @@
 #!/usr/bin/env bash
 
-# echo "Executer la preparation de definitions.json"
+REP_CERTS=$APP_BUNDLE_FOLDER/certs
+REP_KEYS=$APP_BUNDLE_FOLDER/keys
 
-# cd $APP_BUNDLE_FOLDER
-# $APP_BUNDLE_FOLDER/update_definitions.sh > $APP_BUNDLE_FOLDER/definitions_tmp.json
-# if [ $? -eq 0 ]; then
-#   echo "Application du fichier de configuration modifie definitions.json"
-#   mv $APP_BUNDLE_FOLDER/definitions.json $APP_BUNDLE_FOLDER/definitions.json.original
-#   mv $APP_BUNDLE_FOLDER/definitions_tmp.json $APP_BUNDLE_FOLDER/definitions.json
-# else
-#   echo "Erreur preparation definitions.json, utilisation du fichier par defaut."
-# fi
+if [ ! -z $MG_CA ]; then ln -sf $MG_CA $REP_CERTS/calist.cert.pem; fi
+if [ ! -z $MG_CERT ]; then ln -sf $MG_CERT $REP_CERTS/cert.pem; fi
+if [ ! -z $WEB_CERT ]; then ln -sf $WEB_CERT $REP_CERTS/webcert.pem; fi
+if [ ! -z $MG_KEY ]; then ln -sf $MG_KEY $REP_KEYS/key.pem; fi
+if [ ! -z $WEB_KEY ]; then ln -sf $WEB_KEY $REP_KEYS/webkey.pem; fi
 
 cd /
 
