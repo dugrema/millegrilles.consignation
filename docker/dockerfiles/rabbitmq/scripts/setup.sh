@@ -11,8 +11,8 @@ echo "Plugins ajoutes"
 echo "Copier la configuration des usagers"
 mkdir -p $APP_BUNDLE_FOLDER
 cp $APP_SOURCE_FOLDER/config/rabbitmq.config /etc/rabbitmq
+cp -r $APP_SOURCE_FOLDER/config $APP_BUNDLE_FOLDER
 cp $APP_SOURCE_FOLDER/config/definitions.json $APP_BUNDLE_FOLDER
-# cp $APP_SOURCE_FOLDER/config/definitions_template.json $APP_BUNDLE_FOLDER
 
 cp $APP_SOURCE_FOLDER/scripts/run.sh /usr/local/sbin
 cp $APP_SOURCE_FOLDER/scripts/import_users.sh $APP_BUNDLE_FOLDER
@@ -21,18 +21,6 @@ cp $APP_SOURCE_FOLDER/scripts/update_definitions.sh $APP_BUNDLE_FOLDER
 
 # Preparer repertoires pour certs et keys
 mkdir -p $APP_BUNDLE_FOLDER/certs $APP_BUNDLE_FOLDER/keys
-
-# Installer setcap pour permettre de demarrer sur port 443 sans privileges root
-# apt-get update
-# apt-get install -y --no-install-recommends libcap2-bin
-# apt-get autoclean
-# rm -rf /var/lib/apt/lists/*
-
-# RABBITMQ_SERVER_FILE=/usr/lib/rabbitmq/lib/rabbitmq_server-3.7.8/sbin/rabbitmq-server
-# ERTS_FOLDER=/usr/lib/erlang/erts-9.3.3.3
-# setcap 'cap_net_bind_service=+ep' $RABBITMQ_SERVER_FILE
-# setcap 'cap_net_bind_service=+ep' $ERTS_FOLDER/bin/epmd
-# setcap 'cap_net_bind_service=+ep' $ERTS_FOLDER/bin/beam.smp
 
 # Cleanup, supprimer le repertoire src/
 cd /

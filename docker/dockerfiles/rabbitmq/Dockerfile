@@ -13,5 +13,6 @@ RUN $APP_SOURCE_FOLDER/scripts/setup.sh
 VOLUME /opt/rabbitmq/conf
 
 EXPOSE 5673
+EXPOSE 8443
 
 CMD run.sh

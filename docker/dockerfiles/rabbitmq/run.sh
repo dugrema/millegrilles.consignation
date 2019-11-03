@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 REPO=registry.maple.mdugre.info:5000
-VERSION=3.8-management_0
+VERSION=3.8-management_1
 
 docker run \
   --mount type=bind,source=/home/mathieu/tmp/mq/certs,target=/opt/rabbitmq/dist/certs \

@@ -9,6 +9,12 @@ if [ ! -z $WEB_CERT ]; then ln -sf $WEB_CERT $REP_CERTS/webcert.pem; fi
 if [ ! -z $MG_KEY ]; then ln -sf $MG_KEY $REP_KEYS/key.pem; fi
 if [ ! -z $WEB_KEY ]; then ln -sf $WEB_KEY $REP_KEYS/webkey.pem; fi
 
+# Verification de quel fichier de configuration on utilise
+if [ ! -z $CONFIG_FILE ]; then
+  echo "[INFO] Remplacement du fichier rabbitmq.config par $CONFIG_FILE"
+  cp $CONFIG_FILE /etc/rabbitmq/rabbitmq.config
+fi
+
 cd /
 
 echo "Demarrage script de traitement des usagers"
