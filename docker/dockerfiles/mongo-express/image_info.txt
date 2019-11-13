@@ -1,7 +1,7 @@
 REPO=docker.maceroc.com
 NAME=mg_mongo_express
 BRANCH=0.49
-BUILD=4
+BUILD=5
 ARCH_SUPPORTEES=( x86_64 aarch64 )
 
 VERSION=${BRANCH}_${BUILD}
