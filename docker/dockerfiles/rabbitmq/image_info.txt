@@ -1,5 +1,5 @@
 REPO=registry.maple.mdugre.info:5000
-GITHUB_REPO=dugremat
+DOCKERHUB_REPO=dugremat
 NAME=mg_rabbitmq
 BRANCH=3.8-management
 BUILD=1
