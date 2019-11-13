@@ -1,4 +1,5 @@
 REPO=docker.maceroc.com
+DOCKERHUB_REPO=dugremat
 NAME=mg_mongo_express
 BRANCH=0.49
 BUILD=5
