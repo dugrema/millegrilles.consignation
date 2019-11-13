@@ -1,6 +1,0 @@
-REPO=registry.maple.mdugre.info:5000
-NAME=meteor_md
-BRANCH=v1.8
-BUILD=2.03
-
-VERSION=$BRANCH.$BUILD
