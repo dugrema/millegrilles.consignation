@@ -17,8 +17,5 @@ fi
 
 cd /
 
-echo "Demarrage script de traitement des usagers"
-/opt/rabbitmq/dist/monitor_user_operations.sh &
-
 echo "Demarrage rabbitmq-server"
 docker-entrypoint.sh rabbitmq-server

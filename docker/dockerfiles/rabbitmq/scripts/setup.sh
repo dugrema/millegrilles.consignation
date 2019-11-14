@@ -12,12 +12,10 @@ echo "Copier la configuration des usagers"
 mkdir -p $APP_BUNDLE_FOLDER
 cp $APP_SOURCE_FOLDER/config/rabbitmq.config /etc/rabbitmq
 cp -r $APP_SOURCE_FOLDER/config $APP_BUNDLE_FOLDER
-cp $APP_SOURCE_FOLDER/config/definitions.json $APP_BUNDLE_FOLDER
+# cp $APP_SOURCE_FOLDER/config/definitions.json $APP_BUNDLE_FOLDER
 
 cp $APP_SOURCE_FOLDER/scripts/run.sh /usr/local/sbin
-cp $APP_SOURCE_FOLDER/scripts/import_users.sh $APP_BUNDLE_FOLDER
-cp $APP_SOURCE_FOLDER/scripts/monitor_user_operations.sh $APP_BUNDLE_FOLDER
-cp $APP_SOURCE_FOLDER/scripts/update_definitions.sh $APP_BUNDLE_FOLDER
+# cp $APP_SOURCE_FOLDER/scripts/update_definitions.sh $APP_BUNDLE_FOLDER
 
 # Preparer repertoires pour certs et keys
 mkdir -p $APP_BUNDLE_FOLDER/certs $APP_BUNDLE_FOLDER/keys
