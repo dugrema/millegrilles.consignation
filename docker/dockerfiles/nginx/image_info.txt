@@ -1,5 +1,5 @@
 REPO=docker.maceroc.com
-GITHUB_REPO=dugremat
+DOCKERHUB_REPO=dugremat
 NAME=mg_nginx
 BRANCH=1.17
 BUILD=7
