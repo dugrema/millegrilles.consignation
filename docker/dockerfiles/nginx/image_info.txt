@@ -1,4 +1,4 @@
-REPO=registry.maple.mdugre.info:5000
+REPO=docker.maceroc.com
 GITHUB_REPO=dugremat
 NAME=mg_nginx
 BRANCH=1.17
