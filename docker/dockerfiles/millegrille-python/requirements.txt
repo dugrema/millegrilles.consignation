@@ -2,13 +2,13 @@ certifi
 pika==0.12
 pytz==2018.7
 feedparser==5.2.1
-cryptography
-miniupnpc==2.0.2
+cryptography==2.7
 urllib3==1.25.3
+torf>=2.1.0
+psutil
 
-mongo==0.2
-pymongo==3.7.1
-bson==0.5.7
+pymongo>=3.7.1,<4.0
+bson>=0.5.7,<0.6
 
 lxml>=4.3,<5.0
 cssutils>=1.0,<2.0
