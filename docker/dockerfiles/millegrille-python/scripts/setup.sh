@@ -14,6 +14,13 @@ if [ ! -f $REQ_FILE ]; then
     exit 1
 fi
 
+echo "Installation de lxml via package"
+apt update
+apt install -y python3-lxml
+apt autoclean
+rm -rf /var/cache/apt/*
+
+
 echo "Installer dependances Python avec pip: fichier $REQ_FILE"
 # http_proxy=http://192.168.1.28:8000 pip3 install --no-cache-dir -r $REQ_FILE
 pip3 install --no-cache-dir -r $REQ_FILE
