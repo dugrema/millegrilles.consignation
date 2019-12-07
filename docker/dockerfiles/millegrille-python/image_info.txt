@@ -3,7 +3,7 @@
 REPO=docker.maceroc.com
 NAME=millegrilles_consignation_python
 BRANCH=1.16
-BUILD=0
+BUILD=2
 
 ARCH_SUPPORTEES=( x86_64 armv7l aarch64 )
 
