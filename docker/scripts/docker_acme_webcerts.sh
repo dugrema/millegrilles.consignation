@@ -19,6 +19,6 @@ cat $CLE_FILE | docker secret create $CLE -
 FULLCHAIN=$NOM_MILLEGRILLE.pki.millegrilles.web.fullchain.$DATE
 FULLCHAIN_FILE=~/.acme.sh/$ACME_CERT_FOLDER/$WEB_DOMAIN/fullchain.cer
 echo "Creation cle $FULLCHAIN a partir de $FULLCHAIN_FILE"
-cat $FULLCHAIN_FILE | docker secret create $FULLCHAIN -
+cat $FULLCHAIN_FILE | docker config create $FULLCHAIN -
 
 echo "Certificats ajoutes a docker pour $PREFIX_CLE date $DATE"
