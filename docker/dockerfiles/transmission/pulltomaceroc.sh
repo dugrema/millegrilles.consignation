@@ -1,5 +1,5 @@
 #!/bin/bash
-
-docker pull linuxserver/transmission:2.94-r2-ls41
-docker tag linuxserver/transmission:2.94-r2-ls41 docker.maceroc.com/transmission:2.94-r2-ls41
-docker push docker.maceroc.com/transmission:2.94-r2-ls41
+source image_info.txt
+docker pull linuxserver/transmission:$BRANCH
+docker tag linuxserver/transmission:$BRANCH docker.maceroc.com/transmission:$BRANCH
+docker push docker.maceroc.com/transmission:$BRANCH
