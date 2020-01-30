@@ -1,5 +1,11 @@
 #!/bin/bash
 source image_info.txt
+ARCH=`uname -m`
+
 docker pull linuxserver/transmission:$BRANCH
-docker tag linuxserver/transmission:$BRANCH docker.maceroc.com/transmission:$BRANCH
-docker push docker.maceroc.com/transmission:$BRANCH
+
+IMAGE_LOCALE=docker.maceroc.com/transmission:${ARCH}_${BRANCH}
+echo "Preparation $IMAGE_LOCALE"
+
+docker tag linuxserver/transmission:$BRANCH $IMAGE_LOCALE
+docker push $IMAGE_LOCALE
