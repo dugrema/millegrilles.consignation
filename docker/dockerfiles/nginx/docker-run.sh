@@ -19,7 +19,7 @@ VERSION=x86_64_1.18_0
 #   -v /home/mathieu/mgdev/certs:/certs \
 #   $REPO/$NAME:$VERSION
 
-docker run --rm \
+docker run --rm -it \
   --network host \
   -v $CONF_FOLDER:/etc/nginx/conf.d \
   -v /home/mathieu/mgdev/certs:/certs \
