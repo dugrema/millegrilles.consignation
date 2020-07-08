@@ -9,6 +9,6 @@ fi
 cp image_info.txt docker-blynk
 
 cd docker-blynk
-docker-build
+docker-build.sh
 
 exit 1
