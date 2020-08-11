@@ -1,11 +1,11 @@
 #!/bin/bash
 
 echo "Executer l'ajout de plugins pour RabbitMQ"
-rabbitmq-plugins enable --offline rabbitmq_shovel
-rabbitmq-plugins enable --offline rabbitmq_shovel_management
+# rabbitmq-plugins enable --offline rabbitmq_shovel
+# rabbitmq-plugins enable --offline rabbitmq_shovel_management
 rabbitmq-plugins enable --offline rabbitmq_auth_mechanism_ssl
-rabbitmq-plugins enable --offline rabbitmq_federation
-rabbitmq-plugins enable --offline rabbitmq_federation_management
+# rabbitmq-plugins enable --offline rabbitmq_federation
+# rabbitmq-plugins enable --offline rabbitmq_federation_management
 echo "Plugins ajoutes"
 
 echo "Copier la configuration des usagers"
