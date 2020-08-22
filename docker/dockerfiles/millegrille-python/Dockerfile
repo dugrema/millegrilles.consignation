@@ -1,7 +1,7 @@
 # Image pour scripts python millegrilles.
 # Note: les fichiers doivent avoir ete copies dans le repertoire courant sous src/
 
-FROM python:3.7
+FROM python:3.8
 
 ENV BUILD_FOLDER=/opt/millegrilles/build \
     BUNDLE_FOLDER=/opt/millegrilles/dist \
