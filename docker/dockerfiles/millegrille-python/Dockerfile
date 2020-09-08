@@ -6,10 +6,7 @@ FROM python:3.8
 ENV BUILD_FOLDER=/opt/millegrilles/build \
     BUNDLE_FOLDER=/opt/millegrilles/dist \
     PYTHONPATH=/opt/millegrilles/dist \
-    MG_MQ_HOST=mq \
-    MG_MONGO_HOST=mongo \
-    MG_DOMAINES_JSON=$BUNDLE_FOLDER/domaines.json \
-    MG_CERTS_FOLDER=/opt/millegrilles/etc
+    MG_DOMAINES_JSON=$BUNDLE_FOLDER/domaines.json
 
 COPY certs/ $MG_CERTS_FOLDER
 COPY scripts/ $BUILD_FOLDER/scripts
