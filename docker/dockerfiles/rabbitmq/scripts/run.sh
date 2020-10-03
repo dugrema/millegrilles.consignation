@@ -23,6 +23,10 @@ if [ ! -z $CONFIG_FILE ]; then
   cp $CONFIG_FILE /etc/rabbitmq/rabbitmq.config
 fi
 
+echo "Fichier configuration"
+cat /etc/rabbitmq/rabbitmq.config
+echo "---------------------"
+
 cd /
 
 echo "Demarrage rabbitmq-server"
