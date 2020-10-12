@@ -1,6 +1,6 @@
 # Fichier d'information pour le build Docker
 
-REPO=docker.maceroc.com:5000
+REPO=docker.maceroc.com
 NAME=millegrilles_consignation_python
 BRANCH=1.33
 BUILD=0
