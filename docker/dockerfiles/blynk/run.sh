@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-REPO=registry.maple.mdugre.info:5000
+REPO=registry.maceroc.com:5000
 VERSION=3.8-management_1
 
 docker run \
