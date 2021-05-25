@@ -1,0 +1,8 @@
+REPO=docker.maceroc.com
+DOCKERHUB_REPO=dugremat
+NAME=mg_backup_rsync
+BRANCH=0
+BUILD=0
+ARCH_SUPPORTEES=( x86_64 armvl7 aarch64 )
+
+VERSION=${BRANCH}_${BUILD}
