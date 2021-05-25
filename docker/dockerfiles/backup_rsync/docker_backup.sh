@@ -15,6 +15,7 @@ docker run --rm \
        -v $SRC:/backup \
        --env SRC=/backup \
        --env DEST=$DEST \
+       --network host \
        docker.maceroc.com/mg_backup_rsync:x86_64_0_0 \
        run.sh
 
