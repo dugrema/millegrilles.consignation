@@ -1,6 +1,7 @@
-.cert
-.pem
-.srl
-.csr
-.key
-.txt
+*.cert
+*.pem
+*.srl
+*.csr
+*.key
+*.txt
+*.p12

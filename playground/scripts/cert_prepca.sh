@@ -2,6 +2,7 @@
 
 echo "Preparer la cle"
 openssl genpkey -algorithm ED25519 > ca.key
+# openssl genpkey -algorithm rsa > ca.key
 
 echo "Generer CSR"
 openssl req -new -out ca.csr -key ca.key -config openssl-25519-ca.cnf

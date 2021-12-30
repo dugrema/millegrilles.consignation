@@ -1,6 +1,7 @@
 [v3_cert]
 basicConstraints = CA:FALSE
 keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth,clientAuth
 subjectAltName = @alt_names
 subjectKeyIdentifier=hash
 authorityKeyIdentifier=keyid,issuer
@@ -8,6 +9,10 @@ authorityKeyIdentifier=keyid,issuer
 [alt_names]
 IP.1 = 127.0.0.1
 IP.2 = ::1
+IP.3 = 192.168.1.141
 DNS.1 = amd8.pivoine.maceroc.com
 DNS.2 = mongo
 DNS.3 = localhost
+DNS.4 = amd8
+DNS.5 = mq
+

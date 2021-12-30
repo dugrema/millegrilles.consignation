@@ -9,4 +9,4 @@ IP.2 = ::1
 DNS.1 = amd8.pivoine.maceroc.com
 DNS.2 = localhost
 DNS.3 = mq
-
+DNS.4 = amd8
