@@ -1,0 +1,5 @@
+[v3_cert]
+basicConstraints       = critical, CA:true
+subjectKeyIdentifier   = hash
+authorityKeyIdentifier = keyid,issuer
+keyUsage               = critical, keyCertSign, cRLSign, digitalSignature, keyEncipherment

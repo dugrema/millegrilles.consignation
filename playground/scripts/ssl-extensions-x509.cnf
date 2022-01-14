@@ -4,15 +4,15 @@ keyUsage = digitalSignature, keyEncipherment
 extendedKeyUsage = serverAuth,clientAuth
 subjectAltName = @alt_names
 subjectKeyIdentifier=hash
-authorityKeyIdentifier=keyid,issuer
+authorityKeyIdentifier=keyid
 
 [alt_names]
 IP.1 = 127.0.0.1
 IP.2 = ::1
-IP.3 = 192.168.1.141
-DNS.1 = amd8.pivoine.maceroc.com
+IP.3 = 192.168.2.195
+DNS.1 = mg-dev5.maple.maceroc.com
 DNS.2 = mongo
 DNS.3 = localhost
-DNS.4 = amd8
+DNS.4 = mg-dev5
 DNS.5 = mq
 

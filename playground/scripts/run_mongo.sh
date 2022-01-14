@@ -5,6 +5,7 @@ CERT="${VOL_CERTS}/mongo.cert"
 KEY="${VOL_CERTS}/mongo.key"
 
 IMG=mongo:4.4
+IP_ADDR=192.168.2.195
 
 export MONGO_INITDB_ROOT_USERNAME=admin
 # export MONGO_INITDB_ROOT_PASSWORD_FILE=/certs/mongo.passwd.txt
@@ -15,7 +16,7 @@ cat mongo.key mongo.cert ca.cert > mongo.key_cert.pem
 docker run --rm -it \
   --hostname mongo \
   -v "${VOL_CERTS}:/certs:rw" \
-  -p 192.168.1.141:27017:27017 \
+  -p ${IP_ADDR}:27017:27017 \
   -e MONGO_INITDB_ROOT_USERNAME -e MONGO_INITDB_ROOT_PASSWORD \
   "${IMG}" bash
 
