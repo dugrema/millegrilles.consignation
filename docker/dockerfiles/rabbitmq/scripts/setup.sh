@@ -14,7 +14,7 @@ cp $APP_SOURCE_FOLDER/config/rabbitmq.config /etc/rabbitmq
 cp -r $APP_SOURCE_FOLDER/config $APP_BUNDLE_FOLDER
 # cp $APP_SOURCE_FOLDER/config/definitions.json $APP_BUNDLE_FOLDER
 
-cp $APP_SOURCE_FOLDER/scripts/run.sh /usr/local/sbin
+cp $APP_SOURCE_FOLDER/scripts/run.sh /usr/local/bin
 # cp $APP_SOURCE_FOLDER/scripts/update_definitions.sh $APP_BUNDLE_FOLDER
 
 # Preparer repertoires pour certs et keys
@@ -22,5 +22,5 @@ mkdir -p $APP_BUNDLE_FOLDER/certs $APP_BUNDLE_FOLDER/keys
 
 # Cleanup, supprimer le repertoire src/
 cd /
-rm -rf $APP_SOURCE_FOLDER
-ln -s /usr/local/sbin/run.sh
+# rm -rf $APP_SOURCE_FOLDER
+ln -s /usr/local/bin/run.sh

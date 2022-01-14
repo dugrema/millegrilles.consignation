@@ -16,4 +16,5 @@ VOLUME /opt/rabbitmq/conf
 EXPOSE 5673
 EXPOSE 8443
 
-CMD run.sh
+CMD /run.sh
+# CMD /usr/local/bin/docker-entrypoint.sh

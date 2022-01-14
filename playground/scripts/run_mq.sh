@@ -4,9 +4,10 @@ VOL_CERTS="/home/mathieu/git/millegrilles.consignation/playground/scripts"
 CERT="${VOL_CERTS}/mq.cert"
 KEY="${VOL_CERTS}/mq.key"
 
-IMG=rabbitmq:3.9.11-management-alpine
+#IMG=rabbitmq:3.9.11-management-alpine
+IMG=docker.maceroc.com/mg_rabbitmq:x86_64_3.9-management_0
 
-ADDR_IP=192.168.2.195
+ADDR_IP=192.168.2.196
 
 cat "${CERT}" "${VOL_CERTS}/ca.cert" > mq.chain.pem
 
