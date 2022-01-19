@@ -1,4 +1,4 @@
-FROM mongo-express:0.49
+FROM mongo-express:0.54
 
 ENV SRC_FOLDER=/opt/mongo-express/src \
     BUNDLE_FOLDER=/opt/mongo-express/dist \
