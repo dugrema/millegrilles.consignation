@@ -1,0 +1,13 @@
+#!/bin/bash
+# Loop, because it is possible to push more than one branch at a time. (git push --all)
+set -e
+while read oldrev newrev refname
+do
+    export DEPLOY_BRANCH=$(git rev-parse --symbolic --abbrev-ref $refname)
+    echo "githook: Pushing $refname (branch $DEPLOY_BRANCH)"
+    git push --all
+done
+
+echo
+echo "githook: $(date): github push complete" 
+exit 0
