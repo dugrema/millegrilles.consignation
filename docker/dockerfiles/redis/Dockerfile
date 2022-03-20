@@ -1,5 +1,10 @@
 FROM redis:6.2
 
-COPY redis.conf /usr/local/etc
+COPY redis.conf /usr/local/etc/
+COPY creer_acl.sh start.sh /usr/local/bin/
 
-CMD ["redis-server", "/usr/local/etc/redis.conf"]
+RUN mkdir /home/redis && \
+    chown redis:1000 /home/redis && \
+    chmod 700 /home/redis
+
+CMD ["start.sh"]
