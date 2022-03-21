@@ -22,3 +22,7 @@ docker service create \
   -p 1445:1445 \
   --network millegrille_net \
   nginx
+
+echo Passwords
+echo "MQ"; cat /var/opt/millegrilles/secrets/passwd.mq.txt; echo
+echo "Mongo XP"; cat /var/opt/millegrilles/secrets/passwd.mongoxpweb.txt; echo
