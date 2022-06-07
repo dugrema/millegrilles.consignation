@@ -24,5 +24,5 @@ docker service create \
   nginx
 
 echo Passwords
-echo "MQ"; cat /var/opt/millegrilles/secrets/passwd.mq.txt; echo
-echo "Mongo XP"; cat /var/opt/millegrilles/secrets/passwd.mongoxpweb.txt; echo
+echo "MQ"; cat /var/opt/millegrilles/secrets/passwd.mqadmin.txt; echo
+echo "Mongo XP"; cat /var/opt/millegrilles/secrets/passwd.mongoexpress.txt; echo
