@@ -1,5 +1,5 @@
 # Source : https://hub.docker.com/r/neilpang/acme.sh/dockerfile
-FROM alpine:3.12
+FROM alpine:3.16
 
 RUN apk update -f \
   && apk --no-cache add -f \
