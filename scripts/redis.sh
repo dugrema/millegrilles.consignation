@@ -1,5 +1,5 @@
-CONTAINER=6d3c0258b548
-#CONTAINER=`docker container ls --filter name=redis -q`
+#CONTAINER=6d3c0258b548
+CONTAINER=`docker container ls --filter name="^redis\." -q`
 #PATH_PASSWD=/var/opt/millegrilles/secrets/passwd.redis.20220518115418
 PATH_PASSWD=/var/opt/millegrilles/secrets/passwd.redis.txt
 
