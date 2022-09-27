@@ -1,7 +1,7 @@
 REPO=docker.maceroc.com
 DOCKERHUB_REPO=dugremat
 NAME=mg_rabbitmq
-BRANCH=3.9-management
+BRANCH=3.11-management
 BUILD=1
 ARCH_SUPPORTEES=( x86_64 aarch64 )
 
