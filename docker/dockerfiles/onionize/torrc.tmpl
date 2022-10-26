@@ -2,6 +2,11 @@ User tor
 DataDirectory /var/lib/tor
 SocksPort 0.0.0.0:9050
 
+SocksPolicy accept 127.0.0.0/8
+SocksPolicy accept 10.0.0.0/8
+SocksPolicy accept 172.16.0.0/12
+SocksPolicy reject *
+
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
 
 {{ range $name, $containers := groupByMulti $ "Env.ONIONSERVICE_NAME" "," }}
