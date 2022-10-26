@@ -1,3 +1,0 @@
-User tor
-SocksPort 9050
-DataDirectory /var/lib/tor
