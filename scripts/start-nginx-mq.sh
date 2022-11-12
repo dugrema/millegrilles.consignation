@@ -20,10 +20,11 @@ docker service create \
   --mount "type=bind,source=${CONF},destination=/etc/nginx/conf.d/nginx-mq.conf,ro=true" \
   --mount "type=bind,source=${CERTS},destination=/certs,ro=true" \
   --mount "type=bind,source=${CONFIG},destination=/config,ro=true" \
-  -p 1443:1443 \
-  -p 1444:1444 \
-  -p 1445:1445 \
+  --publish published=1443,target=1443,mode=host \
+  --publish published=1444,target=1444,mode=host \
+  --publish published=1445,target=1445,mode=host \
   --network millegrille_net \
+  --network bridge \
   nginx
 
 echo Passwords
