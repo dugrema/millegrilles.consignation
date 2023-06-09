@@ -79,8 +79,16 @@ function getConnectionStringFromEnvVariables() {
     username: getFileEnv(adminUsername) || getFileEnv(dbAuthUsername) || mongo.username,
     password: getFileEnv(adminPassword) || getFileEnv(dbAuthPassword) || mongo.password,
   };
-  const login = infos.username ? `${infos.username}:${infos.password}@` : '';
-  return `mongodb://${login}${infos.server}:${infos.port}/${infos.dbName}`;
+  // const login = infos.username ? `${infos.username}:${infos.password}@` : '';
+  // return `mongodb://${login}${infos.server}:${infos.port}/${infos.dbName}`;
+  
+  const serverUrl = new URL(`mongodb://${infos.server}`)
+  serverUrl.port = infos.port
+  serverUrl.pathname = infos.dbName
+  if(infos.username) serverUrl.username = infos.username
+  if(infos.password) serverUrl.password = infos.password
+
+  return serverUrl.href
 }
 
 const sslCA = 'ME_CONFIG_MONGODB_CA_FILE';
