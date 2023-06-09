@@ -1,4 +1,4 @@
-FROM redis:6.2
+FROM redis:7.0
 
 COPY redis.conf /usr/local/etc/
 COPY creer_acl.sh start.sh connect.sh /usr/local/bin/
