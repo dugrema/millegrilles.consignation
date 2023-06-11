@@ -1,5 +1,5 @@
-REPO=docker.maceroc.com
-DOCKERHUB_REPO=dugremat
+REPO=docker.maple.maceroc.com:5000
+#DOCKERHUB_REPO=dugremat
 NAME=mg_acme
 BRANCH=3_0_5
 BUILD=0

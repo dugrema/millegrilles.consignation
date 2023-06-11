@@ -1,4 +1,4 @@
-REPO=docker.maceroc.com
+REPO=docker.maple.maceroc.com:5000
 # DOCKERHUB_REPO=dugremat
 NAME=mg_mongo_express
 BRANCH=1.0.0-alpha
