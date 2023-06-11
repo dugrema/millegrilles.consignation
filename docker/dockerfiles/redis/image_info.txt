@@ -1,5 +1,4 @@
-REPO=docker.maceroc.com
-# DOCKERHUB_REPO=dugremat
+REPO=docker.maple.maceroc.com:5000
 NAME=mg_redis
 BRANCH=7.0
 BUILD=0
