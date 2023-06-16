@@ -1,7 +1,7 @@
 REPO=docker.maple.maceroc.com:5000
 #DOCKERHUB_REPO=dugremat
-NAME=mg_rabbitmq
-BRANCH=3.12-management
+NAME=mg_solr
+BRANCH=9.2
 BUILD=0
 ARCH_SUPPORTEES=( x86_64 aarch64 )
 
