@@ -14,7 +14,7 @@ ENV SOLR_SSL_ENABLED=true \
     MG_KEY=/run/secrets/key.pem \
     MG_CERT=/run/secrets/cert.pem \
     MG_CA=/run/secrets/pki.millegrille.cert \
-    ZOOKEEPER_URL=thinkcentre1.maple.maceroc.com:9983
+    ZOOKEEPER_URL=solrzookeeper:9983
 
 COPY ./bin $MG_DIR/bin
 
