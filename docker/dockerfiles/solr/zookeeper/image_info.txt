@@ -1,0 +1,8 @@
+REPO=docker.maple.maceroc.com:5000
+#DOCKERHUB_REPO=dugremat
+NAME=mg_zookeeper
+BRANCH=3.8
+BUILD=0
+ARCH_SUPPORTEES=( x86_64 aarch64 )
+
+VERSION=${BRANCH}_${BUILD}
