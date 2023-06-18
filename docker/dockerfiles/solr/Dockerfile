@@ -15,7 +15,8 @@ ENV SOLR_SSL_ENABLED=true \
     MG_CERT=/run/secrets/cert.pem \
     MG_CA=/run/secrets/pki.millegrille.cert \
     ZOOKEEPER_URL=solrzookeeper:2181 \
-    MG_DIR=$MG_DIR_ARG
+    MG_DIR=$MG_DIR_ARG \
+    SOLR_MODULES="extraction"
 
 COPY ./bin $MG_DIR_ARG/bin
 
