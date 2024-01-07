@@ -9,6 +9,7 @@ pipeline {
     }
 
     environment {
+        NOM_APP="collections"
         VBRANCH="${params.BRANCH}"
         VBUILD="${VBRANCH}.${BUILD_NUMBER}"
         DOCKER_IMAGE="${params.DOCKER_IMAGE}"
@@ -54,11 +55,11 @@ pipeline {
 
                 npm i
                 npm run build
-                tar -zcf millegrilles.collections.tar.gz build/
+                tar -zcf reactweb.tar.gz build/
                 '''
 
-                archiveArtifacts artifacts: 'client/millegrilles.collections.tar.gz', followSymlinks: false
-                stash includes: 'client/millegrilles.collections.tar.gz', name: 'react_artifact'
+                archiveArtifacts artifacts: 'client/reactweb.tar.gz', followSymlinks: false
+                stash includes: 'client/reactweb.tar.gz', name: 'react_artifact'
             }
         }
 
@@ -74,12 +75,12 @@ pipeline {
                         # Preparer artifacts web static
                         rm -r build/ || true
                         rm -r static/ || true
-                        tar -zxf client/millegrilles.collections.tar.gz
-                        mkdir -p static/collections
-                        mv build/* static/collections
+                        tar -zxf client/reactweb.tar.gz
+                        mkdir -p static/$NOM_APP
+                        mv build/* static/$NOM_APP
 
                         # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
-                        find static/collections -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
+                        find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
                         '''
 
                         sh '''
@@ -99,12 +100,12 @@ pipeline {
                         # Preparer artifacts web static
                         rm -r build/ || true
                         rm -r static/ || true
-                        tar -zxf client/millegrilles.collections.tar.gz
-                        mkdir -p static/collections
-                        mv build/* static/collections
+                        tar -zxf client/reactweb.tar.gz
+                        mkdir -p static/$NOM_APP
+                        mv build/* static/$NOM_APP
 
                         # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
-                        find static/collections -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
+                        find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
                         '''
 
                         sh '''
