@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'x86_64' }
 
     parameters {
         string(defaultValue: '2024.0', name: 'BRANCH')
@@ -63,58 +63,54 @@ pipeline {
             }
         }
 
-        stage('docker build') {
-            parallel {
-                stage('docker build x86_64') {
-                    agent { label 'x86_64' }
-                    steps {
-                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
-                        unstash 'react_artifact'
+        stage('docker build x86_64') {
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                unstash 'react_artifact'
 
-                        sh '''
-                        # Preparer artifacts web static
-                        rm -r build/ || true
-                        rm -r static/ || true
-                        tar -zxf client/reactweb.tar.gz
-                        mkdir -p static/$NOM_APP
-                        mv build/* static/$NOM_APP
+                sh '''
+                # Preparer artifacts web static
+                rm -r build/ || true
+                rm -r static/ || true
+                tar -zxf client/reactweb.tar.gz
+                mkdir -p static/$NOM_APP
+                mv build/* static/$NOM_APP
 
-                        # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
-                        find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
-                        '''
+                # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
+                find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
+                '''
 
-                        sh '''
-                        # Creer image docker
-                        docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
-                        docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
-                        '''
-                    }
-                }
-                stage('docker build aarch64') {
-                    agent { label 'aarch64' }
-                    steps {
-                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
-                        unstash 'react_artifact'
+                sh '''
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
+                '''
+            }
+        }
 
-                        sh '''
-                        # Preparer artifacts web static
-                        rm -r build/ || true
-                        rm -r static/ || true
-                        tar -zxf client/reactweb.tar.gz
-                        mkdir -p static/$NOM_APP
-                        mv build/* static/$NOM_APP
+        stage('docker build aarch64') {
+            agent { label 'aarch64' }
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                unstash 'react_artifact'
 
-                        # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
-                        find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
-                        '''
+                sh '''
+                # Preparer artifacts web static
+                rm -r build/ || true
+                rm -r static/ || true
+                tar -zxf client/reactweb.tar.gz
+                mkdir -p static/$NOM_APP
+                mv build/* static/$NOM_APP
 
-                        sh '''
-                        # Creer image docker
-                        docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
-                        docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
-                        '''
-                    }
-                }
+                # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
+                find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
+                '''
+
+                sh '''
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
+                '''
             }
         }
 

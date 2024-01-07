@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'x86_64' }
 
     parameters {
         string(defaultValue: '2024.0', name: 'BRANCH')
@@ -15,32 +15,28 @@ pipeline {
     }
 
     stages {
-        stage('docker build') {
-            parallel {
-                stage('docker build x86_64') {
-                    agent { label 'x86_64' }
-                    steps {
-                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+        stage('docker build x86_64') {
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
 
-                        sh '''
-                        # Creer image docker
-                        docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
-                        docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
-                        '''
-                    }
-                }
-                stage('docker build aarch64') {
-                    agent { label 'aarch64' }
-                    steps {
-                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                sh '''
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
+                '''
+            }
+        }
 
-                        sh '''
-                        # Creer image docker
-                        docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
-                        docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
-                        '''
-                    }
-                }
+        stage('docker build aarch64') {
+            agent { label 'aarch64' }
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+
+                sh '''
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
+                '''
             }
         }
 
