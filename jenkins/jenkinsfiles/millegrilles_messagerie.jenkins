@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'x86_64' }
 
     parameters {
         string(defaultValue: '2024.0', name: 'BRANCH')
@@ -16,46 +16,42 @@ pipeline {
     }
 
     stages {
-        stage('docker build') {
-            parallel {
-                stage('docker build x86_64') {
-                    agent { label 'x86_64' }
-                    steps {
-                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+        stage('docker build x86_64') {
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
 
-                        sh '''
-                        # Compiler avec cargo
-                        /var/lib/jenkins/.cargo/bin/cargo b --release --package $NOM_APP --bin $NOM_APP
-                        cp "target/release/${NOM_APP}" "target/release/${NOM_APP}_x86_64"
-                        gzip -f "target/release/${NOM_APP}_x86_64"
+                sh '''
+                # Compiler avec cargo
+                /var/lib/jenkins/.cargo/bin/cargo b --release --package $NOM_APP --bin $NOM_APP
+                cp "target/release/${NOM_APP}" "target/release/${NOM_APP}_x86_64"
+                gzip -f "target/release/${NOM_APP}_x86_64"
 
-                        # Creer image docker
-                        docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
-                        docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
-                        '''
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
+                '''
 
-                        archiveArtifacts artifacts: 'target/release/millegrilles_messagerie_x86_64.gz', followSymlinks: false
-                    }
-                }
-                stage('docker build aarch64') {
-                    agent { label 'aarch64' }
-                    steps {
-                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                archiveArtifacts artifacts: 'target/release/millegrilles_messagerie_x86_64.gz', followSymlinks: false
+            }
+        }
 
-                        sh '''
-                        # Compiler avec cargo
-                        /home/jenkins/.cargo/bin/cargo b --release --package $NOM_APP --bin $NOM_APP
-                        cp "target/release/${NOM_APP}" "target/release/${NOM_APP}_aarch64"
-                        gzip -f "target/release/${NOM_APP}_aarch64"
+        stage('docker build aarch64') {
+            agent { label 'aarch64' }
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
 
-                        # Creer image docker
-                        docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
-                        docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
-                        '''
+                sh '''
+                # Compiler avec cargo
+                /home/jenkins/.cargo/bin/cargo b --release --package $NOM_APP --bin $NOM_APP
+                cp "target/release/${NOM_APP}" "target/release/${NOM_APP}_aarch64"
+                gzip -f "target/release/${NOM_APP}_aarch64"
 
-                        archiveArtifacts artifacts: 'target/release/millegrilles_messagerie_aarch64.gz', followSymlinks: false
-                    }
-                }
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
+                '''
+
+                archiveArtifacts artifacts: 'target/release/millegrilles_messagerie_aarch64.gz', followSymlinks: false
             }
         }
 
