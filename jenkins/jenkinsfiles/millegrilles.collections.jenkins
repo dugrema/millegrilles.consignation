@@ -68,8 +68,7 @@ pipeline {
                         mv build/* static/collections
 
                         # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
-                        FICHIERS_GZ=`find static/collections -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\)`
-                        # for FICHIER in "${FICHIERS_GZ[@]}"; do gzip -k "$FICHIER"; done
+                        find static/collections -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
                         '''
 
                         sh '''
@@ -96,8 +95,7 @@ pipeline {
                         mv build/* static/collections
 
                         # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
-                        FICHIERS_GZ=`find static/collections -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\)`
-                        # for FICHIER in "${FICHIERS_GZ[@]}"; do gzip -k "$FICHIER"; done
+                        find static/collections -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
                         '''
 
                         sh '''
