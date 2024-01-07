@@ -4,12 +4,12 @@ pipeline {
     parameters {
         string(defaultValue: '2024.0', name: 'BRANCH')
         string(defaultValue: '1720dd83-55b4-4255-aa54-754fe09a4408', name: 'CREDENTIALS_ID')
-        string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.collections', name: 'GIT_URL')
-        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_collections', name: 'DOCKER_IMAGE')
+        string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.coupdoeil', name: 'GIT_URL')
+        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_coupdoeil_python', name: 'DOCKER_IMAGE')
     }
 
     environment {
-        NOM_APP="collections"
+        NOM_APP="coupdoeil"
         VBRANCH="${params.BRANCH}"
         VBUILD="${VBRANCH}.${BUILD_NUMBER}"
         DOCKER_IMAGE="${params.DOCKER_IMAGE}"

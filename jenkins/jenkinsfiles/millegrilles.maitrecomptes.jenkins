@@ -4,12 +4,12 @@ pipeline {
     parameters {
         string(defaultValue: '2024.0', name: 'BRANCH')
         string(defaultValue: '1720dd83-55b4-4255-aa54-754fe09a4408', name: 'CREDENTIALS_ID')
-        string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.collections', name: 'GIT_URL')
-        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_collections', name: 'DOCKER_IMAGE')
+        string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.maitrecomptes', name: 'GIT_URL')
+        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_maitrecomptes_python', name: 'DOCKER_IMAGE')
     }
 
     environment {
-        NOM_APP="collections"
+        NOM_APP="millegrilles"
         VBRANCH="${params.BRANCH}"
         VBUILD="${VBRANCH}.${BUILD_NUMBER}"
         DOCKER_IMAGE="${params.DOCKER_IMAGE}"
@@ -122,7 +122,7 @@ pipeline {
             steps {
                 sh '''
                 export DOCKER_CLI_EXPERIMENTAL=enabled
-                #rm -r ${JENKINS_HOME}/.docker/manifests/* || true
+                #rm -r ${JENKINS_HOME}/.docker/manifests/*${NOM_APP}* || true
                 LISTE_ARCH="${DOCKER_IMAGE}:x86_64_${VBUILD} ${DOCKER_IMAGE}:aarch64_${VBUILD}"
                 docker manifest create ${DOCKER_IMAGE}:${VBUILD} $LISTE_ARCH
                 docker manifest push ${DOCKER_IMAGE}:${VBUILD}
