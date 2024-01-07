@@ -1,25 +1,35 @@
 pipeline {
     agent any
 
+    parameters {
+        string(defaultValue: '2024.0', name: 'BRANCH')
+        string(defaultValue: '1720dd83-55b4-4255-aa54-754fe09a4408', name: 'CREDENTIALS_ID')
+        string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.collections', name: 'GIT_URL')
+        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_collections', name: 'DOCKER_IMAGE')
+    }
+
+    environment {
+        VBRANCH="${params.BRANCH}"
+        VBUILD="${VBRANCH}.${BUILD_NUMBER}"
+        DOCKER_IMAGE="${params.DOCKER_IMAGE}"
+    }
+
     stages {
 
         stage('client build') {
             steps {
                 echo 'Build react'
 
-                checkout scmGit(branches: [[name: '2024.0']], extensions: [], userRemoteConfigs: [[credentialsId: '1720dd83-55b4-4255-aa54-754fe09a4408', url: 'ssh://git.maple.maceroc.com/git/millegrilles.collections']])
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
 
                 sh '''
                 # Creer manifest
-                #export VBRANCH="$(echo ${GIT_BRANCH} | awk -F/ '{print $2}')"
-                export VBRANCH=2024.0
-                export VERSION="${VBRANCH}.${BUILD_NUMBER}"
                 export DATECOURANTE=`date "+%Y-%m-%d %H:%M"`
                 export PATH_MANIFEST=client/src/manifest.build.js
 
                 echo "const build = {" > $PATH_MANIFEST
                 echo "  date: '$DATECOURANTE'," >> $PATH_MANIFEST
-                echo "  version: '$VERSION'" >> $PATH_MANIFEST
+                echo "  version: '$VBUILD'" >> $PATH_MANIFEST
                 echo "}" >> $PATH_MANIFEST
                 echo "module.exports = build;" >> $PATH_MANIFEST
 
@@ -47,6 +57,7 @@ pipeline {
                 tar -zcf millegrilles.collections.tar.gz build/
                 '''
 
+                archiveArtifacts artifacts: 'client/millegrilles.collections.tar.gz', followSymlinks: false
                 stash includes: 'client/millegrilles.collections.tar.gz', name: 'react_artifact'
             }
         }
@@ -56,7 +67,7 @@ pipeline {
                 stage('docker build x86_64') {
                     agent { label 'x86_64' }
                     steps {
-                        checkout scmGit(branches: [[name: '2024.0']], extensions: [], userRemoteConfigs: [[credentialsId: '1720dd83-55b4-4255-aa54-754fe09a4408', url: 'ssh://git.maple.maceroc.com/git/millegrilles.collections']])
+                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
                         unstash 'react_artifact'
 
                         sh '''
@@ -73,17 +84,15 @@ pipeline {
 
                         sh '''
                         # Creer image docker
-                        #VBRANCH="$(echo ${GIT_BRANCH} | awk -F/ '{print $2}')"
-                        VBRANCH=2024.0
-                        docker build -t docker.maple.maceroc.com:5000/millegrilles_collections:x86_64_${VBRANCH}.${BUILD_NUMBER} .
-                        docker push docker.maple.maceroc.com:5000/millegrilles_collections:x86_64_${VBRANCH}.${BUILD_NUMBER}
+                        docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
+                        docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
                         '''
                     }
                 }
                 stage('docker build aarch64') {
                     agent { label 'aarch64' }
                     steps {
-                        checkout scmGit(branches: [[name: '2024.0']], extensions: [], userRemoteConfigs: [[credentialsId: '1720dd83-55b4-4255-aa54-754fe09a4408', url: 'ssh://git.maple.maceroc.com/git/millegrilles.collections']])
+                        checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
                         unstash 'react_artifact'
 
                         sh '''
@@ -100,10 +109,8 @@ pipeline {
 
                         sh '''
                         # Creer image docker
-                        #VBRANCH="$(echo ${GIT_BRANCH} | awk -F/ '{print $2}')"
-                        VBRANCH=2024.0
-                        docker build -t docker.maple.maceroc.com:5000/millegrilles_collections:aarch64_${VBRANCH}.${BUILD_NUMBER} .
-                        docker push docker.maple.maceroc.com:5000/millegrilles_collections:aarch64_${VBRANCH}.${BUILD_NUMBER}
+                        docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
+                        docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
                         '''
                     }
                 }
@@ -115,11 +122,9 @@ pipeline {
                 sh '''
                 export DOCKER_CLI_EXPERIMENTAL=enabled
                 rm -r ${JENKINS_HOME}/.docker/manifests/* || true
-                #VBRANCH="$(echo ${GIT_BRANCH} | awk -F/ '{print $2}')"
-                VBRANCH=2024.0
-                LISTE_ARCH="docker.maple.maceroc.com:5000/millegrilles_collections:x86_64_${VBRANCH}.${BUILD_NUMBER} docker.maple.maceroc.com:5000/millegrilles_collections:aarch64_${VBRANCH}.${BUILD_NUMBER}"
-                docker manifest create docker.maple.maceroc.com:5000/millegrilles_collections:${VBRANCH}.${BUILD_NUMBER} $LISTE_ARCH
-                docker manifest push docker.maple.maceroc.com:5000/millegrilles_collections:${VBRANCH}.${BUILD_NUMBER}
+                LISTE_ARCH="${DOCKER_IMAGE}:x86_64_${VBUILD} ${DOCKER_IMAGE}:aarch64_${VBUILD}"
+                docker manifest create ${DOCKER_IMAGE}:${VBUILD} $LISTE_ARCH
+                docker manifest push ${DOCKER_IMAGE}:${VBUILD}
                 '''
             }
         }
