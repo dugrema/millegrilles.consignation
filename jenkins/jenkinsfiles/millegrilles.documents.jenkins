@@ -9,7 +9,7 @@ pipeline {
     }
 
     environment {
-        NOM_APP="collections"
+        NOM_APP="documents"
         VBRANCH="${params.BRANCH}"
         VBUILD="${VBRANCH}.${BUILD_NUMBER}"
         DOCKER_IMAGE="${params.DOCKER_IMAGE}"
