@@ -2,11 +2,11 @@ pipeline {
     agent { label 'x86_64' }
 
     parameters {
-        string(defaultValue: '3.0.8', name: 'TAG')
+        string(defaultValue: '9.2', name: 'TAG')
         string(defaultValue: 'master', name: 'BRANCH')
         string(defaultValue: '1720dd83-55b4-4255-aa54-754fe09a4408', name: 'CREDENTIALS_ID')
         string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.consignation', name: 'GIT_URL')
-        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_acme', name: 'DOCKER_IMAGE')
+        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_solr', name: 'DOCKER_IMAGE')
     }
 
     environment {
@@ -19,11 +19,11 @@ pipeline {
 
         stage('acme build x86_64') {
             steps {
-                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                checkout scmGit(branches: [[name: params.BRANCH]], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
 
                 sh '''
                 # Creer image docker
-                cd docker/dockerfiles/acme
+                cd docker/dockerfiles/solr
                 docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
                 docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
                 '''
@@ -37,7 +37,7 @@ pipeline {
 
                 sh '''
                 # Creer image docker
-                cd docker/dockerfiles/acme
+                cd docker/dockerfiles/solr
                 docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
                 docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
                 '''
