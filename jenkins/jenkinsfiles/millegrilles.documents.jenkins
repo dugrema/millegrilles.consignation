@@ -1,0 +1,125 @@
+pipeline {
+    agent { label 'x86_64' }
+
+    parameters {
+        string(defaultValue: '2024.0', name: 'BRANCH')
+        string(defaultValue: '1720dd83-55b4-4255-aa54-754fe09a4408', name: 'CREDENTIALS_ID')
+        string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.documents', name: 'GIT_URL')
+        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_documents_web', name: 'DOCKER_IMAGE')
+    }
+
+    environment {
+        NOM_APP="collections"
+        VBRANCH="${params.BRANCH}"
+        VBUILD="${VBRANCH}.${BUILD_NUMBER}"
+        DOCKER_IMAGE="${params.DOCKER_IMAGE}"
+    }
+
+    stages {
+
+        stage('client build') {
+            steps {
+                echo 'Build react'
+
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+
+                sh '''
+                # Creer manifest
+                export DATECOURANTE=`date "+%Y-%m-%d %H:%M"`
+                export PATH_MANIFEST=client/src/manifest.build.js
+
+                echo "const build = {" > $PATH_MANIFEST
+                echo "  date: '$DATECOURANTE'," >> $PATH_MANIFEST
+                echo "  version: '$VBUILD'" >> $PATH_MANIFEST
+                echo "}" >> $PATH_MANIFEST
+                echo "module.exports = build;" >> $PATH_MANIFEST
+
+                echo "Manifest $PATH_MANIFEST"
+                cat $PATH_MANIFEST
+                '''
+
+                sh '''
+                export NODE_OPTIONS=--openssl-legacy-provider
+                export CI=false
+
+                cd client
+
+                echo "Env ---"
+                printenv
+                echo "---"
+
+                npm i
+                npm run build
+                tar -zcf reactweb.tar.gz build/
+                '''
+
+                archiveArtifacts artifacts: 'client/reactweb.tar.gz', followSymlinks: false
+                stash includes: 'client/reactweb.tar.gz', name: 'react_artifact'
+            }
+        }
+
+        stage('docker build x86_64') {
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                unstash 'react_artifact'
+
+                sh '''
+                # Preparer artifacts web static
+                rm -r build/ || true
+                rm -r static/ || true
+                tar -zxf client/reactweb.tar.gz
+                mkdir -p static/$NOM_APP
+                mv build/* static/$NOM_APP
+
+                # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
+                find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
+                '''
+
+                sh '''
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
+                '''
+            }
+        }
+
+        stage('docker build aarch64') {
+            agent { label 'aarch64' }
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                unstash 'react_artifact'
+
+                sh '''
+                # Preparer artifacts web static
+                rm -r build/ || true
+                rm -r static/ || true
+                tar -zxf client/reactweb.tar.gz
+                mkdir -p static/$NOM_APP
+                mv build/* static/$NOM_APP
+
+                # Compresser tous les fichiers ressources en gzip (et conserver l\'original)
+                find static/$NOM_APP -type f \\( -name "*.js" -o -name "*.css" -o -name "*.map" -o -name "*.json" \\) -exec gzip -k {} \\;
+                '''
+
+                sh '''
+                # Creer image docker
+                docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
+                '''
+            }
+        }
+
+        stage('docker manifest') {
+            steps {
+                sh '''
+                export DOCKER_CLI_EXPERIMENTAL=enabled
+                #rm -r ${JENKINS_HOME}/.docker/manifests/* || true
+                LISTE_ARCH="${DOCKER_IMAGE}:x86_64_${VBUILD} ${DOCKER_IMAGE}:aarch64_${VBUILD}"
+                docker manifest create ${DOCKER_IMAGE}:${VBUILD} $LISTE_ARCH
+                docker manifest push ${DOCKER_IMAGE}:${VBUILD}
+                '''
+            }
+        }
+
+    }
+}
