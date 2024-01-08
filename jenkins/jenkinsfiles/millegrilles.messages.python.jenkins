@@ -16,6 +16,21 @@ pipeline {
     }
 
     stages {
+        stage('package build') {
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+
+                sh '''
+                rm -r dist/ || true
+                sed -i "/\\\\_VERSION__ =/c\\\\__VERSION__ = \\"${VBUILD}\\"" setup.py
+                python3 setup.py sdist
+                python3 setup.py bdist_wheel
+                '''
+
+                archiveArtifacts artifacts: 'dist/millegrilles_messages-*', followSymlinks: false
+            }
+        }
+
         stage('docker build x86_64') {
             steps {
                 checkout scmGit(branches: [[name: params.BRANCH]], extensions: [submodule(recursiveSubmodules: true, reference: '')], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
