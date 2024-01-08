@@ -38,13 +38,8 @@ pipeline {
                 cat $PATH_MANIFEST
                 '''
 
-                sh '''export NODE_OPTIONS=--openssl-legacy-provider
-                export NVM_CD_FLAGS=
-                export NVM_DIR=/var/lib/jenkins/.nvm
-                export NVM_VERSION=$NVM_DIR/versions/node/v20.10.0
-                export NVM_INC=$NVM_VERSION/include/node
-                export NVM_BIN=$NVM_VERSION/bin
-                export PATH=$NVM_BIN:$PATH
+                sh '''
+                export NODE_OPTIONS=--openssl-legacy-provider
                 export CI=false
 
                 cd client
