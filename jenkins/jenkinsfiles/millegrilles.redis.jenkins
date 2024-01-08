@@ -1,0 +1,59 @@
+pipeline {
+    agent { label 'x86_64' }
+
+    parameters {
+        string(defaultValue: '7.0', name: 'TAG')
+        string(defaultValue: 'master', name: 'BRANCH')
+        string(defaultValue: '1720dd83-55b4-4255-aa54-754fe09a4408', name: 'CREDENTIALS_ID')
+        string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.consignation', name: 'GIT_URL')
+        string(defaultValue: 'docker.maple.maceroc.com:5000/millegrilles_redis', name: 'DOCKER_IMAGE')
+    }
+
+    environment {
+        VBRANCH="${params.BRANCH}"
+        VBUILD="${params.TAG}.${VBRANCH}.${BUILD_NUMBER}"
+        DOCKER_IMAGE="${params.DOCKER_IMAGE}"
+    }
+
+    stages {
+
+        stage('nginx build x86_64') {
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+
+                sh '''
+                # Creer image docker
+                cd docker/dockerfiles/redis
+                docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:x86_64_${VBUILD}
+                '''
+            }
+        }
+
+        stage('docker build aarch64') {
+            agent { label 'aarch64' }
+            steps {
+                checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
+                sh '''
+                # Creer image docker
+                cd docker/dockerfiles/redis
+                docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
+                docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}
+                '''
+            }
+        }
+
+        stage('docker manifest') {
+            steps {
+                sh '''
+                export DOCKER_CLI_EXPERIMENTAL=enabled
+                #rm -r ${JENKINS_HOME}/.docker/manifests/* || true
+                LISTE_ARCH="${DOCKER_IMAGE}:x86_64_${VBUILD} ${DOCKER_IMAGE}:aarch64_${VBUILD}"
+                docker manifest create ${DOCKER_IMAGE}:${VBUILD} $LISTE_ARCH
+                docker manifest push ${DOCKER_IMAGE}:${VBUILD}
+                '''
+            }
+        }
+
+    }
+}
