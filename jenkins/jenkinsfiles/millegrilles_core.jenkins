@@ -22,7 +22,7 @@ pipeline {
 
                 sh '''
                 # Compiler avec cargo
-                /var/lib/jenkins/.cargo/bin/cargo b --release --package millegrilles_core --bin millegrilles_core
+                cargo b --release --package millegrilles_core --bin millegrilles_core
 
                 # Creer image docker
                 docker build -t ${DOCKER_IMAGE}:x86_64_${VBUILD} .
@@ -40,7 +40,7 @@ pipeline {
 
                 sh '''
                 # Compiler avec cargo
-                /home/jenkins/.cargo/bin/cargo b --release --package millegrilles_core --bin millegrilles_core
+                cargo b --release --package millegrilles_core --bin millegrilles_core
                 # Creer image docker
                 docker build -t ${DOCKER_IMAGE}:aarch64_${VBUILD} .
                 docker push ${DOCKER_IMAGE}:aarch64_${VBUILD}

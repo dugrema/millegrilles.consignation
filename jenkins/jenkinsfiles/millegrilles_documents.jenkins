@@ -22,7 +22,7 @@ pipeline {
 
                 sh '''
                 # Compiler avec cargo
-                /var/lib/jenkins/.cargo/bin/cargo b --release --package $NOM_APP --bin $NOM_APP
+                cargo b --release --package $NOM_APP --bin $NOM_APP
                 cp "target/release/${NOM_APP}" "target/release/${NOM_APP}_x86_64"
                 gzip -f "target/release/${NOM_APP}_x86_64"
 
@@ -42,7 +42,7 @@ pipeline {
 
                 sh '''
                 # Compiler avec cargo
-                /home/jenkins/.cargo/bin/cargo b --release --package $NOM_APP --bin $NOM_APP
+                cargo b --release --package $NOM_APP --bin $NOM_APP
                 cp "target/release/${NOM_APP}" "target/release/${NOM_APP}_aarch64"
                 gzip -f "target/release/${NOM_APP}_aarch64"
 
