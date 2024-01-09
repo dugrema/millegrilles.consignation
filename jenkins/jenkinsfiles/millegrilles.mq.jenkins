@@ -17,7 +17,7 @@ pipeline {
 
     stages {
 
-        stage('nginx build x86_64') {
+        stage('docker build x86_64') {
             steps {
                 checkout scmGit(branches: [[name: params.BRANCH]], extensions: [], userRemoteConfigs: [[credentialsId: params.CREDENTIALS_ID, url: params.GIT_URL]])
 
