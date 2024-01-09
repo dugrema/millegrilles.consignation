@@ -2,7 +2,7 @@ pipeline {
     agent { label 'x86_64' }
 
     parameters {
-        string(defaultValue: '3.12-management', name: 'TAG')
+        string(defaultValue: '3.13-management', name: 'TAG')
         string(defaultValue: 'master', name: 'BRANCH')
         string(defaultValue: '1720dd83-55b4-4255-aa54-754fe09a4408', name: 'CREDENTIALS_ID')
         string(defaultValue: 'ssh://git.maple.maceroc.com/git/millegrilles.consignation', name: 'GIT_URL')
