@@ -3,16 +3,15 @@
 x86_64
 
 1. Ubuntu LTS le plus récent, avec upgrades pour les packages sur x84_64 (debs)
-2. Packages (debs) pour l'environnement de développeemnt sur x86_64
-3. Rust
-4. NodeJS, et NodeJS headers
-5. Snaps pour les logiciels de développement
-6. Contenu du répertoire backup/offline de jenkins (sur jenkins2)
+2. Packages (debs) pour l'environnement de développement sur x86_64
+3. Logiciels de développement Rust et NodeJS
+4. Snaps pour les logiciels de développement
+5. Contenu du répertoire backup/offline de jenkins (sur jenkins2)
 
 aarch64
 
 1. RaspberryPi OS pour aarch64 le plus récent, avec upgrades pour les packages (debs)
-2. Rust
+2. Logiciels de développement Rust et NodeJS
 3. Contenu du répertoire backup/offline de jenkins (sur pi-dev7)
 
 ## Préparer les archives debs pour l'upgrade systeme
@@ -30,18 +29,17 @@ sudo mv /var/cache/apt/archives/*.deb $PATH_WORK/debs/1.upgrade
 
 # ** Desactiver la connexion reseau **
 echo "Effectuer upgrade"
-sudo dpkg -i $PATH_WORK/debs/1.upgrade/*.deb
+sudo dpkg -i --auto-deconfigure $PATH_WORK/debs/1.upgrade/*.deb
 </pre>
 
 Appliquer correctifs, downloads au besoin. Pour Ubuntu 22.04.3 LTS : 
 <pre>
 # ** Activer la connexion reseau **
-sudo apt install -d --fix-broken
+sudo apt install -dy --fix-broken
 sudo mv /var/cache/apt/archives/*.deb $PATH_WORK/debs/1.upgrade
 # ** Desactiver la connexion reseau **
 
-sudo dpkg -i $PATH_WORK/debs/1.upgrade/libpam*
-sudo dpkg -i $PATH_WORK/debs/1.upgrade/libreoffice-core*
+sudo dpkg -i --auto-deconfigure $PATH_WORK/debs/1.upgrade/libpam* $PATH_WORK/debs/1.upgrade/libreoffice-core*
 sudo apt install --fix-broken
 
 # Repeter cette etape tant qu'il reste des packages a downloader
@@ -64,7 +62,7 @@ cmake gcc-arm-none-eabi libnewlib-arm-none-eabi build-essential
 
 sudo mv /var/cache/apt/archives/*.deb $PATH_WORK/debs/2.millegrille
 
-sudo dpkg -i $PATH_WORK/debs/2.millegrille/*.deb
+sudo dpkg -i --auto-deconfigure $PATH_WORK/debs/2.millegrille/*.deb
 </pre>
 
 Redémarrer.
@@ -110,7 +108,17 @@ Aller dans la section Standalone installers. Downloader les versions stable :
 
 NodeJS : https://nodejs.org/en/download/
 
-Downooader les versions LTS suivantes : 
+Downloader les versions LTS suivantes : 
 
 * Linux Binaries x64
 * Linux Binaries ARMv8
+
+## RaspberryPi
+
+Installer la version complete de RaspberryPi OS 64 bit.
+
+Suivre les étapes de :
+
+* Préparer les archives debs pour l'upgrade systeme
+* Preparer les archives debs pour MilleGrilles
+
