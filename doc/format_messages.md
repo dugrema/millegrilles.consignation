@@ -124,12 +124,14 @@ Information de déchiffrage. Variable, peut inclure des paramètres pour algorit
 
 Champs : 
 
-* format : le format de chiffrage (e.g. mgs4 => algorithme libsodium stream xchacha20-poly1305 avec blocks de 64kb)
-* header : optionnel - header de déchiffrage (e.g. mgs4)
-* iv : optionnel - nonce de déchiffrage
-* tag : optionnel - tag de déchiffrage
-* cles : optionnel - cles en format { pubkey_1: clé chiffrée ed25519 format multibase, pubkey_2: ... }
-* cle : optionnel - cle unique chiffrée ed25519 format multibase. Utilisé pour kind:6 (réponse chiffrée).
+| Champ  | Description                                                                                              |
+|--------|----------------------------------------------------------------------------------------------------------|
+| format | le format de chiffrage (e.g. mgs4 => algorithme libsodium stream xchacha20-poly1305 avec blocks de 64kb) |
+| header | optionnel - header de déchiffrage (e.g. mgs4)                                                            |
+| iv     | optionnel - nonce de déchiffrage                                                                         |
+| tag    | optionnel - tag de déchiffrage                                                                           |
+| cles   | optionnel - cles en format { pubkey_1: clé chiffrée ed25519 format multibase, pubkey_2: ... }            |
+| cle    | optionnel - cle unique chiffrée ed25519 format multibase. Utilisé pour kind:6 (réponse chiffrée)         |
 
 ### Pre-migration
 
@@ -260,4 +262,6 @@ Exemples de traitements à éviter :
 
 Pour éviter ces situations, utiliser une commande pour effectuer le traitement et sauvegarder le résultat avec une
 ou plusieurs transactions. Une commande peut émettre des transactions vers plusieurs domaines.
+
+## Hachage et signature
 
