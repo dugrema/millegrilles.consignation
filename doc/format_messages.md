@@ -2,7 +2,7 @@
 
 ## Structure
 
-Inspire par nostr
+Inspiré par le format nostr (https://nostr.com/).
 
 Exemple de message
 
@@ -15,8 +15,8 @@ Exemple de message
   "origine: "zeYncRqEqZ6eTEmUZ8whJFuHG796eSvCTWE4M432izXrp22bAtwGm7Jf",
   "dechiffrage": {
     "format": "mgs4",
-    "header": "m6Y9EbvfEzN2FVz3sIkwQpAErewQBs4bi",
-    "hachage": "zSEfXUCRKy4K356KmLo6ETupg6h8Tc3ctvpdbpGzfytmX9WTcptULHEyhozcRm29iocKtMheYgVuxDNPe4KQnxc8k7F4U4" 
+    "hachage": "zSEfXUCRKy4K356KmLo6ETupg6h8Tc3ctvpdbpGzfytmX9WTcptULHEyhozcRm29iocKtMheYgVuxDNPe4KQnxc8k7F4U4", 
+    "header": "m6Y9EbvfEzN2FVz3sIkwQpAErewQBs4bi"
   },
   "pre-migration": {
     estampille: 1671554193,
@@ -60,33 +60,23 @@ du message.
 
 ### Champ id
 
-Hachage blake2s (32 bytes) encodé en hexadécimal d'une partie du contenu de l'enveloppe.
+Hachage blake2s (32 bytes) encodé en hexadécimal (64 charactères) d'une partie du contenu de l'enveloppe.
 
-Les champs utilisés pour le hachage dépendent du kind. Les valeurs des champs sont mis dans un array json et le hachage est calculé sur la valeur json-str en utf-8.
-
-Pour un kind:0 on calculerait le hachage du contenu suivant :
-
-```array_champs = ["6e468422dfb74a5738702a8823b9b28168abab8655faacb6853cd0ee15deee93",1681650062,0,"{\"Champ\":\"valeur\"}"]```
-
-Pour les champs en format dictionnaire (e.g. routage, chiffrage), il faut utiliser un algorithme de tri des noms de champs pour toujours obtenir le même ordre. Dans le routage l'ordre des champs doit toujours être action,domaine[,partition].
-
-Exemple de kind:1
-
-```array_champs = ["6e468422dfb74a5738702a8823b9b28168abab8655faacb6853cd0ee15deee93",1681650062,0,"routage":{"action":"fichePublique","domaine":"CoreTopologie","partition":"ZABC1"},"{\"Champ\":\"valeur\"}"]```
-
-| Language    | Methode                                                                             |
-|-------------|-------------------------------------------------------------------------------------|
-| Python      | json.dumps(array_champs, *sort_keys=True*, *separators=(',', ':')*)                 |
-| Javascript  | utiliser module *npm 'json-stable-stringify'* : stringify(array_champs).normalize() |
-| Rust        | todo                                                                                |
+Voir section Hachage et signature plus bas pour détails d'implémentation.
 
 ### Champ pubkey
 
-Clé publique ed25519 du certificat utilisé pour signer le message. Le champ pubkey agit aussi comme identificateur de certificat (fingerprint) pour identifier le module d'origine du message.
+Clé publique ed25519 du certificat utilisé pour signer le message. La clé est encodée en hexadécimal minuscules (64 
+charactères). Le champ pubkey agit aussi comme identificateur de certificat (fingerprint) pour identifier le module 
+d'origine du message.
+
+Exemple : 6e468422dfb74a5738702a8823b9b28168abab8655faacb6853cd0ee15deee93
 
 ### Estampille
 
 Valeur epoch en secondes (int).
+
+Exemple : 1709210225
 
 ### Kind
 
@@ -157,6 +147,8 @@ différent. Le format de stockage en texte évite ce problème.
 Signature ed25519 en format hexadécimal du id (les 32 bytes du hachage blake2s) avec la clé du certificat. Utilisé pour la non-répudiation. 
 
 Un message avec une signature invalide doit être rejeté.
+
+Voir section Hachage et signature plus bas pour détails d'implémentation.
 
 ### Certificat
 
@@ -263,5 +255,77 @@ Exemples de traitements à éviter :
 Pour éviter ces situations, utiliser une commande pour effectuer le traitement et sauvegarder le résultat avec une
 ou plusieurs transactions. Une commande peut émettre des transactions vers plusieurs domaines.
 
-## Hachage et signature
+## Sécurité cryptographique
+
+Une partie du message est haché et signé par un certificat X.509. Les champs hachés dépendent du kind de message.
+
+Les champs qui ne sont pas hachés servent à vérifier le message (champs id et sig) ou peuvent être validés séparément
+(certificat, millegrille). Les attachements sont optionnels et exclus de la vérification. Ils devraient aussi pouvoir 
+être validés par les applications qui les utilisent.
+
+Deux niveaux de sécurité sont appliqués : authentification et non-répudiation. La non-répudiation est garantie par la 
+signature ed25519 dans le champ `sig` et le hachage cryptographique conservé dans le champ `id`. Voir : 
+https://csrc.nist.gov/glossary/term/non_repudiation.
+
+L'authentification est garantie par la correspondance d'une clé publique de certificat X.509. Cette clé est conservée
+dans le champ `pubkey`. Le certificat correspondant peut être présent dans l'élément optionnel `certificat` mais 
+peut aussi être obtenu à partir d'une requête sur le bus MQ. Le certificat contient des éléments qui permettent de
+vérifier le role ou domaine du signateur. 
+
+### Hachage
+
+Les champs utilisés pour le hachage dépendent du kind. Les valeurs des champs sont mis dans un array json et le hachage 
+est calculé avec l'algorithme blake2s sur la valeur json-str en utf-8.
+
+Pour un kind:0 le calcul du hachage du contenu est [pubkey, estampille, kind, contenu]:
+
+`array_champs = ["6e468422dfb74a5738702a8823b9b28168abab8655faacb6853cd0ee15deee93",1681650062,0,"{\"Champ\":\"valeur\"}"]`
+
+Pour les champs en format dictionnaire (e.g. routage, chiffrage), il faut trier les noms de 
+champs pour toujours obtenir le même ordre. Dans le routage l'ordre des champs doit toujours être 
+[action,domaine] ou [action,domaine,partition].
+
+Exemple de kind:1
+
+`array_champs = ["6e468422dfb74a5738702a8823b9b28168abab8655faacb6853cd0ee15deee93",1681650062,0,"routage":{"action":"fichePublique","domaine":"CoreTopologie","partition":"ZABC1"},"{\"Champ\":\"valeur\"}"]`
+
+Voir le table de la section kind pour la liste et l'ordre des champs à hacher.
+
+| Language    | Methode                                                                             |
+|-------------|-------------------------------------------------------------------------------------|
+| Python      | json.dumps(array_champs, *sort_keys=True*, *separators=(',', ':')*)                 |
+| Javascript  | utiliser module *npm 'json-stable-stringify'* : stringify(array_champs).normalize() |
+| Rust        | utiliser des structs avec les champs dans le bon ordre, serialiser avec serde       |
+
+### Signature
+
+La valeur du champ `id` est signée avec l'algorithme ed25519 en utilisant la clé privée du module qui génère le message.
+La clé publique du module doit être placée dans l'élément `pubkey`.
+
+### Certificats
+
+Les certificats sont générés pour chaque module qui doit intéragir sur la MilleGrille. 
+
+La clé privée qui correspond au certificat est chargée en mémoire par le module afin de signer les messages émis et
+déchiffrer les réponses avec des éléments chiffrés. 
+
+Voir document certificats.md pour plus de détails.
+
+### Implémentations
+
+Formatteur (générateur) de messages
+
+| Language   | Projet                                                      | Module                                            |
+|------------|-------------------------------------------------------------|---------------------------------------------------|
+| Python     | https://github.com/dugrema/millegrilles.messages.python.git | millegrilles_messages.messages.FormatteurMessages |
+| Javascript | https://github.com/dugrema/millegrilles.utiljs.git          | millegrilles.utilsjs/src/formatteurMessages.js    |
+| Rust       | https://github.com/dugrema/millegrilles_common_rust.git     | millegrilles_common_rust::formatteur_messages     |
+
+Vérification de messages
+
+| Language   | Projet                                                      | Module                                           |
+|------------|-------------------------------------------------------------|--------------------------------------------------|
+| Python     | https://github.com/dugrema/millegrilles.messages.python.git | millegrilles_messages.messages.ValidateurMessage |
+| Javascript | https://github.com/dugrema/millegrilles.utiljs.git          | millegrilles.utilsjs/src/validateurMessage.js    |
+| Rust       | https://github.com/dugrema/millegrilles_common_rust.git     | millegrilles_common_rust::verificateur           |
 

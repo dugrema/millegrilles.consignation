@@ -65,7 +65,7 @@ Ports :
 
 Exemples de modules protégés :
 
-- core : 4 domaines de base (certificats, comptes usagers, topologie, catalogues modules) requis par MilleGrilles
+- core : 5 domaines de base (backup, certificats, comptes usagers, topologie, catalogues modules) requis par MilleGrilles
 - céduleur : emet un événement à toutes les minutes
 - coupdoeil : interface d'administration de MilleGrilles
 - maitredescles : Gestionnaire de clées chiffrées de MilleGrilles.
