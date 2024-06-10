@@ -68,10 +68,11 @@ Exemples de modules protégés :
 - core : 5 domaines de base (backup, certificats, comptes usagers, topologie, catalogues modules) requis par MilleGrilles
 - céduleur : emet un événement à toutes les minutes
 - coupdoeil : interface d'administration de MilleGrilles
-- maitredescles : Gestionnaire de clées chiffrées de MilleGrilles.
+- maitredescles : Gestionnaire de clés chiffrées de MilleGrilles.
 - grosfichiers_backend : service de gestion du domaine et base de données GrosFichiers (collection/file manager de MilleGrilles)
 - documents_backend : service de gestion du domaine et base de données Documents (password manager de MilleGrilles)
-- messagerie_backend : notifications de MilleGrilles pour les usagers
+- messages_backend : reception de messages web
+- senseurspassifs_backend : gestion de microcontrolleurs et appareils
 - mq : Le bus MQ (RabbitMQ)
 - mongo : Base de données utilisées par les domaines MilleGrilles
 - backup : Backup des transactions

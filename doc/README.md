@@ -13,19 +13,12 @@ MilleGrilles expose un bus de communication sécurisé qui échange des messages
 
 ## Raison d'être
 
-Pas de mots de passe.
-
-Distribution du contenu sur le cloud.
-
-Applications mobiles, pas de app store.
-
-Éviter injection de messages.
-
-Sécurité de connexion middleware, toujours TLS avec certificat client.
-
-Stockage de fichiers chiffrés.
-
-Chiffrage des clés.
+* Pas de mots de passe.
+* Distribution de contenu dans le cloud.
+* Applications mobiles web sans app store.
+* Sécurité de connexion middleware, toujours TLS avec certificat client.
+* Stockage de fichiers chiffrés.
+* Chiffrage des clés.
 
 ## Technologies
 
