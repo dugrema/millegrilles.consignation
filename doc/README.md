@@ -11,14 +11,14 @@ fortes comme un appareil mobile ou une clé de sécurité USB/NFC pour accéder 
 
 MilleGrilles expose un bus de communication sécurisé qui échange des messages avec une signature électronique.
 
-## Raison d'être
+## Raison d'être / vision
 
-* Pas de mots de passe.
-* Distribution de contenu dans le cloud.
+* Pas de mots de passe pour les usagers.
+* Chiffrage des fichiers au repos.
 * Applications mobiles web sans app store.
 * Sécurité de connexion middleware, toujours TLS avec certificat client.
-* Stockage de fichiers chiffrés.
-* Chiffrage des clés.
+* Distribution des clés.
+* Distribution de contenu dans le cloud.
 
 ## Technologies
 
