@@ -1,5 +1,5 @@
 # Use management image for RabbitMQ
-FROM rabbitmq:3.13.7-rc-management
+FROM rabbitmq:3.13.7-management
 
 ENV APP_SOURCE_FOLDER=/opt/rabbitmq/src \
     APP_BUNDLE_FOLDER=/opt/rabbitmq/dist \
