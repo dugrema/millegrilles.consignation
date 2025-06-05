@@ -1,4 +1,4 @@
-FROM redis:7.4.4-alpine
+FROM redis:8.0.2-alpine
 
 COPY redis.conf /usr/local/etc/
 COPY creer_acl.sh start.sh connect.sh /usr/local/bin/
