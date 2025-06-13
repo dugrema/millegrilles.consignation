@@ -7,10 +7,21 @@ storage:
     blobdescriptor: inmemory
   filesystem:
     rootdirectory: /var/lib/registry
+    maxthreads: 20
+  delete:
+    enabled: true
+  maintenance:
+    uploadpurging:
+      enabled: true
+      age: 168h
+      interval: 24h
+      dryrun: false
 http:
   addr: :5000
   headers:
     X-Content-Type-Options: [nosniff]
+  http2:
+    disabled: false
 health:
   storagedriver:
     enabled: true

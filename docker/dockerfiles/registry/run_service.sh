@@ -8,7 +8,7 @@ docker service create \
   --mount type=volume,source=registry,destination=/var/lib/registry \
   --env REGISTRY_HTTP_TLS_CERTIFICATE=/opt/registry/secrets/fullchain.cer \
   --env REGISTRY_HTTP_TLS_KEY=/opt/registry/secrets/${KEY_NAME} \
-  --publish published=5000,target=443,mode=host \
+  --publish published=5000,target=5000,mode=host \
   --name registry \
-  docker.maceroc.com/mg_registry:x86_64_2.8.0
+  docker.maple.maceroc.com:5000/mg_registry:x86_64_2.8.3
 
