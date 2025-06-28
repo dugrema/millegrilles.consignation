@@ -2,7 +2,7 @@ import datetime
 
 from pymongo.database import Database
 
-from scripts.python.mongo_script import mg_mongo_connect
+from mongo_script import mg_mongo_connect
 
 
 def run(db: Database):
