@@ -1,7 +1,11 @@
+import datetime
+
 from pymongo.database import Database
 
+from scripts.python.mongo_script import mg_mongo_connect
 
-def fix_media_summary(db: Database):
+
+def run(db: Database):
     collection_fichiersrep = db['GrosFichiers/fichiersRep']
 
     count = 0
@@ -18,7 +22,7 @@ def fix_media_summary(db: Database):
             ]
         }},
         {"$match": {"comments.0": {"$exists": False}}},
-        {"$limit": 20}
+        # {"$limit": 20}
     ]
 
     cursor_fichiersrep = collection_fichiersrep.aggregate(pipeline)
@@ -26,10 +30,22 @@ def fix_media_summary(db: Database):
         # print(fichiersrep)
         tuuid = fichiersrep['tuuid']
 
-        if len(fichiersrep['comments']) == 0:
-            print(tuuid)
-            count += 1
-            # collection_fichiersrep.update_one({"tuuid": tuuid}, {"$set": {"flag_summary": False}})
+        print(tuuid)
+        count += 1
+        # collection_fichiersrep.update_one({"tuuid": tuuid}, {"$set": {"flag_summary": False}})
 
 
     print(f"\n-------\nCounted {count} files\n-------")
+
+
+def main():
+    _client, db = mg_mongo_connect()
+    run(db)
+
+
+if __name__ == '__main__':
+    start = datetime.datetime.now()
+    print(f"Started: {start}")
+    main()
+    duration = datetime.datetime.now() - start
+    print(f"Duration: {duration}")
