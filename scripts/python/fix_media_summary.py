@@ -18,7 +18,7 @@ def fix_media_summary(db: Database):
                 {"$project": {"tuuid": 1, "mimetype": 1, "flag_summary": 1}}
             ]
         }},
-        {"$match": {"fichiersrep.flag_summary": True}},
+        {"$match": {"fichiersrep.flag_summary": True, "fichiersrep.mimetype": {"$regex": "^image/"}}},
         {"$lookup": {
             "from": "GrosFichiers/fileComments",
             "localField": "fichiersrep.tuuid",
@@ -32,15 +32,20 @@ def fix_media_summary(db: Database):
 
     cursor_media = collection_media.aggregate(pipeline)
     for media in cursor_media:
-        print(media)
+        # print(media)
         fichiersrep = media['fichiersrep'][0]
         tuuid = fichiersrep['tuuid']
-        try:
-            is_image = fichiersrep['mimetype'].startswith('image/')
-        except (KeyError, AttributeError):
-            continue
-        if is_image and len(media['comments']) == 0:
-            print(f"No comment for tuuid:{tuuid}")
+
+        if len(media['comments']) == 0:
+            print(tuuid)
             count += 1
 
-    print(f"Counted {count} files")
+        # try:
+        #     is_image = fichiersrep['mimetype'].startswith('image/')
+        # except (KeyError, AttributeError):
+        #     continue
+        # if is_image and len(media['comments']) == 0:
+        #     print(tuuid)
+        #     count += 1
+
+    print(f"\n-------\nCounted {count} files\n-------")
