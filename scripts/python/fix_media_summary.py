@@ -15,10 +15,10 @@ def fix_media_summary(db: Database):
             "foreignField": "fuuids_versions.0",
             "as": "fichiersrep",
             "pipeline": [
-                {"$project": {"tuuid": 1, "mimetype": 1, "flag_summary": 1}}
+                {"$project": {"tuuid": 1, "mimetype": 1, "flag_summary": 1, "supprime": 1}}
             ]
         }},
-        {"$match": {"fichiersrep.flag_summary": True, "fichiersrep.mimetype": {"$regex": "^image/"}}},
+        {"$match": {"fichiersrep.supprime": False, "fichiersrep.flag_summary": True, "fichiersrep.mimetype": {"$regex": "^image/"}}},
         {"$lookup": {
             "from": "GrosFichiers/fileComments",
             "localField": "fichiersrep.tuuid",
@@ -28,6 +28,7 @@ def fix_media_summary(db: Database):
                 {"$project": {"comment_id": 1}}
             ]
         }},
+        {"$match": {"comments.0": {"$exists": False}}}
     ]
 
     cursor_media = collection_media.aggregate(pipeline)
@@ -39,13 +40,7 @@ def fix_media_summary(db: Database):
         if len(media['comments']) == 0:
             print(tuuid)
             count += 1
+            # collection_fichiersrep.update_one({"tuuid": tuuid}, {"$set": {"flag_summary": False}})
 
-        # try:
-        #     is_image = fichiersrep['mimetype'].startswith('image/')
-        # except (KeyError, AttributeError):
-        #     continue
-        # if is_image and len(media['comments']) == 0:
-        #     print(tuuid)
-        #     count += 1
 
     print(f"\n-------\nCounted {count} files\n-------")
