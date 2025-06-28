@@ -1,3 +1,4 @@
+import datetime
 import tempfile
 from fix_media_summary import fix_media_summary
 
@@ -32,4 +33,7 @@ def main():
 
 
 if __name__ == '__main__':
+    start = datetime.datetime.now()
     main()
+    duration = datetime.datetime.now() - start
+    print(f"Duration: {duration}")
