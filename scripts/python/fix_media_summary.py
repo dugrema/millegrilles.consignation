@@ -8,23 +8,31 @@ def fix_media_summary(db: Database):
 
     pipeline = [
         {"$match": {"images.small.nonce": {"$exists": True}}},
+        {"$project": {"fuuid": 1}},
         {"$lookup": {
             "from": "GrosFichiers/fichiersRep",
             "localField": "fuuid",
             "foreignField": "fuuids_versions.0",
-            "as": "fichiersrep"
+            "as": "fichiersrep",
+            "pipeline": [
+                {"$project": {"tuuid": 1, "mimetype": 1, "flag_summary": 1}}
+            ]
         }},
         {"$match": {"fichiersrep.flag_summary": True}},
         {"$lookup": {
             "from": "GrosFichiers/fileComments",
             "localField": "fichiersrep.tuuid",
             "foreignField": "tuuid",
-            "as": "comments"
+            "as": "comments",
+            "pipeline": [
+                {"$project": {"comment_id": 1}}
+            ]
         }},
     ]
 
     cursor_media = collection_media.aggregate(pipeline)
     for media in cursor_media:
+        print(media)
         fichiersrep = media['fichiersrep'][0]
         tuuid = fichiersrep['tuuid']
         try:
