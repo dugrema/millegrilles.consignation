@@ -81,7 +81,7 @@ def count_processing(args: Namespace, db: Database):
             if args.refresh:
                 sleep(args.refresh)
                 # Erase line and refresh
-                print(" " * len(line), end="\r")
+                print("\r" + " " * len(line), end="\r")
             else:
                 return  # Done
         except KeyboardInterrupt:
