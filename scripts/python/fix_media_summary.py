@@ -77,11 +77,11 @@ def count_processing(args: Namespace, db: Database):
             count = collection_fichiersrep.count_documents({"flag_summary": False})
             current_date = datetime.datetime.now()
             line = f"{current_date} Entries currently processing: {count} files"
-            print(line, end="")
+            print(line, end="\r")
             if args.refresh:
                 sleep(args.refresh)
                 # Erase line and refresh
-                print("\r" + " " * len(line), end="\r")
+                print(" " * len(line), end="\r")
             else:
                 return  # Done
         except KeyboardInterrupt:
