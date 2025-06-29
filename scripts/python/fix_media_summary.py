@@ -70,14 +70,17 @@ def apply(collection: Collection, tuuids: list[str]):
         print(tuuid)
 
 
-def count_processing(db: Database):
+def count_processing(args: Namespace, db: Database):
     collection_fichiersrep = db['GrosFichiers/fichiersRep']
     while True:
         try:
             count = collection_fichiersrep.count_documents({"flag_summary": False})
             current_date = datetime.datetime.now()
             print(f"{current_date} Entries currently processing: {count} files", end="\r")
-            sleep(10)
+            if args.refresh:
+                sleep(10)
+            else:
+                return  # Done
         except KeyboardInterrupt:
             print()  # Leave the last entry on screen
             return
@@ -85,7 +88,7 @@ def count_processing(db: Database):
 
 def run(args: Namespace, db: Database):
     if args.processing:
-        count_processing(db)
+        count_processing(args, db)
     else:
         remaining(args, db)
 
@@ -106,6 +109,10 @@ def __parse_command_line():
     parser.add_argument(
         '--processing', action="store_true", required=False,
         help="Count number of currently processing entries"
+    )
+    parser.add_argument(
+        '--refresh', type=int, required=False,
+        help="Refresh interval"
     )
 
     args = parser.parse_args()
