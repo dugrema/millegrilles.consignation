@@ -1,6 +1,8 @@
 import argparse
 import datetime
+
 from argparse import Namespace
+from time import sleep
 
 from pymongo.collection import Collection
 from pymongo.database import Database
@@ -70,8 +72,15 @@ def apply(collection: Collection, tuuids: list[str]):
 
 def count_processing(db: Database):
     collection_fichiersrep = db['GrosFichiers/fichiersRep']
-    count = collection_fichiersrep.count_documents({"flag_summary": False})
-    print(f"\n-------\nEntries currently processing: {count} files\n-------")
+    while True:
+        try:
+            count = collection_fichiersrep.count_documents({"flag_summary": False})
+            current_date = datetime.datetime.now()
+            print(f"{current_date} Entries currently processing: {count} files", end="\r")
+            sleep(10)
+        except KeyboardInterrupt:
+            print()  # Leave the last entry on screen
+            return
 
 
 def run(args: Namespace, db: Database):
