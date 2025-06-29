@@ -76,9 +76,12 @@ def count_processing(args: Namespace, db: Database):
         try:
             count = collection_fichiersrep.count_documents({"flag_summary": False})
             current_date = datetime.datetime.now()
-            print(f"{current_date} Entries currently processing: {count} files", end="\r")
+            line = f"{current_date} Entries currently processing: {count} files"
+            print(line, end="")
             if args.refresh:
-                sleep(10)
+                sleep(args.refresh)
+                # Erase line and refresh
+                print(" " * len(line), end="\r")
             else:
                 return  # Done
         except KeyboardInterrupt:
@@ -93,7 +96,7 @@ def run(args: Namespace, db: Database):
         remaining(args, db)
 
 def __parse_command_line():
-    parser = argparse.ArgumentParser(description="Instance manager for MilleGrilles")
+    parser = argparse.ArgumentParser(description="Fix script for image summaries")
     parser.add_argument(
         '--verbose', action="store_true", required=False,
         help="More logging"
