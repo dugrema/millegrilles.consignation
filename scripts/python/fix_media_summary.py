@@ -75,10 +75,10 @@ def count_processing(db: Database):
 
 
 def run(args: Namespace, db: Database):
-    remaining(args, db)
     if args.processing:
         count_processing(db)
-
+    else:
+        remaining(args, db)
 
 def __parse_command_line():
     parser = argparse.ArgumentParser(description="Instance manager for MilleGrilles")
