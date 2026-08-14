@@ -1,3 +1,0 @@
-# Auto-generated ACL
-user client_rust on +@all -DEBUG ~* >abcd
-user client_nodejs on +@all -DEBUG ~* >abcd
